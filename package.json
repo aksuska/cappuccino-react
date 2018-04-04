@@ -1,0 +1,32 @@
+{
+  "name": "cappuccino-react",
+  "version": "1.0.0",
+  "description": "Modern Cappuccino Implementation with React",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "build": "npm run clean:build && babel src -d lib -s",
+    "clean:build": "rm -rf lib"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    },
+    "verbose": true
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "sprintf-js": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^22.2.2",
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.2",
+    "babel-jest": "^22.4.3",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-env": "^1.6.1",
+    "eslint": "^4.19.1",
+    "jest": "^22.4.3"
+  }
+}

@@ -1,0 +1,67 @@
+==========================
+COMPILER NOTES
+==========================
+
+0. GOALS
+    A. Based on modern JavaScript standards
+        1. e.g. class notation, declared properties, template literals, etc.
+    B. Based on modern Cocoa standards
+        1. Current implementation is old and out of date, and doesn't include newer functionality
+    C. Embeddable--i.e. does not require owning the entire window
+    D. Using ReactJS for view layer
+        1. Provides closer-to-DOM implementation, for better accessibility and inspect-ability
+        2. Provides cross-browser and cross-platform support, including excellent mobile support
+    E. Smaller browser footprint
+        1. Using import/export semantics to avoid loading too much unnecessary code
+        2. Avoiding images whenever possible and relying more on built-in controls and CSS
+    F. Faster execution
+        1. Trying to be closer to native JS
+        2. Less indirection
+    G. Easier to read compiled code
+    H. Better type checking (may have to wait for tools to mature)
+
+I. TYPES
+	A. C primitive types. All primitive types should be converted to JS primitive types
+		1. all int including NSInteger/NSUInteger, EXCEPT for char/unichar, float & double => number
+		2. char/unichar, const char *, etc => string
+		3. We can use buffer arrays (ArrayBuffer, typed arrays, and DataView) for byte types (like for NSData), if we think we need to.
+
+II. Transformations
+    A. Keywords
+        1. nil/Nil should change to null
+        2. self
+            a. unless assigned to, all instances should be changed to "this"
+            b. if assigned to, change assignment to "let self = " and leave all instances after assignment (NOT including same line) left alone.
+    B. Instance variables
+        1. DO NOT ALLOW IVARS BEGINNING WITH '$'--RAISE EXCEPTION AT COMPILATION
+        2. Name is transformed by prefixing with '$'
+        3. all framework ivars should be double prefixed '$$'
+        4. all usages of ivars need to change to this.ivar
+    C. Properties
+        1. dot syntax notation will be supported
+            a. getter usage should compile to objj_propGuard(object, 'property')
+            b. setter usage should compile to objj_propGuard(object, 'property', [value])
+            c. cannot allow a regular method name to collide with public property name, so may need a dup check
+            d. DOT NOTATION WILL NOT INVOKE METHOD FORWARDING--MUST BE CALLED AS METHOD FOR THAT
+        2. compiler should create an ivar for every property that doesn't already have one, as well as implement native accessors
+            a. if a getter and/or setter is declared, synthesize it instead
+            b. all accessor implementations and overrides need to be absorbed into native getter/setters
+                1. NOTE: if only one of the getter/setter is overridden, the other must be added or it will be undefined (JS limitation on overriding accessors)
+    D. Methods
+        1. Definitions/Declarations
+            a. Colons are converted to underscores
+            b. (void)setArgument:(id)argument atIndex:(CPUInteger)idx -> setArgument_atIndex_(argument: id, idx: CPUInteger): void
+        2. All recognized method calls are converted to objj_msgSend() calls
+            a. [object selector:arg1 with:arg2] -> objj_msgSend(object, 'selector:with:', arg1, arg2)
+            a. [[CPObject alloc] init] -> objj_msgSend(objj_msgSend(CPObject, 'alloc'), 'init')
+    E. Object literals
+        1. @"string" -> new CPString("string")
+        2. @'A', @99[FLU], @YES/NO -> new CPNumber(''##') (constructor will work out how to interpret value)
+        3. @{key: value} -> new CPDictionary(key, value)
+        4. @[value1, value2] -> new CPArray(value1, value2)
+        5. We can support boxed expressions if we want, we will just need to wrap them in a function and figure out what the result type is
+    F. Imports
+        1. Class is always default export; also export all other defined symbols.
+        2. Every default import should be exported to facilitate the "chained" import that Objective-C uses
+            a. likewise, every import should reference all exported items
+        3. Can we import only used symbols?
