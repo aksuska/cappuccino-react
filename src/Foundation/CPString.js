@@ -21,21 +21,17 @@ export default class CPString extends CPObject {
 		}
 	}
 
-	get description() {return this;}
-	set description(anything) {objj_throw_arg("Assignment to readonly property");}
-
 	get hash() {return this.$$hashCode;}
 	set hash(anything) {objj_throw_arg("Assignment to readonly property");}
+
+	get description() {return this;}
+	set description(anything) {objj_throw_arg("Assignment to readonly property");}
 
 	get jsString() {return this.$$jsString;}
 	set jsString(anything) {objj_throw_arg("Assignment to readonly property");}
 
 	static string() {
 		return this.alloc().initWithString_(new CPString(""));
-	}
-
-	static stringWithString_(aString) {
-		return this.alloc().initWithString_(aString);
 	}
 
 	static stringWithFormat_(format, ...args) {
@@ -45,6 +41,10 @@ export default class CPString extends CPObject {
 	// TODO: CPLocale support: method should call [CPLocale currentLocale]
 	static localizedStringWithFormat_(format, ...args) {
 		return this.alloc().initWithFormat_locale_arguments_(format, null, args);
+	}
+
+	static stringWithString_(aString) {
+		return this.alloc().initWithString_(aString);
 	}
 
 	$generateHash() {
@@ -73,8 +73,7 @@ export default class CPString extends CPObject {
 			}
 		}
 		this.$$hashCode = result + (result << (length & 31));
-}
-
+	}
 
 	initWithString_(aString) {
 		if (aString === null) {
@@ -93,7 +92,7 @@ export default class CPString extends CPObject {
 	initWithFormat_(format, ...args) {
 		return this.initWithFormat_locale_arguments_(format, null, args);
 	}
-	
+
 	initWithFormat_arguments_(format, args) {
 		return this.initWithFormat_locale_arguments_(format, null, args);
 	}
@@ -114,5 +113,11 @@ export default class CPString extends CPObject {
 		let formatString = format.jsString.replace(/%@/, '%s');
 		let values = args.map(element => element instanceof CPObject ? objj_propGuard(element, 'description', 'jsString') : element);
 		return this.initWithString_(new CPString(vsprintf(formatString, values)));
+	}
+
+	//! @typed id : @ignored
+	copyWithZone_(zone) {
+		// cocoa just returns the same object, so we'll do the same
+		return this;
 	}
 }
