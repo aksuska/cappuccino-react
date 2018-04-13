@@ -49,15 +49,14 @@ export default class CPInvocation extends CPObject {
 
 		// first two args are actually target & sel
 		if (idx === 0)
-			this.$$target = argumentLocation;
+			this.$$target = argumentLocation[argumentLocation.name];
 		else if (idx === 1)
-			this.$$selector = argumentLocation;
+			this.$$selector = argumentLocation[argumentLocation.name];
 		else if (this.$$argList !== null) // safety check since we can't guarantee we were initialized properly
-			this.$$argList[idx] = argumentLocation;
+			this.$$argList[idx] = argumentLocation[argumentLocation.name];
 	}
 
-	// JS doesn't support pass-by-reference, so we can't implement getArgument:atIndex:
-	getArgumentAtIndex_(idx) {
+	getArgument_atIndex_(argumentLocation, idx) {
 		// silently ignore if we are not initialized properly
 		if (this.$$methodSignature === null)
 			return;
@@ -67,11 +66,11 @@ export default class CPInvocation extends CPObject {
 		}
 
 		if (idx === 0)
-			return this.target;
+			argumentLocation[argumentLocation.name] = this.target;
 		else if (idx === 1)
-			return this.selector;
+			argumentLocation[argumentLocation.name] = this.selector;
 		else if (this.$$argList !== null) // safety check since we can't guarantee we were initialized properly
-			return this.$$argList[idx];
+			argumentLocation[argumentLocation.name] = this.$$argList[idx];
 	}
 
 	retainArguments() {
@@ -93,13 +92,11 @@ export default class CPInvocation extends CPObject {
 		this.invoke();
 	}
 
-	// JS cannot pass by reference so this should be the value
-	setReturnValue_(buffer) {
-		this.$$retValue = buffer;
+	setReturnValue_(retLoc) {
+		this.$$retValue = retLoc[retLoc.name];
 	}
-	
-	// JS cannot pass by reference so tso we can't implement getReturnValue:
-	returnValue() {
-		return this.$$retValue;
+
+	returnValue(retLoc) {
+		retLoc[retLoc.name] = this.$$retValue;
 	}
 }
