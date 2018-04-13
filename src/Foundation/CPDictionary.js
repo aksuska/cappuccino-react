@@ -14,12 +14,12 @@ export default class CPDictionary extends CPObject {
 		super();
 		this.$$jsMap = new Map();
 		for (let i=0; i<args.length; i+=2) {
-			this._setObjectForKey(args[i+1], args[i]);
+			this.$setObjectForKey(args[i+1], args[i]);
 		}
 	}
 
 	// pass through private method so we can raise exceptions when we need to
-	_setObjectForKey(object, key) {
+	$setObjectForKey(object, key) {
 		// null key is exception
 		if (key === null)
 			objj_throw_arg("-[%@ setObject:forKey:]: key cannot be null", this.className);
@@ -32,5 +32,11 @@ export default class CPDictionary extends CPObject {
 			objj_throw_arg("-[%@ setObject:forKey:]: key cannot be null", this.className);
 		else
 			this.$$jsMap.set(ourKey, object);
+	}
+
+	//! @typed id : @ignored
+	copyWithZone_(zone) {
+		// cocoa just returns the same object, so we'll do the same
+		return this;
 	}
 }
