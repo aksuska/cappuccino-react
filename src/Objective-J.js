@@ -1,4 +1,4 @@
-/**
+/*!
  * The Objective-J "Runtime", as it were. Essentially just a group of utility methods. They must be functions or we run into cyclical import issues since functions are hoisted, and classes aren't.
  * We generally expect that these methods will only be called internally by the framework, so we allow run-time errors to occur by passing null/undefined values.
  **/
@@ -9,7 +9,7 @@ import CPMethodSignature from './Foundation/CPMethodSignature';
 import CPInvocation from './Foundation/CPInvocation';
 import CPException, {CPInvalidArgumentException} from './Foundation/CPException';
 
-/*
+/*!
 	* A "decorator" kind of function that facilitates making null-targeted methods into no-ops and handles message forwarding. Compiler rewrites all method calls to this function.
 */
 
@@ -51,7 +51,7 @@ export default function objj_msgSend(target, selector, ...args) {
 	}
 }
 
-/*
+/*!
 	* A "decorator" kind of function that facilitates null-targeted dot syntax property access into no-ops. Compiler wraps all objects with dot syntax property access with this call.
 	* Will also support standard JS calls and chained calls: e.g. CPObject.alloc().init() -> objj_propGuard(CPObject, 'alloc', [], 'init', [])
 */
@@ -80,7 +80,7 @@ export function objj_propGuard(object, ...args) {
 	return object;
 }
 
-/*
+/*!
  * +initialize support: called to run the one-time initialization of a class and its superclass. Can also be used as a wrapper to ensure initialization
  * on property access/method calls when forwarding is not needed or desired. Keeps track of what is initialized by adding classes as properties to function object.
 */
@@ -104,7 +104,7 @@ export function objj_initialize(aClass) {
 	return aClass;
 }
 
-/*
+/*!
  * Returns and maintains a global UID counter for object UID's
 */
 
@@ -113,7 +113,7 @@ export function objj_oid() {
 }
 objj_oid.$$oidCounter = 0;
 
-/*
+/*!
  * Converts Objective-J selector string into the javascript function name
 */
 
@@ -125,7 +125,7 @@ export function objj_function(selector) {
 	return selector.split(':').join('_');
 }
 
-/*
+/*!
  * Converts property name to Objective-J setter selector string and visa versa
 */
 
@@ -138,7 +138,7 @@ export function objj_setter2prop(selector) {
 	return propName[0].toLowerCase() + propName.substr(1);
 }
 
-/*
+/*!
  * Utility function to get descriptor for property on object anywhere on the prototype chain
 */
 
@@ -155,7 +155,7 @@ export function objj_propertyDescriptor(object, property) {
 	return descriptor;
 }
 
-/*
+/*!
  * Algorithm for returning function that matches selector, or undefined if none. Employs full search for regular method vs accessor.
 */
 
@@ -183,16 +183,16 @@ export function objj_getMethod(object, selector) {
 	return method;
 }
 
-/*
+/*!
  * Convenience functions for creating objects that may depends on caller declaration, to avoid circular dependencies.
 */
 
-// wrapper for string convenience constructor
+//! wrapper for string convenience constructor
 export function objj_string(string) {
 	return new CPString(string);
 }
 
-// wrapper for method signature creation
+//! wrapper for method signature creation
 export function objj_methodSignature(object, selector) {
 	let method = objj_getMethod(object, selector);
 	if (method !== undefined) {
@@ -203,12 +203,12 @@ export function objj_methodSignature(object, selector) {
 	}
 }
 
-// wrapper for -[CPException raise:format:arguments:] for CPInvalidArgumentException
+//! wrapper for -[CPException raise:format:arguments:] for CPInvalidArgumentException
 export function objj_throw_arg(error, ...args) {
 	objj_initialize(CPException).raise_format_arguments_(CPInvalidArgumentException, new CPString(error), args);
 }
 
-// wrapper for CPInvocation creation
+//! wrapper for CPInvocation creation
 export function objj_invocation(target, selector, ...args) {
 	const methodSignature = objj_msgSend(target, 'methodSignatureForSelector:', selector);
 	if (methodSignature !== null) {
@@ -217,7 +217,8 @@ export function objj_invocation(target, selector, ...args) {
 			invocation.target = target;
 			invocation.selector = selector;
 			for (let i= 0; i < args.length; i++) {
-				invocation.setArgument_atIndex_(args[i], i + 2);
+				let name = `arg${i}`, arg = {get name() {return name}, get [name]() {return args[i]}, set [name](value) {args[i] = value}};
+				invocation.setArgument_atIndex_(arg, i + 2);
 			}
 		}
 		return invocation;

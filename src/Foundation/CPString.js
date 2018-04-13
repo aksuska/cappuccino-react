@@ -1,17 +1,18 @@
-/**
- * Implementation of NSString. We have a has-a relationship with the native JS string
+/*!
+ * Module that contains NSString class emulation and related symbols. We maintain a has-a relationship with a native JS string.
  **/
 
 import {objj_propGuard, objj_throw_arg} from '../Objective-J';
 import CPObject from './CPObject';
 const vsprintf = require("sprintf-js").vsprintf;
 
+//! NSString Cocoa Foundation class emulation
 export default class CPString extends CPObject {
 
 	$$jsString = '';
 	$$hashCode = 0;
 
-	// basically a convenience constructor so we can do shorthand conversions
+	// we use this a convenience constructor so we can do shorthand conversions
 	constructor(jsString) {
 		super();
 		if (jsString !== null && jsString !== undefined)
@@ -21,28 +22,35 @@ export default class CPString extends CPObject {
 		}
 	}
 
+	//! @property(readonly) CPUInteger hash
 	get hash() {return this.$$hashCode;}
 	set hash(anything) {objj_throw_arg("Assignment to readonly property");}
 
+	//! @property(readonly, copy) CPString description
 	get description() {return this;}
 	set description(anything) {objj_throw_arg("Assignment to readonly property");}
 
+	//! @property(readonly, copy) string jsString
 	get jsString() {return this.$$jsString;}
 	set jsString(anything) {objj_throw_arg("Assignment to readonly property");}
 
+	//! @typed instancetype : void
 	static string() {
 		return this.alloc().initWithString_(new CPString(""));
 	}
 
+	//! @typed instancetype : CPString, ...
 	static stringWithFormat_(format, ...args) {
 		return this.alloc().initWithFormat_locale_arguments_(format, null, args);
 	}
 
 	// TODO: CPLocale support: method should call [CPLocale currentLocale]
+	//! @typed instancetype : CPString, ...
 	static localizedStringWithFormat_(format, ...args) {
 		return this.alloc().initWithFormat_locale_arguments_(format, null, args);
 	}
 
+	//! @typed instancetype : CPString
 	static stringWithString_(aString) {
 		return this.alloc().initWithString_(aString);
 	}
@@ -75,6 +83,7 @@ export default class CPString extends CPObject {
 		this.$$hashCode = result + (result << (length & 31));
 	}
 
+	//! @typed instancetype : CPString
 	initWithString_(aString) {
 		if (aString === null) {
 			objj_throw_arg("-[%@ initWithString:]: null argument", this.className);
@@ -89,20 +98,24 @@ export default class CPString extends CPObject {
 		return self;
 	}
 
+	//! @typed instancetype : CPString, ...
 	initWithFormat_(format, ...args) {
 		return this.initWithFormat_locale_arguments_(format, null, args);
 	}
 
+	//! @typed instancetype : CPString, va_list
 	initWithFormat_arguments_(format, args) {
 		return this.initWithFormat_locale_arguments_(format, null, args);
 	}
 
-	// CPLocale support?
+	// TODO: CPLocale support?
+	//! @typed instancetype : CPString, CPLocale, ...
 	initWithFormat_locale_(format, locale, ...args) {
 		return this.initWithFormat_locale_arguments_(format, null, args);
 	}
 
 	// TODO: CPLocale support?
+	//! @typed instancetype : CPString, CPLocale, va_list
 	initWithFormat_locale_arguments_(format, locale, args) {
 		if (format === null) {
 			objj_throw_arg("-[%@ initWithFormat:locale:arguments:]: null argument", this.className);

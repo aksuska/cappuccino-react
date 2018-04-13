@@ -1,5 +1,5 @@
-/**
- * Implementation of NSException
+/*!
+ * Module that contains NSException class emulation and related symbols.
  **/
 
 import {objj_initialize, objj_string, objj_throw_arg} from '../Objective-J';
@@ -7,9 +7,10 @@ import CPObject from './CPObject';
 import CPString from './CPString';
 import objj_msgSend from "../Objective-J";
 
-// globals
+//! @typed CPString
 export const CPInvalidArgumentException = objj_string("CPInvalidArgumentException");
 
+//! NSException Cocoa Foundation class emulation
 export default class CPException extends CPObject {
 
 	static $$uncaughtExceptionHandler = null;
@@ -20,21 +21,31 @@ export default class CPException extends CPObject {
 	$$callStackReturnAddresses = null;
 	$$callStackSymbols = null;
 
+	//! @property(readonly, copy) CPString name
 	get name() {return this.$$name;}
 	set name(anything) {objj_throw_arg("Assignment to readonly property");}
 
+	//! @property(readonly, copy) CPString reason
 	get reason() {return this.$$reason;}
 	set reason(anything) {objj_throw_arg("Assignment to readonly property");}
 
+	//! @property(readonly, copy) CPDictionary userInfo
 	get userInfo() {return this.$$userInfo;}
 	set userInfo(anything) {objj_throw_arg("Assignment to readonly property");}
 
+	/*!
+	 * Browsers don't provide a reliable way to parse a call stack, so we just return the entries from new Error().stack
+	 * @property(readonly, copy) CPArray<CPString> callStackReturnAddresses
+	 */
 	get callStackReturnAddresses() {return this.$$callStackReturnAddresses;}
 	set callStackReturnAddresses(anything) {objj_throw_arg("Assignment to readonly property");}
 
+	//! Browsers don't provide a reliable way to parse a call stack, so we just return the entries from new Error().stack
+	//! @property(readonly, copy) CPArray<CPString> callStackSymbols
 	get callStackSymbols() {return this.$$callStackSymbols;}
 	set callStackSymbols(anything) {objj_throw_arg("Assignment to readonly property");}
 
+	//! @typed CPException : CPString, CPString, CPDictionary
 	static exceptionWithName_reason_userInfo_(name, reason, userInfo) {
 		const exception = this.new();
 		if (exception) {
@@ -45,10 +56,12 @@ export default class CPException extends CPObject {
 		return exception
 	}
 
+	//! @typed void : CPString, CPString
 	static raise_format_(name, format, ...args) {
 		this.raise_format_arguments_(name, format, args);
 	}
 
+	//! @typed void : CPString, CPString, CPArray
 	static raise_format_arguments_(name, format, args) {
 		// null format seems to be ignored in cocoa, so we'll do that too
 		const reason = (format !== null) ? objj_msgSend(CPString, 'stringWithFormat:', format, ...args) : null;
@@ -61,16 +74,19 @@ export default class CPException extends CPObject {
 		throw exception;
 	}
 
+	//! @typed void : void
 	raise() {
 		throw this;
 	}
 }
 
+//! @typed void (^)(Event e) : void
 export function CPGetUncaughtExceptionHandler() {
 	return objj_initialize(CPException).$$uncaughtExceptionHandler;
 }
 
-export function CPSetUncaughtExceptionHandler(handler/*(Event e)*/) {
+//! @typed void : void (^)(Event e)
+export function CPSetUncaughtExceptionHandler(handler) {
 	if (objj_initialize(CPException).$$uncaughtExceptionHandler !== null) {
 		window.removeEventListener('error', CPException.$$uncaughtExceptionHandler, true);
 	}

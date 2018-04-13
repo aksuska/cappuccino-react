@@ -1,15 +1,16 @@
-/**
- * Implementation of NSDictionary. We have a has-a relationship with the native Map object
+/*!
+ * Module that contains NSDictionary class emulation and related symbols. We maintain a has-a relationship with a native Map object
  **/
 
 import objj_msgSend, {objj_throw_arg} from '../Objective-J';
 import CPObject from './CPObject';
 
+//! NSDictionary Cocoa Foundation class emulation
 export default class CPDictionary extends CPObject {
 
 	$$jsMap;
 	
-	// allows for shorthand conversion of literal syntax @{key: value, ...}
+	// we use this a convenience constructor for shorthand conversion of literal syntax @{key: value, ...}
 	constructor(...args) {
 		super();
 		this.$$jsMap = new Map();

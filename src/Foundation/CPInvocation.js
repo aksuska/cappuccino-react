@@ -1,10 +1,11 @@
-/**
- * Implementation of NSInvocation.
- **/
+/*!
+ * Module that contains NSInvocation class emulation and related symbols.
+ */
 
 import {objj_throw_arg} from '../Objective-J';
 import CPObject from './CPObject';
 
+//! NSInvocation Cocoa Foundation class emulation
 export default class CPInvocation extends CPObject {
 
 	$$selector = null;
@@ -12,20 +13,25 @@ export default class CPInvocation extends CPObject {
 	$$methodSignature = null;
 	$$argList = [];
 	$$retValue;
-	
+
+	//! @property() SEL selector
 	get selector() {return this.$$selector;}
 	set selector(aSelector) {this.$$selector = aSelector;}
 
+	//! @property(strong) id target
 	get target () {return this.$$target;}
 	set target(aTarget) {this.$$target = aTarget;}
 
+	//! @property(readonly, strong) CPMethodSignature methodSignature
 	get methodSignature() {return this.$$methodSignature;}
 	set methodSignature(anything) {objj_throw_arg("Assignment to readonly property");}
 
-	// will always return true. See retainArguments() for more information
+	//! Property will always be YES. See -retainArguments for more information.
+	//! @property(readonly) BOOL argumentsRetained
 	get argumentsRetained() {return true;}
 	set argumentsRetained(anything) {objj_throw_arg("Assignment to readonly property");}
 
+	//! @typed CPInvocation : CPMethodSignature
 	static invocationWithMethodSignature_(sig) {
 		// exception if signature null
 		if (sig === null)
@@ -38,6 +44,8 @@ export default class CPInvocation extends CPObject {
 		return invocation;
 	}
 
+	//! The argumentLocation argument must be a value created by the @ref() directive or a runtime error will occur.
+	//! @typed void : @ref, CPInteger
 	setArgument_atIndex_(argumentLocation, idx) {
 		// silently ignore if we are not initialized properly
 		if (this.$$methodSignature === null)
@@ -56,6 +64,8 @@ export default class CPInvocation extends CPObject {
 			this.$$argList[idx] = argumentLocation[argumentLocation.name];
 	}
 
+	//! The argumentLocation argument must be a value created by the @ref() directive or a runtime error will occur.
+	//! @typed void : @ref, CPInteger
 	getArgument_atIndex_(argumentLocation, idx) {
 		// silently ignore if we are not initialized properly
 		if (this.$$methodSignature === null)
@@ -73,11 +83,13 @@ export default class CPInvocation extends CPObject {
 			argumentLocation[argumentLocation.name] = this.$$argList[idx];
 	}
 
+	//! Method is a no-op since we don't have a reasonable JS replacement. Weakmap is close, but not iterable so we can't convert from one to the other.
+	//! For this reason -argumentsRetained always returns YES.
+	//! @typed void : void
 	retainArguments() {
-		// this is basically a no-op since we don't have a reasonable JS replacement. Weakmap is close, but no iterable
-		// so we can't convert from one to the other
 	}
 
+	//! @typed void : void
 	invoke() {
 		// silently ignore if we weren't set up properly
 		if (this.$$methodSignature === null || this.$$target === null || this.$$selector === null)
@@ -87,15 +99,20 @@ export default class CPInvocation extends CPObject {
 		this.$$retValue = this.$$target[this.$$selector](...this.$$argList);
 	}
 
+	//! @typed void : id
 	invokeWithTarget_(aTarget) {
 		this.$$target = aTarget;
 		this.invoke();
 	}
 
+	//! The retLoc argument must be a value created by the @ref() directive or a runtime error will occur.
+	//! @typed void : @ref
 	setReturnValue_(retLoc) {
 		this.$$retValue = retLoc[retLoc.name];
 	}
 
+	//! The retLoc argument must be a value created by the @ref() directive or a runtime error will occur.
+	//! @typed void : @ref
 	returnValue(retLoc) {
 		retLoc[retLoc.name] = this.$$retValue;
 	}
