@@ -105,8 +105,11 @@ test("objj_invocation() returns configured CPInvocation instance", () => {
 	expect(invocation).toBeInstanceOf(CPInvocation);
 	expect(invocation.target).toBe(object);
 	expect(invocation.selector).toBe('testMethod::');
-	expect(invocation.getArgumentAtIndex_(2)).toBe('arg1');
-	expect(invocation.getArgumentAtIndex_(3)).toBe('arg2');
+	let arg = null, argRef = { get name() { return 'arg' }, get arg() { return arg }, set arg(value) { arg = value } };
+	invocation.getArgument_atIndex_(argRef, 2);
+	expect(arg).toBe('arg1');
+	invocation.getArgument_atIndex_(argRef, 3);
+	expect(arg).toBe('arg2');
 });
 
 /*
