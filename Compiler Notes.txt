@@ -65,3 +65,8 @@ II. Transformations
         2. Every default import should be exported to facilitate the "chained" import that Objective-C uses
             a. likewise, every import should reference all exported items
         3. Can we import only used symbols?
+    G. References
+        1. @ref(var) compiles to:
+            { get name() { return 'var' }, get var() { return var }, set var(value) { var = value } }
+        2. @deref(refVar) compiles to:
+            refVar[refVar.name]
