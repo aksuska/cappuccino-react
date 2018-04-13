@@ -40,15 +40,6 @@ export default class CPObject {
 	}
 	static set initialized(anything) {objj_throw_arg("Assignment to readonly property");}
 
-	static get description() {return objj_string(this.name);}
-	static set description(anything) {objj_throw_arg("Assignment to readonly property");}
-
-	static get debugDescription() {return this.description();}
-	static set debugDescription(anything) {objj_throw_arg("Assignment to readonly property");}
-
-	static get superclass() {return (this === CPObject) ? null : Object.getPrototypeOf(this);}
-	static set superclass(anything) {objj_throw_arg("Assignment to readonly property");}
-
 	get superclass() {return (this.constructor === CPObject) ? null : Object.getPrototypeOf(this.constructor);}
 	set superclass(anything) {objj_throw_arg("Assignment to readonly property");}
 
@@ -59,7 +50,7 @@ export default class CPObject {
 	set exposedBindings(anything) {objj_throw_arg("Assignment to readonly property");}
 
 	get observationInfo() {return this.$$observationInfo;}
-	set observationInfo(anything) {objj_throw_arg("Assignment to readonly property");}
+	set observationInfo(anObject) {this.$$observationInfo = anObject;}
 
 	get className() {return objj_string(this.constructor.name);}
 	set className(anything) {objj_throw_arg("Assignment to readonly property");}
@@ -90,12 +81,12 @@ export default class CPObject {
 		return this.alloc().init();
 	}
 
-	static copyWithZone_(zone = null) {
+	static copyWithZone_(zone) {
 		// all class objects are unique
 		return this;
 	}
 
-	static mutableCopyWithZone_(zone = null) {
+	static mutableCopyWithZone_(zone) {
 		// all class objects are unique
 		return this;
 	}
@@ -104,8 +95,18 @@ export default class CPObject {
 		return this;
 	}
 
+	static superclass() {
+		return (this === CPObject) ? null : Object.getPrototypeOf(this);
+	}
+
 	static isSubclassOfClass_(aClass) {
 		return typeof aClass === 'object' ? Object.create(this.prototype) instanceof aClass : false;
+	}
+
+	static instancesRespondToSelector_(aSelector) {
+		// we can't call respondsToSelector as it may be overridden for forwarding, as this method must test only the implemented methods of the class
+		const instance = this.new();
+		return (instance) ? (Reflect.has(instance, objj_function(aSelector)) || this.resolveInstanceMethod_(aSelector)) : false;
 	}
 
 	static conformsToProtocol_(protocol) {
@@ -116,32 +117,26 @@ export default class CPObject {
 		return (objj_getMethod(this, aSelector) !== undefined);
 	}
 
-	static instancesRespondToSelector_(aSelector) {
-		// we can't call respondsToSelector as it may be overridden for forwarding, as this method must test only the implemented methods of the class
-		const instance = this.new();
-		return (instance) ? (Reflect.has(instance, objj_function(aSelector)) || this.resolveInstanceMethod_(aSelector)) : false;
+	static methodForSelector_(aSelector) {
+		if (this.respondsToSelector_(aSelector)) {
+			return (self, ...args) => objj_msgSend(self, aSelector, ...args);
+		}
+		else {
+			return (self, ...args) => objj_msgSend(self, 'doesNotRecognizeSelector:', aSelector);
+		}
 	}
 
 	static instanceMethodForSelector_(aSelector) {
 		if (this.instancesRespondToSelector_(aSelector)) {
-			return (...args) => objj_msgSend(this, aSelector, ...args);
+			return (self, ...args) => objj_msgSend(self, aSelector, ...args);
 		}
 		else {
-			return (...args) => objj_msgSend(this, 'doesNotRecognizeSelector:', aSelector);
+			return (self, ...args) => objj_msgSend(self, 'doesNotRecognizeSelector:', aSelector);
 		}
 	}
 
-	static resolveClassMethod_(sel) {
-		return false;
-	}
-
-	/* Caveat: adding instance properties or defining accessor methods for existing properties must be accomplished using Object.defineProperty() with defined getter/setters */
-	static resolveInstanceMethod_(sel) {
-		return false;
-	}
-
-	static forwardingTargetForSelector_(aSelector) {
-		return null;
+	instanceMethodSignatureForSelector_(aSelector) {
+		return objj_msgSend(this.new(), 'methodSignatureForSelector:', aSelector);
 	}
 
 	static methodSignatureForSelector_(aSelector) {
@@ -151,10 +146,30 @@ export default class CPObject {
 		return null;
 	}
 
+	static description() {
+		return objj_string(this.name);
+	}
+
+	static debugDescription() {
+		return this.description();
+	}
+
+	static forwardingTargetForSelector_(aSelector) {
+		return null;
+	}
+
 	static forwardInvocation_(invocation) {
 		this.doesNotRecognizeSelector_(objj_propGuard(invocation, 'selector'));
 	}
-	
+
+	static resolveClassMethod_(sel) {
+		return false;
+	}
+
+	static resolveInstanceMethod_(sel) {
+		return false;
+	}
+
 	static doesNotRecognizeSelector_(aSelector) {
 		objj_throw_arg("+[%s %s]: unrecognized selector sent to class", this.name, aSelector);
 	}
@@ -191,12 +206,12 @@ export default class CPObject {
 		return this.constructor === aClass;
 	}
 
-	conformsToProtocol_(protocol) {
-		return this.constructor.$$conformsTo.includes(protocol.name);
-	}
-
 	respondsToSelector_(aSelector) {
 		return (objj_getMethod(this, aSelector) !== undefined);
+	}
+
+	conformsToProtocol_(protocol) {
+		return this.constructor.$$conformsTo.includes(protocol.name);
 	}
 
 	performSelector_(aSelector) {
@@ -219,6 +234,10 @@ export default class CPObject {
 		return null;
 	}
 
+	methodForSelector_(aSelector) {
+		return this.constructor.instanceMethodForSelector_(aSelector);
+	}
+
 	methodSignatureForSelector_(aSelector) {
 		if (this.respondsToSelector_(aSelector)) {
 			return objj_methodSignature(this, aSelector);
@@ -236,6 +255,10 @@ export default class CPObject {
 
 	copy() {
 		return objj_msgSend(this, 'copyWithZone:', null);
+	}
+
+	mutableCopy() {
+		return objj_msgSend(this, 'mutableCopyWithZone:', null);
 	}
 }
 
