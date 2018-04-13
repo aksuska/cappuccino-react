@@ -38,9 +38,9 @@ export default class CPException extends CPObject {
 	static exceptionWithName_reason_userInfo_(name, reason, userInfo) {
 		const exception = this.new();
 		if (exception) {
-			exception.$$name = name;
-			exception.$$reason = reason;
-			exception.$$userInfo = userInfo;
+			exception.$$name = objj_msgSend(name, 'copyWithZone:', null);
+			exception.$$reason = objj_msgSend(reason, 'copyWithZone:', null);
+			exception.$$userInfo = objj_msgSend(userInfo, 'copyWithZone:', null);
 		}
 		return exception
 	}
