@@ -8,10 +8,10 @@ while(<>) {
 	if (m#^\s*(/(?:\*[*!]|/[!/]))#) {
 		my $comment = loadComment($1, $_);
 		# check for our directives
-		if ($comment =~ s#^[/*!\s]*(\@property\s*\(.*)\n##) {
-			print "$comment$1;\n";
+		if ($comment =~ s#^([/*!\s]*)(\@property\s*\(.*)#${1}<B>Declaration:</B> \@code $2 \@endcode#m) {
+			print "$comment$2;\n";
 		}
-		elsif($comment =~ s#^[/*!\s]*\@typed\s+(.*)\n##) {
+		elsif($comment =~ s#^[/*\s!]*\@typed\s+(.*)\n##m) {
 			$typeSpec = $1;
 			print $comment;
 		}
