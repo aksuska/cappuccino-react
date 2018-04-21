@@ -119,7 +119,7 @@ export default class CPObject {
 
 	//! @typed BOOL : Class
 	static isSubclassOfClass_(aClass) {
-		return typeof aClass === 'object' ? Object.create(this.prototype) instanceof aClass : false;
+		return typeof aClass === 'function' ? Object.create(this.prototype) instanceof aClass : false;
 	}
 
 	//! This property shows under the "Scripting" group in Cocoa docs but since there is no useful equivalent in JS, and this property is otherwise useful, we put it here.
