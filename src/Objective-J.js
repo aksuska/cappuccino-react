@@ -161,7 +161,9 @@ export function objj_propertyDescriptor(object, property) {
 
 export function objj_getMethod(object, selector) {
 	let functionName = objj_function(selector), method;
-	if (typeof object[functionName] === 'function') {
+	// It is not possible in JS to reliably determine whether a property is a data member returning a function or a method, so we have
+	// to treat them as if they are the same thing. One exception is if it inherits from CPObject, which we can check for.
+	if (typeof object[functionName] === 'function' && '$$initialized' in object[functionName] === false) {
 		method = object[functionName];
 	}
 	else if (functionName in object) {
