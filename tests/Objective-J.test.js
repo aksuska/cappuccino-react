@@ -64,6 +64,14 @@ test("objj_getMethod() returns undefined for no such selector", () => {
 	expect(objj_getMethod(CPObject, 'bogus')).toBeUndefined();
 });
 
+test("objj_getMethod() returns undefined for property returning class without defined getter", () => {
+	const MyObject = class extends CPObject { constructor() {super(); this.propValue = CPObject} };
+	const object = new MyObject();
+	expect(objj_getMethod(object, 'propValue')).toBeUndefined();
+	Object.defineProperty(object, 'prop', {get() { return this.propValue } });
+	expect(typeof objj_getMethod(object, 'prop')).toBe('function');
+});
+
 test("objj_getMethod() returns function for regular method", () => {
 	const MyObject = class extends CPObject { constructor() {super(); this.$propValue = false} get propValue() { return this.$propValue} set propValue(value) { this.$propValue = value} testMethod() {return true;} };
 	expect(typeof objj_getMethod(new MyObject(), 'testMethod')).toBe('function');
