@@ -26,7 +26,7 @@ I. TYPES
 		2. char/unichar, const char *, etc => string
 		3. We can use buffer arrays (ArrayBuffer, typed arrays, and DataView) for byte types (like for NSData), if we think we need to.
 
-II. Transformations
+II. TRANSFORMATIONS
     A. Keywords
         1. nil/Nil should change to null
         2. self
@@ -38,15 +38,22 @@ II. Transformations
         3. all framework ivars should be double prefixed '$$'
         4. all usages of ivars need to change to this.ivar
     C. Properties
-        1. dot syntax notation will be supported
-            a. getter usage should compile to objj_propGuard(object, 'property')
-            b. setter usage should compile to objj_propGuard(object, 'property', [value])
-            c. cannot allow a regular method name to collide with public property name, so may need a dup check
-            d. DOT NOTATION WILL NOT INVOKE METHOD FORWARDING--MUST BE CALLED AS METHOD FOR THAT
-        2. compiler should create an ivar for every property that doesn't already have one, as well as implement native accessors
-            a. if a getter and/or setter is declared, synthesize it instead
-            b. all accessor implementations and overrides need to be absorbed into native getter/setters
+        1. Declared properties will be auto-synthesized
+            a. Property/ivar will be created by prefixing with an underscore '_', unless one is already defined, and native getter/setter will be added
+            b. If an instance var name is specified by an @synthesize directive, it will be used instead
+            c. Any @synthesize directive without an ivar name specification should generate an error, since ivars and getter/setter must be different
+            d. If the property options include a getter and/or setter, these are added as regular methods that call defined getter/setter
+            e. all accessor implementations and overrides need to be absorbed into native getter/setters
                 1. NOTE: if only one of the getter/setter is overridden, the other must be added or it will be undefined (JS limitation on overriding accessors)
+        2. dot syntax notation will be supported
+            a. Usage is wrapped by objj_propGuard(), which prevents properties from being accessed directly
+                1. getter usage compiles to objj_propGuard(object, 'property')
+                2. setter usage compiles to objj_propGuard(object, 'property', [value])
+            c. Only declared properties can be accessed using dot notation.
+            d. DOT NOTATION WILL NOT INVOKE METHOD FORWARDING--MUST BE CALLED AS METHOD FOR THAT
+        3. CAVEATS
+            a. JS cannot distinguish between methods and properties that return a function value (including returning a class, but we can check for that)
+
     D. Methods
         1. Definitions/Declarations
             a. Colons are converted to underscores
