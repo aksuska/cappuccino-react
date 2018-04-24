@@ -171,7 +171,7 @@ export function objj_getMethod(object, selector) {
 		const descriptor = objj_propertyDescriptor(object, selector);
 		method = descriptor.get;
 	}
-	else if ((functionName = objj_setter2prop(selector)) in object)
+	else if (selector.substr(0, 3) === 'set' && (functionName = objj_setter2prop(selector)) in object)
 	{
 		// check setter
 		const descriptor = objj_propertyDescriptor(object, functionName);
