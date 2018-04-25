@@ -72,8 +72,12 @@ export function objj_propGuard(object, ...args) {
 			object = object.apply(target, args.shift());
 		else if (args.length === 1 && args[0] instanceof Array)
 		{
-			// assume that data property with single extra value is setter
-			target[property] = args.shift()[0];
+			// assume that data property with single extra value is setter, but make sure there is a defined setter
+			const descriptor = objj_propertyDescriptor(target, property);
+			if (descriptor.set)
+				target[property] = args.shift()[0];
+			else
+				objj_throw_arg("Assignment to readonly property");
 		}
 	}
 

@@ -229,6 +229,18 @@ test("objj_propGuard() throws on nonexistent property", () => {
 	}
 });
 
+test("objj_propGuard() throws on assignment to property without defined setter", () => {
+	try {
+		objj_propGuard({get prop() { return true }}, 'prop', [false]);
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.jsString).toBe(CPInvalidArgumentException.jsString);
+		expect(e.reason.jsString).toBe("Assignment to readonly property");
+	}
+});
+
 test("objj_propGuard() returns correct value on property chain", () => {
 	expect(objj_propGuard(new CPString("hello"), 'jsString', 'length')).toBe(5);
 });
