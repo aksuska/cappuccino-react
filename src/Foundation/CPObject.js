@@ -177,28 +177,34 @@ export default class CPObject {
 
 	//! @name Obtaining Information About Methods
 	//! @{
+	//! Returns an anonymous function taking arguments (self, _cmd, ...args) that calls objj_msgSend(self, aSelector, ...args). If the object doesn't respond
+	//!  to the selector (-respondsToSelector: returns NO), function will call objj_msgSend(self, @selector(doesNotRecognizeSelector:), aSelector).
 	//! @typed IMP : SEL
 	static methodForSelector_(aSelector) {
 		if (this.respondsToSelector_(aSelector)) {
-			return (self, ...args) => objj_msgSend(self, aSelector, ...args);
+			return (self, _cmd, ...args) => objj_msgSend(self, aSelector, ...args);
 		}
 		else {
-			return (self, ...args) => objj_msgSend(self, 'doesNotRecognizeSelector:', aSelector);
+			return (self, _cmd, ...args) => objj_msgSend(self, 'doesNotRecognizeSelector:', aSelector);
 		}
 	}
 
+	//! Returns an anonymous function taking arguments (self, _cmd, ...args) that calls objj_msgSend(self, aSelector, ...args). If the object doesn't respond
+	//!  to the selector (-respondsToSelector: returns NO), function will call objj_msgSend(self, @selector(doesNotRecognizeSelector:), aSelector).
 	//! @typed IMP : SEL
 	methodForSelector_(aSelector) {
 		return this.constructor.instanceMethodForSelector_(aSelector);
 	}
 
+	//! Returns an anonymous function taking arguments (self, _cmd, ...args) that calls objj_msgSend(self, aSelector, ...args). If the object doesn't respond
+	//!  to the selector (-respondsToSelector: returns NO), function will call objj_msgSend(self, @selector(doesNotRecognizeSelector:), aSelector).
 	//! @typed IMP : SEL
 	static instanceMethodForSelector_(aSelector) {
 		if (this.instancesRespondToSelector_(aSelector)) {
-			return (self, ...args) => objj_msgSend(self, aSelector, ...args);
+			return (self, _cmd, ...args) => objj_msgSend(self, aSelector, ...args);
 		}
 		else {
-			return (self, ...args) => objj_msgSend(self, 'doesNotRecognizeSelector:', aSelector);
+			return (self, _cmd, ...args) => objj_msgSend(self, 'doesNotRecognizeSelector:', aSelector);
 		}
 	}
 
