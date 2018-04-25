@@ -140,22 +140,7 @@ export default class CPObject {
 	}
 	//! @}
 
-	//! @name Testing Class Functionality
-	//! @{
-	//! @typed BOOL : SEL
-	static instancesRespondToSelector_(aSelector) {
-		// we can't call respondsToSelector as it may be overridden for forwarding, as this method must test only the implemented methods of the class
-		const instance = this.new();
-		return (instance) ? (objj_getMethod(instance, aSelector) !== undefined || this.resolveInstanceMethod_(aSelector)) : false;
-	}
-
-	//! @typed BOOL : SEL
-	static respondsToSelector_(aSelector) {
-		return (objj_getMethod(this, aSelector) !== undefined);
-	}
-	//! @}
-
-	//! @name Testing Object Inheritance, Behavior, and Conformance
+	//! @name Testing Class and Object Inheritance, Behavior, and Conformance
 	//! @{
 	//! @typed BOOL : Class
 	isKindOfClass_(aClass) {
@@ -167,6 +152,15 @@ export default class CPObject {
 		return this.constructor === aClass;
 	}
 
+	static instancesRespondToSelector_(aSelector) {
+		// we can't call respondsToSelector as it may be overridden for forwarding, as this method must test only the implemented methods of the class
+		const instance = this.new();
+		return (instance) ? (objj_getMethod(instance, aSelector) !== undefined || this.resolveInstanceMethod_(aSelector)) : false;
+	}
+
+	static respondsToSelector_(aSelector) {
+		return (objj_getMethod(this, aSelector) !== undefined);
+	}
 	//! @typed BOOL : SEL
 	respondsToSelector_(aSelector) {
 		return (objj_getMethod(this, aSelector) !== undefined);
