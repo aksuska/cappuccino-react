@@ -40,10 +40,13 @@ II. TRANSFORMATIONS
     C. Properties
         1. Declared properties will be auto-synthesized
             a. Property/ivar will be created by prefixing with an underscore '_', unless one is already defined, and native getter/setter will be added
-            b. If an instance var name is specified by an @synthesize directive, it will be used instead
-            c. Any @synthesize directive without an ivar name specification should generate an error, since ivars and getter/setter must be different
-            d. If the property options include a getter and/or setter, these are added as regular methods that call defined getter/setter
-            e. all accessor implementations and overrides need to be absorbed into native getter/setters
+                1. Must check to see if accessors are implemented; if so, use their implementation for native version
+                2. If the property options include a getter and/or setter, these are added as regular methods that call native getter/setter
+            b. @synthesize will be supported if provided.
+                1. If an instance var name is specified by the directive, it will be used instead of the default
+                2. Any @synthesize directive without an ivar name specification should generate an error, since ivars and getter/setter must be different
+            c. @dynamic will simply instruct the compiler to not generate accessors
+            d. all accessor overrides need to be absorbed into native getter/setters
                 1. NOTE: if only one of the getter/setter is overridden, the other must be added or it will be undefined (JS limitation on overriding accessors)
         2. dot syntax notation will be supported
             a. Usage is wrapped by objj_propGuard(), which prevents properties from being accessed directly
