@@ -209,7 +209,7 @@ export default class CPObject {
 	}
 
 	//! @typed CPMethodSignature : SEL
-	instanceMethodSignatureForSelector_(aSelector) {
+	static instanceMethodSignatureForSelector_(aSelector) {
 		return objj_msgSend(this.new(), 'methodSignatureForSelector:', aSelector);
 	}
 
