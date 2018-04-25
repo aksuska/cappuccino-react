@@ -4,7 +4,6 @@
 
 import objj_msgSend, {
 	objj_propGuard,
-	objj_function,
 	objj_string,
 	objj_methodSignature,
 	objj_throw_arg,
