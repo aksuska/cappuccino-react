@@ -37,7 +37,6 @@ export default class CPObject {
 	static get initialized() {
 		return this.hasOwnProperty("$$initialized") ? this.$$initialized : false;
 	}
-	static set initialized(anything) {objj_throw_arg("Assignment to readonly property");}
 
 	//! @name Initializing a Class
 	//! @{
@@ -115,7 +114,6 @@ export default class CPObject {
 
 	//! @property(readonly) Class superclass
 	get superclass() {return (this.constructor === CPObject) ? null : Object.getPrototypeOf(this.constructor);}
-	set superclass(anything) {objj_throw_arg("Assignment to readonly property");}
 
 	//! @typed BOOL : Class
 	static isSubclassOfClass_(aClass) {
@@ -125,7 +123,6 @@ export default class CPObject {
 	//! This property shows under the "Scripting" group in Cocoa docs but since there is no useful equivalent in JS, and this property is otherwise useful, we put it here.
 	//! @property(readonly, copy) CPString className
 	get className() {return objj_string(this.constructor.name);}
-	set className(anything) {objj_throw_arg("Assignment to readonly property");}
 	//! @}
 
 	//! @name Identifying and Comparing Objects
@@ -137,7 +134,6 @@ export default class CPObject {
 
 	//! @property(readonly) CPUInteger hash
 	get hash() {return this.$$UID;}
-	set hash(anything) {objj_throw_arg("Assignment to readonly property");}
 
 	//! @typed instancetype : void
 	self() {
@@ -249,7 +245,6 @@ export default class CPObject {
 
 	//! @property(readonly, copy) CPString description
 	get description() {return objj_string(`<${this.constructor.name}: ${this.$$uidString()}>`);}
-	set description(anything) {objj_throw_arg("Assignment to readonly property");}
 
 	//! @typed CPString : void
 	static debugDescription() {
@@ -258,7 +253,6 @@ export default class CPObject {
 
 	//! @property(readonly, copy) CPString debugDescription
 	get debugDescription() {return this.description();}
-	set debugDescription(anything) {objj_throw_arg("Assignment to readonly property");}
 	//! @}
 
 	//! @name Sending Messages
@@ -336,7 +330,6 @@ export default class CPObject {
 	//! @{
 	//! @property(readonly, copy) CPArray<CPString> exposedBindings
 	get exposedBindings() {return this.$$exposedBindings;}
-	set exposedBindings(anything) {objj_throw_arg("Assignment to readonly property");}
 
 	//! @property () Object observationInfo
 	get observationInfo() {return this.$$observationInfo;}

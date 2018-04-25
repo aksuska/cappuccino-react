@@ -23,27 +23,22 @@ export default class CPException extends CPObject {
 
 	//! @property(readonly, copy) CPString name
 	get name() {return this.$$name;}
-	set name(anything) {objj_throw_arg("Assignment to readonly property");}
 
 	//! @property(readonly, copy) CPString reason
 	get reason() {return this.$$reason;}
-	set reason(anything) {objj_throw_arg("Assignment to readonly property");}
 
 	//! @property(readonly, copy) CPDictionary userInfo
 	get userInfo() {return this.$$userInfo;}
-	set userInfo(anything) {objj_throw_arg("Assignment to readonly property");}
 
 	/*!
 	 * Browsers don't provide a reliable way to parse a call stack, so we just return the entries from new Error().stack
 	 * @property(readonly, copy) CPArray<CPString> callStackReturnAddresses
 	 */
 	get callStackReturnAddresses() {return this.$$callStackReturnAddresses;}
-	set callStackReturnAddresses(anything) {objj_throw_arg("Assignment to readonly property");}
 
 	//! Browsers don't provide a reliable way to parse a call stack, so we just return the entries from new Error().stack
 	//! @property(readonly, copy) CPArray<CPString> callStackSymbols
 	get callStackSymbols() {return this.$$callStackSymbols;}
-	set callStackSymbols(anything) {objj_throw_arg("Assignment to readonly property");}
 
 	//! @typed CPException : CPString, CPString, CPDictionary
 	static exceptionWithName_reason_userInfo_(name, reason, userInfo) {

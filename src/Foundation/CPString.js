@@ -24,15 +24,12 @@ export default class CPString extends CPObject {
 
 	//! @property(readonly) CPUInteger hash
 	get hash() {return this.$$hashCode;}
-	set hash(anything) {objj_throw_arg("Assignment to readonly property");}
 
 	//! @property(readonly, copy) CPString description
 	get description() {return this;}
-	set description(anything) {objj_throw_arg("Assignment to readonly property");}
 
 	//! @property(readonly, copy) string jsString
 	get jsString() {return this.$$jsString;}
-	set jsString(anything) {objj_throw_arg("Assignment to readonly property");}
 
 	//! @typed instancetype : void
 	static string() {

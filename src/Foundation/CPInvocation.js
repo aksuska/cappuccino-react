@@ -24,12 +24,10 @@ export default class CPInvocation extends CPObject {
 
 	//! @property(readonly, strong) CPMethodSignature methodSignature
 	get methodSignature() {return this.$$methodSignature;}
-	set methodSignature(anything) {objj_throw_arg("Assignment to readonly property");}
 
 	//! Property will always be YES. See -retainArguments for more information.
 	//! @property(readonly) BOOL argumentsRetained
 	get argumentsRetained() {return true;}
-	set argumentsRetained(anything) {objj_throw_arg("Assignment to readonly property");}
 
 	//! @typed CPInvocation : CPMethodSignature
 	static invocationWithMethodSignature_(sig) {

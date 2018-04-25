@@ -15,21 +15,17 @@ export default class CPMethodSignature extends CPObject {
 	//! Property will always be '@' since we currently don't have a means of determining a method's return type
 	//! @property(readonly) string methodReturnType
 	get methodReturnType() {return this.$$typeList[0];}
-	set methodReturnType(anything) {objj_throw_arg("Assignment to readonly property");}
 
 	//! Property will always be 1 since there is no real JS equivalent
 	//! @property(readonly) CPUInteger methodReturnLength
 	get methodReturnLength() {return 1;}
-	set methodReturnLength(anything) {objj_throw_arg("Assignment to readonly property");}
 
 	//! @property(readonly) CPUInteger numberOfArguments
 	get numberOfArguments() {return this.$$typeList.length - 1;}
-	set numberOfArguments(anything) {objj_throw_arg("Assignment to readonly property");}
 
 	//! Property will always be 1 since there is no real JS equivalent
 	//! @property(readonly) CPUInteger frameLength
 	get frameLength() {return 1;}
-	set frameLength(anything) {objj_throw_arg("Assignment to readonly property");}
 
 	//! @typed CPMethodSignature : string
 	static signatureWithObjCTypes_(typeString) {
