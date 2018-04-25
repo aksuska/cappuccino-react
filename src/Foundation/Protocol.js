@@ -8,7 +8,7 @@ export default class Protocol {
 	$_inherits;
 	$_methods = [];
 
-	constructor(name, inherits) {
+	constructor(name, inherits = null) {
 		this.$_name = name;
 		this.$_inherits = inherits;
 	}
