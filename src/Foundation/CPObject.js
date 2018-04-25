@@ -147,7 +147,7 @@ export default class CPObject {
 	static instancesRespondToSelector_(aSelector) {
 		// we can't call respondsToSelector as it may be overridden for forwarding, as this method must test only the implemented methods of the class
 		const instance = this.new();
-		return (instance) ? (Reflect.has(instance, objj_function(aSelector)) || this.resolveInstanceMethod_(aSelector)) : false;
+		return (instance) ? (objj_getMethod(instance, aSelector) !== undefined || this.resolveInstanceMethod_(aSelector)) : false;
 	}
 
 	//! @typed BOOL : SEL
