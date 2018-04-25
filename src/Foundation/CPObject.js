@@ -155,14 +155,6 @@ export default class CPObject {
 	}
 	//! @}
 
-	//! @name Testing Protocol Conformance
-	//! @{
-	//! @typed BOOL : Protocol
-	static conformsToProtocol_(protocol) {
-		return this.$$conformsTo.includes(protocol.name);
-	}
-	//! @}
-
 	//! @name Testing Object Inheritance, Behavior, and Conformance
 	//! @{
 	//! @typed BOOL : Class
@@ -180,6 +172,9 @@ export default class CPObject {
 		return (objj_getMethod(this, aSelector) !== undefined);
 	}
 
+	static conformsToProtocol_(protocol) {
+		return this.$$conformsTo.includes(protocol.name);
+	}
 	//! @typed BOOL : Protocol
 	conformsToProtocol_(protocol) {
 		return this.constructor.$$conformsTo.includes(protocol.name);
