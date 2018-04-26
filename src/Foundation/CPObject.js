@@ -246,7 +246,7 @@ export default class CPObject {
 	}
 
 	//! @property(readonly, copy) CPString debugDescription
-	get debugDescription() {return this.description();}
+	get debugDescription() {return this.description;}
 	//! @}
 
 	//! @name Sending Messages
