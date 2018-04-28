@@ -338,14 +338,14 @@ export default class CPObject {
 		return null;
 	}
 
-	//! @typed void : CPInvocation
-	static forwardInvocation_(invocation) {
-		this.doesNotRecognizeSelector_(objj_propGuard(invocation, 'selector'));
-	}
-
 	//! @typed ID : SEL
 	forwardingTargetForSelector_(aSelector) {
 		return null;
+	}
+
+	//! @typed void : CPInvocation
+	static forwardInvocation_(invocation) {
+		this.doesNotRecognizeSelector_(objj_propGuard(invocation, 'selector'));
 	}
 
 	//! @typed void : CPInvocation
