@@ -164,6 +164,9 @@ export function objj_propertyDescriptor(object, property) {
 */
 
 export function objj_getMethod(object, selector) {
+	// null just means undefined
+	if (selector === null) return undefined;
+
 	let functionName = objj_function(selector), method;
 	// It is not possible in JS to reliably determine whether a property is a data member returning a function or a method, so we have
 	// to treat them as if they are the same thing. One exception is if it inherits from CPObject, which we can check for.

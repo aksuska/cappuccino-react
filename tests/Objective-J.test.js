@@ -60,6 +60,10 @@ test("objj_string() returns CPString instance", () => {
 	expect(objj_string("hello")).toBeInstanceOf(CPString);
 });
 
+test("objj_getMethod() returns undefined for null selector", () => {
+	expect(objj_getMethod(CPObject, null)).toBeUndefined();
+});
+
 test("objj_getMethod() returns undefined for no such selector", () => {
 	expect(objj_getMethod(CPObject, 'bogus')).toBeUndefined();
 });
