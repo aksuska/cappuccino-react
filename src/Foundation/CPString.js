@@ -1,4 +1,4 @@
-/*!
+/*
  * Module that contains NSString class emulation and related symbols. We maintain a has-a relationship with a native JS string.
  **/
 
@@ -29,6 +29,7 @@ export default class CPString extends CPObject {
 	get description() {return this;}
 
 	//! @property(readonly, copy) string jsString
+	//! Returns the native JS string that backs the NSArray
 	get jsString() {return this.$$jsString;}
 
 	//! @typed instancetype : void
