@@ -7,7 +7,7 @@ import objj_msgSend, {
 	objj_string,
 	objj_methodSignature,
 	objj_throw_arg,
-	objj_getMethod, objj_oid
+	objj_getMethod, objj_oid, objj_array
 } from '../Objective-J';
 const sprintf = require('sprintf-js').sprintf;
 
@@ -60,7 +60,7 @@ export default class CPObject {
 
 	//! @typed instancetype : void
 	init() {
-		this.$$exposedBindings = [];
+		this.$$exposedBindings = objj_array([]);
 		this.$$observationInfo = {};
 
 		return this;
