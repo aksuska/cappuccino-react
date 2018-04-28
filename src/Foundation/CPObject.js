@@ -67,11 +67,16 @@ export default class CPObject {
 	}
 
 	//! @typed id : void
+	static copy() {
+		return objj_msgSend(this, 'copyWithZone:', null);
+	}
+
+	//! @typed id : void
 	copy() {
 		return objj_msgSend(this, 'copyWithZone:', null);
 	}
 
-	//! @typed id : @ignored
+	//! @typed id : null
 	static copyWithZone_(zone) {
 		// all class objects are unique
 		return this;
@@ -82,7 +87,12 @@ export default class CPObject {
 		return objj_msgSend(this, 'mutableCopyWithZone:', null);
 	}
 
-	//! @typed id : @ignored
+	//! @typed id : void
+	static mutableCopy() {
+		return objj_msgSend(this, 'mutableCopyWithZone:', null);
+	}
+
+	//! @typed id : null
 	static mutableCopyWithZone_(zone) {
 		// all class objects are unique
 		return this;
@@ -106,8 +116,8 @@ export default class CPObject {
 		return this.constructor;
 	}
 
-	//! @typed Class : void
-	static superclass() {
+	//! @property(class, readonly) Class superclass
+	static get superclass() {
 		return (this === CPObject) ? null : Object.getPrototypeOf(this);
 	}
 
@@ -116,8 +126,16 @@ export default class CPObject {
 
 	//! @typed BOOL : Class
 	static isSubclassOfClass_(aClass) {
-		return typeof aClass === 'function' ? Object.create(this.prototype) instanceof aClass : false;
+		for (let targetClass = this; targetClass !== Object.getPrototypeOf(CPObject); targetClass = Object.getPrototypeOf(targetClass)) {
+			if (targetClass === aClass)
+				return true;
+		}
+		return false;
 	}
+
+	//! This property shows under the "Scripting" group in Cocoa docs but since there is no useful equivalent in JS, and this property is otherwise useful, we put it here.
+	//! @property(class, readonly, copy) CPString className
+	static get className() {return objj_string(this.name);}
 
 	//! This property shows under the "Scripting" group in Cocoa docs but since there is no useful equivalent in JS, and this property is otherwise useful, we put it here.
 	//! @property(readonly, copy) CPString className
@@ -126,13 +144,26 @@ export default class CPObject {
 
 	//! @name Identifying and Comparing Objects
 	//! @{
+	//! @typed BOOL : Class
+	static isEqual_(aClass) {
+		return this === aClass;
+	}
+
 	//! @typed BOOL : id
 	isEqual_(object) {
 		return this.hash === object.hash;
 	}
 
+	//! @property(class, readonly) CPUInteger hash
+	static get hash() {return (this.$$UID === undefined ? this.$$UID = objj_oid() : this.$$UID);}
+
 	//! @property(readonly) CPUInteger hash
 	get hash() {return this.$$UID;}
+
+	//! @typed Class : void
+	static self() {
+		return this;
+	}
 
 	//! @typed instancetype : void
 	self() {
@@ -143,10 +174,20 @@ export default class CPObject {
 	//! @name Testing Class and Object Inheritance, Behavior, and Conformance
 	//! @{
 	//! @typed BOOL : Class
+	static isKindOfClass_(aClass) {
+		for (let targetClass = this; targetClass !== Object.getPrototypeOf(CPObject); targetClass = Object.getPrototypeOf(targetClass)) {
+			if (targetClass === aClass)
+				return true;
+		}
+		return false;
+	}
+
+	//! @typed BOOL : Class
 	isKindOfClass_(aClass) {
 		return this instanceof aClass;
 	}
 
+	//! Technically, CPObject should respond to +isMemberOfClass: but the answer is always NO and since there is no use case we just don't include it.
 	//! @typed BOOL : Class
 	isMemberOfClass_(aClass) {
 		return this.constructor === aClass;
@@ -154,8 +195,7 @@ export default class CPObject {
 
 	static instancesRespondToSelector_(aSelector) {
 		// we can't call respondsToSelector as it may be overridden for forwarding, as this method must test only the implemented methods of the class
-		const instance = this.new();
-		return (instance) ? (objj_getMethod(instance, aSelector) !== undefined || this.resolveInstanceMethod_(aSelector)) : false;
+		return objj_getMethod(this.prototype, aSelector) !== undefined || this.resolveInstanceMethod_(aSelector);
 	}
 
 	static respondsToSelector_(aSelector) {
@@ -210,7 +250,7 @@ export default class CPObject {
 
 	//! @typed CPMethodSignature : SEL
 	static instanceMethodSignatureForSelector_(aSelector) {
-		return objj_msgSend(this.new(), 'methodSignatureForSelector:', aSelector);
+		return objj_msgSend(this.prototype, 'methodSignatureForSelector:', aSelector);
 	}
 
 	//! @typed CPMethodSignature : SEL
@@ -232,17 +272,17 @@ export default class CPObject {
 
 	//! @name Describing Objects
 	//! @{
-	//! @typed CPString : void
-	static description() {
+	//! @property(class, readonly, copy) CPString description
+	static get description() {
 		return objj_string(this.name);
 	}
 
 	//! @property(readonly, copy) CPString description
 	get description() {return objj_string(`<${this.constructor.name}: ${this.$$uidString()}>`);}
 
-	//! @typed CPString : void
-	static debugDescription() {
-		return this.description();
+	//! @property(class, readonly, copy) CPString debugDescription
+	static get debugDescription() {
+		return this.description;
 	}
 
 	//! @property(readonly, copy) CPString debugDescription
@@ -252,13 +292,28 @@ export default class CPObject {
 	//! @name Sending Messages
 	//! @{
 	//! @typed id : SEL
+	static performSelector_(aSelector) {
+		return objj_msgSend(this, aSelector);
+	}
+
+	//! @typed id : SEL
 	performSelector_(aSelector) {
 		return objj_msgSend(this, aSelector);
 	}
 
 	//! @typed id : SEL, id
+	static performSelector_withObject_(aSelector, object) {
+		return objj_msgSend(this, aSelector, object);
+	}
+
+	//! @typed id : SEL, id
 	performSelector_withObject_(aSelector, object) {
 		return objj_msgSend(this, aSelector, object);
+	}
+
+	//! @typed id : SEL, id, id
+	static performSelector_withObject_withObject_(aSelector, object1, object2) {
+		return objj_msgSend(this, aSelector, object1, object2);
 	}
 
 	//! @typed id : SEL, id, id
@@ -333,6 +388,7 @@ export default class CPObject {
 	//! @name Instance Methods
 	//! TODO: do we think that there is a use case to implement the accessibility API? Is it mappable to ARIA?
 	//! @{
+	//! Technically, CPObject should respond to +isProxy but the answer is always NO and since there is no use case we just don't include it.
 	//! @typed BOOL : void
 	isProxy() {
 		return false;
