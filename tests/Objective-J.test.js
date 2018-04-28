@@ -7,14 +7,15 @@ import objj_msgSend, {
 	objj_invocation,
 	objj_methodSignature,
 	objj_throw_arg,
-	objj_prop2setter, objj_setter2prop, objj_getMethod
+	objj_prop2setter, objj_setter2prop, objj_getMethod, objj_array
 } from '../src/Objective-J';
 import {
 	CPObject,
 	CPString,
 	CPInvocation,
 	CPInvalidArgumentException,
-	CPMethodSignature
+	CPMethodSignature,
+	CPArray
 } from '../src/Foundation/Foundation';
 
 /*
@@ -127,6 +128,12 @@ test("objj_invocation() returns configured CPInvocation instance", () => {
 	expect(arg).toBe('arg1');
 	invocation.getArgument_atIndex_(argRef, 3);
 	expect(arg).toBe('arg2');
+});
+
+test("objj_array() returns CPArray instance", () => {
+	const array = objj_array([1, 2, 3]);
+	expect(array).toBeInstanceOf(CPArray);
+	expect(array.jsArray).toEqual([1, 2, 3]);
 });
 
 /*

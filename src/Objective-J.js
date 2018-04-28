@@ -8,6 +8,7 @@ import CPString from './Foundation/CPString';
 import CPMethodSignature from './Foundation/CPMethodSignature';
 import CPInvocation from './Foundation/CPInvocation';
 import CPException, {CPInvalidArgumentException} from './Foundation/CPException';
+import CPArray from './Foundation/CPArray';
 
 /*!
 	* A "decorator" kind of function that facilitates making null-targeted methods into no-ops and handles message forwarding. Compiler rewrites all method calls to this function.
@@ -233,4 +234,9 @@ export function objj_invocation(target, selector, ...args) {
 		return invocation;
 	}
 	return null;
+}
+
+//! wrapper for CPArray creation
+export function objj_array(array) {
+	return new CPArray(array);
 }
