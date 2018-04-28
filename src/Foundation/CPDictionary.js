@@ -1,4 +1,4 @@
-/*!
+/*
  * Module that contains NSDictionary class emulation and related symbols. We maintain a has-a relationship with a native Map object
  **/
 
@@ -35,9 +35,11 @@ export default class CPDictionary extends CPObject {
 			this.$$jsMap.set(ourKey, object);
 	}
 
-	//! @typed id : @ignored
+	//! @typed id : null
 	copyWithZone_(zone) {
 		// cocoa just returns the same object, so we'll do the same
 		return this;
 	}
 }
+
+CPDictionary.$$conformsTo.push('CPCopying', 'CPMutableCopying');
