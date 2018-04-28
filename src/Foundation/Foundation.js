@@ -12,6 +12,7 @@ import CPMethodSignature from './CPMethodSignature';
 import CPInvocation from './CPInvocation';
 import CPException, {CPInvalidArgumentException} from './CPException';
 import CPDictionary from "./CPDictionary";
+import CPArray from './CPArray';
 
 /*
  * Objective-J Runtime Exports
@@ -24,7 +25,7 @@ export {Protocol};
  * Object Exports
 */
 
-export {CPObject, CPString, CPException, CPInvalidArgumentException, CPMethodSignature, CPInvocation, CPDictionary};
+export {CPObject, CPString, CPException, CPInvalidArgumentException, CPMethodSignature, CPInvocation, CPDictionary, CPArray};
 
 /*
  * Selector Function Exports
