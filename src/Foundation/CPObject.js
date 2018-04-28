@@ -293,27 +293,36 @@ export default class CPObject {
 	//! @{
 	//! @typed id : SEL
 	static performSelector_(aSelector) {
-		return objj_msgSend(this, aSelector);
+		return this.performSelector_withObject_withObject_(aSelector, null, null);
 	}
 
 	//! @typed id : SEL
 	performSelector_(aSelector) {
-		return objj_msgSend(this, aSelector);
+		return this.performSelector_withObject_withObject_(aSelector, null, null);
 	}
 
 	//! @typed id : SEL, id
 	static performSelector_withObject_(aSelector, object) {
-		return objj_msgSend(this, aSelector, object);
+		return this.performSelector_withObject_withObject_(aSelector, object, null);
 	}
 
 	//! @typed id : SEL, id
 	performSelector_withObject_(aSelector, object) {
-		return objj_msgSend(this, aSelector, object);
+		return this.performSelector_withObject_withObject_(aSelector, object, null);
 	}
 
 	//! @typed id : SEL, id, id
 	static performSelector_withObject_withObject_(aSelector, object1, object2) {
-		return objj_msgSend(this, aSelector, object1, object2);
+		// if method takes more than two arguments, need to pass null for them
+		let args = [object1, object2];
+		const sig = this.methodSignatureForSelector_(aSelector);
+		if (sig !== null) {
+			const argCount = sig.numberOfArguments;
+			for (let i=2; i<argCount; i++) {
+				args.push(null);
+			}
+		}
+		return objj_msgSend(this, aSelector, ...args);
 	}
 
 	//! @typed id : SEL, id, id
