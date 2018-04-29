@@ -18,6 +18,7 @@ export function objj_CPObject(superClass = Object) {
 	//!  reasonably apply to all objects should be defined here.
 	const metaClass = class CPObject extends superClass {
 
+		static $UID = null;
 		static $initialized = false;
 		static $conformsTo = [];
 
