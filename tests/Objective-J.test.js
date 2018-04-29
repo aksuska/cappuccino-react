@@ -3,7 +3,6 @@ import objj_msgSend, {
 	objj_initialize,
 	objj_function,
 	objj_propertyDescriptor,
-	objj_string,
 	objj_invocation,
 	objj_methodSignature,
 	objj_throw_arg,
@@ -55,10 +54,6 @@ test("objj_prop2setter() returns proper setter selector", () => {
 
 test("objj_setter2prop() returns proper property name from setter selector", () => {
 	expect(objj_setter2prop('setPropValue:')).toBe('propValue');
-});
-
-test("objj_string() returns CPString instance", () => {
-	expect(objj_string("hello")).toBeInstanceOf(CPString);
 });
 
 test("objj_getMethod() returns undefined for null selector", () => {

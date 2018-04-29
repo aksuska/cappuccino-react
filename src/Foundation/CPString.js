@@ -3,11 +3,11 @@
  **/
 
 import {objj_propGuard, objj_throw_arg} from '../Objective-J';
-import CPObject from './CPObject';
+import {objj_CPObject} from './CPObject';
 const vsprintf = require("sprintf-js").vsprintf;
 
 //! NSString Cocoa Foundation class emulation
-export default class CPString extends CPObject {
+export default class CPString extends objj_CPObject(Object) {
 
 	$jsString = '';
 	$hashCode = 0;
@@ -122,7 +122,7 @@ export default class CPString extends CPObject {
 
 		// %@ will always be a string, so convert, but objects must change to description
 		let formatString = format.jsString.replace(/%@/, '%s');
-		let values = args.map(element => element instanceof CPObject ? objj_propGuard(element, 'description', 'jsString') : element);
+		let values = args.map(element => element['$ISA'] === 'CPObject' ? objj_propGuard(element, 'description', 'jsString') : element);
 		return this.initWithString_(new CPString(vsprintf(formatString, values)));
 	}
 

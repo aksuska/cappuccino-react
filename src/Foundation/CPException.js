@@ -2,16 +2,15 @@
  * Module that contains NSException class emulation and related symbols.
  **/
 
-import {objj_initialize, objj_string, objj_throw_arg} from '../Objective-J';
-import CPObject from './CPObject';
+import objj_msgSend, {objj_initialize} from '../Objective-J';
+import {objj_CPObject} from './CPObject';
 import CPString from './CPString';
-import objj_msgSend from "../Objective-J";
 
 //! @typed CPString
-export const CPInvalidArgumentException = objj_string("CPInvalidArgumentException");
+export const CPInvalidArgumentException = new CPString("CPInvalidArgumentException");
 
 //! NSException Cocoa Foundation class emulation
-export default class CPException extends CPObject {
+export default class CPException extends objj_CPObject(Error) {
 
 	static $uncaughtExceptionHandler = null;
 

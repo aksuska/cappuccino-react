@@ -4,12 +4,11 @@
 
 import objj_msgSend, {
 	objj_propGuard,
-	objj_string,
 	objj_methodSignature,
 	objj_throw_arg,
 	objj_getMethod, objj_oid, objj_array
 } from '../Objective-J';
-
+import CPString from './CPString';
 const sprintf = require('sprintf-js').sprintf;
 
 export function objj_CPObject(superClass = Object) {
@@ -297,12 +296,12 @@ export function objj_CPObject(superClass = Object) {
 		//! @{
 		//! @property(class, readonly, copy) CPString description
 		static get description() {
-			return objj_string(this.name);
+			return new CPString(this.name);
 		}
 
 		//! @property(readonly, copy) CPString description
 		get description() {
-			return objj_string(`<${this.constructor.name}: ${this.$$uidString()}>`);
+			return new CPString(`<${this.constructor.name}: ${this.$uidString()}>`);
 		}
 
 		//! @property(class, readonly, copy) CPString debugDescription

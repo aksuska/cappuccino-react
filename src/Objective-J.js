@@ -197,11 +197,6 @@ export function objj_getMethod(object, selector) {
  * Convenience functions for creating objects that may depends on caller declaration, to avoid circular dependencies.
 */
 
-//! wrapper for string convenience constructor
-export function objj_string(string) {
-	return new CPString(string);
-}
-
 //! wrapper for method signature creation
 export function objj_methodSignature(object, selector) {
 	let method = objj_getMethod(object, selector);
