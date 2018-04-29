@@ -6,7 +6,7 @@
 import objj_msgSend, {objj_propGuard} from '../Objective-J';
 import Protocol from './Protocol';
 // object imports
-import CPObject from './CPObject';
+import CPObject, {objj_CPObject} from './CPObject';
 import CPString from './CPString';
 import CPMethodSignature from './CPMethodSignature';
 import CPInvocation from './CPInvocation';
@@ -25,7 +25,7 @@ export {Protocol};
  * Object Exports
 */
 
-export {CPObject, CPString, CPException, CPInvalidArgumentException, CPMethodSignature, CPInvocation, CPDictionary, CPArray};
+export {objj_CPObject, CPObject, CPString, CPException, CPInvalidArgumentException, CPMethodSignature, CPInvocation, CPDictionary, CPArray};
 
 /*
  * Selector Function Exports
