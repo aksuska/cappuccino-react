@@ -101,7 +101,7 @@ test("objj_methodSignature() returns signature or null", () => {
 	const MyObject = class extends CPObject { testMethod_(arg) {return true;} };
 	let sig = objj_methodSignature(new MyObject(), 'testMethod:');
 	expect(sig).toBeInstanceOf(CPMethodSignature);
-	expect(sig.$$typeList.join('')).toBe('@@:@');
+	expect(sig.$typeList.join('')).toBe('@@:@');
 });
 
 test("objj_throw_arg() throws expected exception", () => {
@@ -176,7 +176,7 @@ test("objj_msgSend() missing defined getter throws 'does not recognize' exceptio
 	}
 	catch (e) {
 		expect(e.name.jsString).toBe(CPInvalidArgumentException.jsString);
-		expect(e.reason.jsString).toBe(`-[MyObject prop]: unrecognized selector sent to instance ${object.$$uidString()}`);
+		expect(e.reason.jsString).toBe(`-[MyObject prop]: unrecognized selector sent to instance ${object.$uidString()}`);
 	}
 });
 
@@ -195,7 +195,7 @@ test("objj_msgSend() setter as selector: missing defined setter throws 'does not
 	}
 	catch (e) {
 		expect(e.name.jsString).toBe(CPInvalidArgumentException.jsString);
-		expect(e.reason.jsString).toBe(`-[MyObject setProp:]: unrecognized selector sent to instance ${object.$$uidString()}`);
+		expect(e.reason.jsString).toBe(`-[MyObject setProp:]: unrecognized selector sent to instance ${object.$uidString()}`);
 	}
 });
 

@@ -8,12 +8,12 @@ import CPObject from './CPObject';
 //! NSDictionary Cocoa Foundation class emulation
 export default class CPDictionary extends CPObject {
 
-	$$jsMap;
+	$jsMap;
 	
 	// we use this a convenience constructor for shorthand conversion of literal syntax @{key: value, ...}
 	constructor(...args) {
 		super();
-		this.$$jsMap = new Map();
+		this.$jsMap = new Map();
 		for (let i=0; i<args.length; i+=2) {
 			this.$setObjectForKey(args[i+1], args[i]);
 		}
@@ -32,7 +32,7 @@ export default class CPDictionary extends CPObject {
 		if (ourKey === null)
 			objj_throw_arg("-[%@ setObject:forKey:]: key cannot be null", this.className);
 		else
-			this.$$jsMap.set(ourKey, object);
+			this.$jsMap.set(ourKey, object);
 	}
 
 	//! @typed id : null
@@ -42,4 +42,4 @@ export default class CPDictionary extends CPObject {
 	}
 }
 
-CPDictionary.$$conformsTo.push('CPCopying', 'CPMutableCopying');
+CPDictionary.$conformsTo.push('CPCopying', 'CPMutableCopying');

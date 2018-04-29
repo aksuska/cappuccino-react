@@ -8,22 +8,22 @@ import CPObject from './CPObject';
 //! NSArray Cocoa Foundation class emulation
 export default class CPArray extends CPObject {
 
-	$$jsArray;
+	$jsArray;
 
 	// we use this a convenience constructor for shorthand conversion of literal syntax @[value1, value2, ...]
 	constructor(anArray) {
 		super();
-		this.$$jsArray = anArray.slice();
+		this.$jsArray = anArray.slice();
 	}
 
 	//! @property(readonly, copy) string jsArray
 	//! Returns a copy of the native JS array that backs the NSArray
-	get jsArray() {return this.$$jsArray.slice();}
+	get jsArray() {return this.$jsArray.slice();}
 
 	//! @name Querying an Array
 	//! @{
 	//! @property(readonly) CPUInteger count
-	get count() { return this.$$jsArray.length}
+	get count() { return this.$jsArray.length}
 	//! @}
 
 	//! @typed id : null
@@ -33,4 +33,4 @@ export default class CPArray extends CPObject {
 	}
 }
 
-CPArray.$$conformsTo.push('CPCopying', 'CPMutableCopying');
+CPArray.$conformsTo.push('CPCopying', 'CPMutableCopying');

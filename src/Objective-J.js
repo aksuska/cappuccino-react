@@ -101,7 +101,7 @@ export function objj_initialize(aClass) {
 	for (let i = 0; i < chain.length; i++) {
 		let targetClass = chain[i];
 		targetClass.initialize();
-		targetClass.$$initialized = true;
+		targetClass.$initialized = true;
 		targetClass.load();
 	}
 
@@ -114,9 +114,9 @@ export function objj_initialize(aClass) {
 */
 
 export function objj_oid() {
-	return ++objj_oid.$$oidCounter;
+	return ++objj_oid.$oidCounter;
 }
-objj_oid.$$oidCounter = 0;
+objj_oid.$oidCounter = 0;
 
 /*!
  * Converts Objective-J selector string into the javascript function name
@@ -171,7 +171,7 @@ export function objj_getMethod(object, selector) {
 	let functionName = objj_function(selector), method;
 	// It is not possible in JS to reliably determine whether a property is a data member returning a function or a method, so we have
 	// to treat them as if they are the same thing. One exception is if it inherits from CPObject, which we can check for.
-	if (typeof object[functionName] === 'function' && '$$initialized' in object[functionName] === false) {
+	if (typeof object[functionName] === 'function' && '$initialized' in object[functionName] === false) {
 		method = object[functionName];
 	}
 	else if (functionName in object) {

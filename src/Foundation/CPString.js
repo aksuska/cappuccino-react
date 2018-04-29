@@ -9,28 +9,28 @@ const vsprintf = require("sprintf-js").vsprintf;
 //! NSString Cocoa Foundation class emulation
 export default class CPString extends CPObject {
 
-	$$jsString = '';
-	$$hashCode = 0;
+	$jsString = '';
+	$hashCode = 0;
 
 	// we use this a convenience constructor so we can do shorthand conversions
 	constructor(jsString) {
 		super();
 		if (jsString !== null && jsString !== undefined)
 		{
-			this.$$jsString = jsString;
+			this.$jsString = jsString;
 			this.$generateHash();
 		}
 	}
 
 	//! @property(readonly) CPUInteger hash
-	get hash() {return this.$$hashCode;}
+	get hash() {return this.$hashCode;}
 
 	//! @property(readonly, copy) CPString description
 	get description() {return this;}
 
 	//! @property(readonly, copy) string jsString
 	//! Returns the native JS string that backs the NSArray
-	get jsString() {return this.$$jsString;}
+	get jsString() {return this.$jsString;}
 
 	//! @typed instancetype : void
 	static string() {
@@ -54,7 +54,7 @@ export default class CPString extends CPObject {
 	}
 
 	$generateHash() {
-		let source = this.$$jsString, length = source.length, result = length;
+		let source = this.$jsString, length = source.length, result = length;
 		if (result <= 96) {
 			// First count in fours
 			for (let i = 0; i < length; i += 4) {
@@ -78,7 +78,7 @@ export default class CPString extends CPObject {
 				result = result * 67503105 + source.charCodeAt(i) * 16974593 + source.charCodeAt(i + 1) * 66049 + source.charCodeAt(i + 2) * 257 + source.charCodeAt(i + 3);
 			}
 		}
-		this.$$hashCode = result + (result << (length & 31));
+		this.$hashCode = result + (result << (length & 31));
 	}
 
 	//! @typed instancetype : CPString
@@ -90,7 +90,7 @@ export default class CPString extends CPObject {
 
 		let self = super.init();
 		if (self) {
-			self.$$jsString = aString.$$jsString;
+			self.$jsString = aString.$jsString;
 			self.$generateHash();
 		}
 		return self;

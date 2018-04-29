@@ -10,18 +10,18 @@ import CPObject from './CPObject';
 //! NSMethodSignature Cocoa Foundation class emulation
 export default class CPMethodSignature extends CPObject {
 	
-	$$typeList = [];
+	$typeList = [];
 	
 	//! Property will always be '@' since we currently don't have a means of determining a method's return type
 	//! @property(readonly) string methodReturnType
-	get methodReturnType() {return this.$$typeList[0];}
+	get methodReturnType() {return this.$typeList[0];}
 
 	//! Property will always be 1 since there is no real JS equivalent
 	//! @property(readonly) CPUInteger methodReturnLength
 	get methodReturnLength() {return 1;}
 
 	//! @property(readonly) CPUInteger numberOfArguments
-	get numberOfArguments() {return this.$$typeList.length - 1;}
+	get numberOfArguments() {return this.$typeList.length - 1;}
 
 	//! Property will always be 1 since there is no real JS equivalent
 	//! @property(readonly) CPUInteger frameLength
@@ -31,17 +31,17 @@ export default class CPMethodSignature extends CPObject {
 	static signatureWithObjCTypes_(typeString) {
 		let sig = this.new();
 		if (sig) {
-			sig.$$typeList = typeString.split('');
+			sig.$typeList = typeString.split('');
 		}
 		return sig;
 	}
 
 	//! @typed string : CPUInteger
 	getArgumentTypeAtIndex_(idx) {
-		if (idx >= this.$$typeList.length)
-			objj_throw_arg( "-[%@ getArgumentTypeAtIndex:]: index (%i) out of bounds [0, %i]", this.className, idx, this.$$typeList.length - 1);
+		if (idx >= this.$typeList.length)
+			objj_throw_arg( "-[%@ getArgumentTypeAtIndex:]: index (%i) out of bounds [0, %i]", this.className, idx, this.$typeList.length - 1);
 		
-		return this.$$typeList[idx];
+		return this.$typeList[idx];
 	}
 	
 	//! Currently N/A since we don't have an emulation of Distributed Objects, but always returns YES since that is usually the right answer

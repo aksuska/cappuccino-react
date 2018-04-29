@@ -13,40 +13,40 @@ export const CPInvalidArgumentException = objj_string("CPInvalidArgumentExceptio
 //! NSException Cocoa Foundation class emulation
 export default class CPException extends CPObject {
 
-	static $$uncaughtExceptionHandler = null;
+	static $uncaughtExceptionHandler = null;
 
-	$$name = null;
-	$$reason = null;
-	$$userInfo = null;
-	$$callStackReturnAddresses = null;
-	$$callStackSymbols = null;
+	$name = null;
+	$reason = null;
+	$userInfo = null;
+	$callStackReturnAddresses = null;
+	$callStackSymbols = null;
 
 	//! @property(readonly, copy) CPString name
-	get name() {return this.$$name;}
+	get name() {return this.$name;}
 
 	//! @property(readonly, copy) CPString reason
-	get reason() {return this.$$reason;}
+	get reason() {return this.$reason;}
 
 	//! @property(readonly, copy) CPDictionary userInfo
-	get userInfo() {return this.$$userInfo;}
+	get userInfo() {return this.$userInfo;}
 
 	/*!
 	 * Browsers don't provide a reliable way to parse a call stack, so we just return the entries from new Error().stack
 	 * @property(readonly, copy) CPArray<CPString> callStackReturnAddresses
 	 */
-	get callStackReturnAddresses() {return this.$$callStackReturnAddresses;}
+	get callStackReturnAddresses() {return this.$callStackReturnAddresses;}
 
 	//! Browsers don't provide a reliable way to parse a call stack, so we just return the entries from new Error().stack
 	//! @property(readonly, copy) CPArray<CPString> callStackSymbols
-	get callStackSymbols() {return this.$$callStackSymbols;}
+	get callStackSymbols() {return this.$callStackSymbols;}
 
 	//! @typed CPException : CPString, CPString, CPDictionary
 	static exceptionWithName_reason_userInfo_(name, reason, userInfo) {
 		const exception = this.new();
 		if (exception) {
-			exception.$$name = objj_msgSend(name, 'copyWithZone:', null);
-			exception.$$reason = objj_msgSend(reason, 'copyWithZone:', null);
-			exception.$$userInfo = objj_msgSend(userInfo, 'copyWithZone:', null);
+			exception.$name = objj_msgSend(name, 'copyWithZone:', null);
+			exception.$reason = objj_msgSend(reason, 'copyWithZone:', null);
+			exception.$userInfo = objj_msgSend(userInfo, 'copyWithZone:', null);
 		}
 		return exception
 	}
@@ -65,7 +65,7 @@ export default class CPException extends CPObject {
 			throw "!? Could not create CPException object ?!";
 
 		// because we don't have a sensible way of parsing call stacks, we'll just set whatever browser gives us
-		exception.$$callStackReturnAddresses = exception.$$callStackSymbols = new Error().stack.split("\n");
+		exception.$callStackReturnAddresses = exception.$callStackSymbols = new Error().stack.split("\n");
 		throw exception;
 	}
 
@@ -77,14 +77,14 @@ export default class CPException extends CPObject {
 
 //! @typed void (^)(Event e) : void
 export function CPGetUncaughtExceptionHandler() {
-	return objj_initialize(CPException).$$uncaughtExceptionHandler;
+	return objj_initialize(CPException).$uncaughtExceptionHandler;
 }
 
 //! @typed void : void (^)(Event e)
 export function CPSetUncaughtExceptionHandler(handler) {
-	if (objj_initialize(CPException).$$uncaughtExceptionHandler !== null) {
-		window.removeEventListener('error', CPException.$$uncaughtExceptionHandler, true);
+	if (objj_initialize(CPException).$uncaughtExceptionHandler !== null) {
+		window.removeEventListener('error', CPException.$uncaughtExceptionHandler, true);
 	}
-	CPException.$$uncaughtExceptionHandler = handler;
+	CPException.$uncaughtExceptionHandler = handler;
 	window.addEventListener('error', handler, true);
 }

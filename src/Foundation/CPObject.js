@@ -18,26 +18,27 @@ export function objj_CPObject(superClass = Object) {
 	//!  reasonably apply to all objects should be defined here.
 	const metaClass = class CPObject extends superClass {
 
-		static $$initialized = false;
-		static $$conformsTo = [];
+		static $initialized = false;
+		static $conformsTo = [];
 
-		$$UID = null;
-		$$exposedBindings = null;
-		$$observationInfo = null;
+		$ISA = 'CPObject';
+		$UID = null;
+		$exposedBindings = null;
+		$observationInfo = null;
 
-		constructor() {
-			super();
-			this.$$UID = objj_oid();
+		constructor(...args) {
+			super(...args);
+			this.$UID = objj_oid();
 		}
 
 		// private method to return UID as hex value
-		$$uidString() {
-			return sprintf("x%06x", this.$$UID);
+		$uidString() {
+			return sprintf("x%06x", this.$UID);
 		}
 
 		// we need to use the conditional getter or all subclasses will inherit the value
 		static get initialized() {
-			return this.hasOwnProperty("$$initialized") ? this.$$initialized : false;
+			return this.hasOwnProperty("$initialized") ? this.$initialized : false;
 		}
 
 		//! @name Initializing a Class
@@ -64,8 +65,8 @@ export function objj_CPObject(superClass = Object) {
 
 		//! @typed instancetype : void
 		init() {
-			this.$$exposedBindings = objj_array([]);
-			this.$$observationInfo = {};
+			this.$exposedBindings = objj_array([]);
+			this.$observationInfo = {};
 
 			return this;
 		}
@@ -133,7 +134,7 @@ export function objj_CPObject(superClass = Object) {
 
 		//! @typed BOOL : Class
 		static isSubclassOfClass_(aClass) {
-			for (let targetClass = this; targetClass.name !== Object.getPrototypeOf(CPObject).name; targetClass = Object.getPrototypeOf(targetClass)) {
+			for (let targetClass = this; targetClass !== null; targetClass = Object.getPrototypeOf(targetClass)) {
 				if (targetClass === aClass)
 					return true;
 			}
@@ -143,13 +144,13 @@ export function objj_CPObject(superClass = Object) {
 		//! This property shows under the "Scripting" group in Cocoa docs but since there is no useful equivalent in JS, and this property is otherwise useful, we put it here.
 		//! @property(class, readonly, copy) CPString className
 		static get className() {
-			return objj_string(this.name);
+			return new CPString(this.name);
 		}
 
 		//! This property shows under the "Scripting" group in Cocoa docs but since there is no useful equivalent in JS, and this property is otherwise useful, we put it here.
 		//! @property(readonly, copy) CPString className
 		get className() {
-			return objj_string(this.constructor.name);
+			return new CPString(this.constructor.name);
 		}
 
 		//! @}
@@ -158,7 +159,7 @@ export function objj_CPObject(superClass = Object) {
 		//! @{
 		//! @typed BOOL : Class
 		static isEqual_(aClass) {
-			return this === aClass;
+			return this.hash === aClass.hash;
 		}
 
 		//! @typed BOOL : id
@@ -173,7 +174,7 @@ export function objj_CPObject(superClass = Object) {
 
 		//! @property(readonly) CPUInteger hash
 		get hash() {
-			return this.$$UID;
+			return this.$UID;
 		}
 
 		//! @typed Class : void
@@ -225,12 +226,12 @@ export function objj_CPObject(superClass = Object) {
 		}
 
 		static conformsToProtocol_(protocol) {
-			return this.$$conformsTo.includes(protocol.name);
+			return this.$conformsTo.includes(protocol.name);
 		}
 
 		//! @typed BOOL : Protocol
 		conformsToProtocol_(protocol) {
-			return this.constructor.$$conformsTo.includes(protocol.name);
+			return this.constructor.$conformsTo.includes(protocol.name);
 		}
 
 		//! @}
@@ -408,7 +409,7 @@ export function objj_CPObject(superClass = Object) {
 
 		//! @typed void : SEL
 		doesNotRecognizeSelector_(aSelector) {
-			objj_throw_arg("-[%@ %s]: unrecognized selector sent to instance %s", this.className, aSelector, this.$$uidString());
+			objj_throw_arg("-[%@ %s]: unrecognized selector sent to instance %s", this.className, aSelector, this.$uidString());
 		}
 
 		//! @}
@@ -418,16 +419,16 @@ export function objj_CPObject(superClass = Object) {
 		//! @{
 		//! @property(readonly, copy) CPArray<CPString> exposedBindings
 		get exposedBindings() {
-			return this.$$exposedBindings;
+			return this.$exposedBindings;
 		}
 
 		//! @property () Object observationInfo
 		get observationInfo() {
-			return this.$$observationInfo;
+			return this.$observationInfo;
 		}
 
 		set observationInfo(anObject) {
-			this.$$observationInfo = anObject;
+			this.$observationInfo = anObject;
 		}
 
 		//! @}
@@ -445,7 +446,8 @@ export function objj_CPObject(superClass = Object) {
 
 	};
 
-	metaClass.$$conformsTo.push('CPObject');
+	metaClass.$conformsTo.push('CPObject');
+
 	return metaClass;
 }
 

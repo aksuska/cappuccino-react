@@ -34,8 +34,7 @@ II. TRANSFORMATIONS
             b. if assigned to, change assignment to "let self = " and leave all instances after assignment (NOT including same line) left alone.
     B. Instance variables
         1. DO NOT ALLOW IVARS BEGINNING WITH '$'--RAISE EXCEPTION AT COMPILATION
-        2. Name is transformed by prefixing with '$'
-        3. all framework ivars should be double prefixed '$$'
+        3. all framework ivars should be prefixed with '$'
         4. all usages of ivars need to change to this.ivar
     C. Properties
         1. Declared properties will be auto-synthesized
