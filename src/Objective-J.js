@@ -3,7 +3,7 @@
  * We generally expect that these methods will only be called internally by the framework, so we allow run-time errors to occur by passing null/undefined values.
  **/
 
-import CPObject from './Foundation/CPObject';
+import CPObject, {objj_CPObject} from './Foundation/CPObject';
 import CPString from './Foundation/CPString';
 import CPMethodSignature from './Foundation/CPMethodSignature';
 import CPInvocation from './Foundation/CPInvocation';
@@ -20,7 +20,7 @@ export default function objj_msgSend(target, selector, ...args) {
 		return null;
 
 	// initialize class if needed
-	const targetClass = target instanceof CPObject ? target.constructor : target;
+	const targetClass = typeof target === 'object' ? target.constructor : target;
 	if (!targetClass.initialized) {
 		objj_initialize(targetClass);
 	}
@@ -93,9 +93,17 @@ export function objj_propGuard(object, ...args) {
 export function objj_initialize(aClass) {
 	// need to initialize top-down
 	let chain = [];
-	for (let targetClass = aClass; targetClass !== Object.getPrototypeOf(CPObject); targetClass = Object.getPrototypeOf(targetClass)) {
+	let targetClass = aClass;
+	while (targetClass.name !== 'CPObject') {
 		if (!targetClass.initialized)
 			chain.unshift(targetClass);
+		targetClass = Object.getPrototypeOf(targetClass);
+	}
+
+	// now check CPObject--we do this separately as mixin maintains state
+	if (objj_CPObject.$initialized === false) {
+		objj_CPObject.$initialized = true;
+		chain.unshift(CPObject);
 	}
 
 	for (let i = 0; i < chain.length; i++) {
@@ -185,7 +193,7 @@ export function objj_getMethod(object, selector) {
 		const descriptor = objj_propertyDescriptor(object, functionName);
 		method = descriptor.set;
 	}
-	else if((object instanceof CPObject) ? object.constructor.resolveInstanceMethod_(selector) : object.resolveClassMethod_(selector))
+	else if((typeof object === 'object' ) ? object.constructor.resolveInstanceMethod_(selector) : object.resolveClassMethod_(selector))
 	{
 		// we expect that the resolve will add a regular or accessor method, so re-call us
 		method = objj_getMethod(object, selector);
