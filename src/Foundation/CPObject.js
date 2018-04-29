@@ -169,7 +169,7 @@ export function objj_CPObject(superClass = Object) {
 
 		//! @property(class, readonly) CPUInteger hash
 		static get hash() {
-			return (this.$$UID === undefined ? this.$$UID = objj_oid() : this.$$UID);
+			return this.$UID;
 		}
 
 		//! @property(readonly) CPUInteger hash
@@ -446,10 +446,16 @@ export function objj_CPObject(superClass = Object) {
 
 	};
 
+	metaClass.$UID = objj_CPObject.$UID;
+	metaClass.$initialized = objj_CPObject.$initialized;
 	metaClass.$conformsTo.push('CPObject');
 
 	return metaClass;
 }
+
+// we need CPObject to act as singleton, so store UID & initialized state in function
+objj_CPObject.$UID = objj_oid();
+objj_CPObject.$initialized = false;
 
 // our default export is meta class as concrete class
 const CPObject = objj_CPObject();
