@@ -193,7 +193,7 @@ export function objj_CPObject(superClass = Object) {
 		//! @{
 		//! @typed BOOL : Class
 		static isKindOfClass_(aClass) {
-			for (let targetClass = this; targetClass !== Object.getPrototypeOf(CPObject); targetClass = Object.getPrototypeOf(targetClass)) {
+			for (let targetClass = this; targetClass !== null; targetClass = Object.getPrototypeOf(targetClass)) {
 				if (targetClass === aClass)
 					return true;
 			}
