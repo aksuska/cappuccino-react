@@ -4,25 +4,31 @@
 
 export default class Protocol {
 
-	$_name;
-	$_inherits;
-	$_methods = [];
+	$name;
+	$inherits;
+	$methods = [];
+	$properties = [];
 
 	constructor(name, inherits = null) {
-		this.$_name = name;
-		this.$_inherits = inherits;
+		this.$name = name;
+		this.$inherits = inherits;
 	}
 
 	get name() {
-		return this.$_name;
+		return this.$name;
 	}
 
 	get inherits() {
-		return this.$_inherits;
+		return this.$inherits;
 	}
 
 	// adds a method to the protocol definition
 	addSelector_isRequired_isClassMethod(selector, required, classMethod) {
-		this.$_methods.push({selector: selector.methodName, required: required, classMethod: classMethod});
+		this.$methods.push({selector: selector, required: required, classMethod: classMethod});
+	}
+
+	// adds a property to the protocol definition
+	addProperty_isRequired_onClass(property, required, onClass) {
+		this.$properties.push({property: property, required: required, onClass: onClass});
 	}
 }
