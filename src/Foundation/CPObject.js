@@ -345,7 +345,8 @@ export function objj_CPObject(superClass = Object) {
 			const sig = this.methodSignatureForSelector_(aSelector);
 			if (sig !== null) {
 				const argCount = sig.numberOfArguments;
-				for (let i = 2; i < argCount; i++) {
+				// first two args always self and _cmd
+				for (let i = 4; i < argCount; i++) {
 					args.push(null);
 				}
 			}
@@ -354,7 +355,17 @@ export function objj_CPObject(superClass = Object) {
 
 		//! @typed id : SEL, id, id
 		performSelector_withObject_withObject_(aSelector, object1, object2) {
-			return objj_msgSend(this, aSelector, object1, object2);
+			// if method takes more than two arguments, need to pass null for them
+			let args = [object1, object2];
+			const sig = this.methodSignatureForSelector_(aSelector);
+			if (sig !== null) {
+				const argCount = sig.numberOfArguments;
+				// first two args always self and _cmd
+				for (let i = 4; i < argCount; i++) {
+					args.push(null);
+				}
+			}
+			return objj_msgSend(this, aSelector, ...args);
 		}
 
 		//! @}
