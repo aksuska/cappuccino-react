@@ -5,10 +5,10 @@
 import objj_msgSend, {
 	objj_propGuard,
 	objj_methodSignature,
-	objj_throw_arg,
-	objj_getMethod, objj_array
+	objj_getMethod, objj_array, objj_initialize
 } from '../Objective-J';
 import CPString from './CPString';
+import CPException, {CPInvalidArgumentException} from "./CPException";
 const sprintf = require('sprintf-js').sprintf;
 
 export function objj_CPObject(superClass = Object) {
@@ -404,12 +404,12 @@ export function objj_CPObject(superClass = Object) {
 		//! @{
 		//! @typed void : SEL
 		static doesNotRecognizeSelector_(aSelector) {
-			objj_throw_arg("+[%s %s]: unrecognized selector sent to class", this.name, aSelector);
+			objj_initialize(CPException).raise_format_(CPInvalidArgumentException, new CPString("+[%s %s]: unrecognized selector sent to class"), this.name, aSelector);
 		}
 
 		//! @typed void : SEL
 		doesNotRecognizeSelector_(aSelector) {
-			objj_throw_arg("-[%@ %s]: unrecognized selector sent to instance %s", this.className, aSelector, this.$uidString());
+			objj_initialize(CPException).raise_format_(CPInvalidArgumentException, new CPString("-[%@ %s]: unrecognized selector sent to instance %s"), this.className, aSelector, this.$uidString());
 		}
 
 		//! @}
