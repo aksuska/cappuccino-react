@@ -122,7 +122,7 @@ export default class CPString extends objj_CPObject(Object) {
 
 		// %@ will always be a string, so convert, but objects must change to description
 		let formatString = format.jsString.replace(/%@/, '%s');
-		let values = args.map(element => element['$ISA'] === 'CPObject' ? objj_propGuard(element, 'description', 'jsString') : element);
+		let values = args.map(element => element !== null && element !== undefined && element['$ISA'] === 'CPObject' ? objj_propGuard(element, 'description', 'jsString') : element);
 		return this.initWithString_(new CPString(vsprintf(formatString, values)));
 	}
 
