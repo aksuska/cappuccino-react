@@ -118,15 +118,6 @@ export function objj_initialize(aClass) {
 }
 
 /*!
- * Returns and maintains a global UID counter for object UID's
-*/
-
-export function objj_oid() {
-	return ++objj_oid.$oidCounter;
-}
-objj_oid.$oidCounter = 0;
-
-/*!
  * Converts Objective-J selector string into the javascript function name
 */
 

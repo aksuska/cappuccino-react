@@ -6,7 +6,7 @@ import objj_msgSend, {
 	objj_propGuard,
 	objj_methodSignature,
 	objj_throw_arg,
-	objj_getMethod, objj_oid, objj_array
+	objj_getMethod, objj_array
 } from '../Objective-J';
 import CPString from './CPString';
 const sprintf = require('sprintf-js').sprintf;
@@ -28,7 +28,7 @@ export function objj_CPObject(superClass = Object) {
 
 		constructor(...args) {
 			super(...args);
-			this.$UID = objj_oid();
+			this.$UID = objj_CPObject.$oidCounter++;
 		}
 
 		// private method to return UID as hex value
@@ -169,7 +169,7 @@ export function objj_CPObject(superClass = Object) {
 
 		//! @property(class, readonly) CPUInteger hash
 		static get hash() {
-			return this.$UID;
+			return this.hasOwnProperty("$UID") ? this.$UID : this.$UID = objj_CPObject.$oidCounter++;
 		}
 
 		//! @property(readonly) CPUInteger hash
@@ -446,15 +446,17 @@ export function objj_CPObject(superClass = Object) {
 
 	};
 
-	metaClass.$UID = objj_CPObject.$UID;
+	// we need CPObject to act as singleton, so store UID & initialized state in function
+	if (objj_CPObject.$oidCounter === undefined) objj_CPObject.$oidCounter = 1;
+
+	// our UID always 1 so we don't have to worry about multiple invocations creating different hash values
+	metaClass.$UID = 1;
 	metaClass.$initialized = objj_CPObject.$initialized;
 	metaClass.$conformsTo.push('CPObject');
 
 	return metaClass;
 }
 
-// we need CPObject to act as singleton, so store UID & initialized state in function
-objj_CPObject.$UID = objj_oid();
 objj_CPObject.$initialized = false;
 
 // our default export is meta class as concrete class
