@@ -14,17 +14,18 @@ export default class CPException extends objj_CPObject(Error) {
 
 	static $uncaughtExceptionHandler = null;
 
-	$name = null;
-	$reason = null;
 	$userInfo = null;
-	$callStackReturnAddresses = null;
-	$callStackSymbols = null;
 
+	constructor(...args) {
+		super(...args);
+
+	}
+
+	// we declare this for consistency with Cocoa, but don't implerment because it already exists in superclass.
 	//! @property(readonly, copy) CPString name
-	get name() {return this.$name;}
 
 	//! @property(readonly, copy) CPString reason
-	get reason() {return this.$reason;}
+	get reason() {return this.message;}
 
 	//! @property(readonly, copy) CPDictionary userInfo
 	get userInfo() {return this.$userInfo;}
@@ -33,18 +34,18 @@ export default class CPException extends objj_CPObject(Error) {
 	 * Browsers don't provide a reliable way to parse a call stack, so we just return the entries from new Error().stack
 	 * @property(readonly, copy) CPArray<CPString> callStackReturnAddresses
 	 */
-	get callStackReturnAddresses() {return this.$callStackReturnAddresses;}
+	get callStackReturnAddresses() {return this.stack.split("\n");}
 
 	//! Browsers don't provide a reliable way to parse a call stack, so we just return the entries from new Error().stack
 	//! @property(readonly, copy) CPArray<CPString> callStackSymbols
-	get callStackSymbols() {return this.$callStackSymbols;}
+	get callStackSymbols() {return this.stack.split("\n");}
 
 	//! @typed CPException : CPString, CPString, CPDictionary
 	static exceptionWithName_reason_userInfo_(name, reason, userInfo) {
 		const exception = this.new();
 		if (exception) {
-			exception.$name = objj_msgSend(name, 'copyWithZone:', null);
-			exception.$reason = objj_msgSend(reason, 'copyWithZone:', null);
+			exception.name = objj_msgSend(name, 'copyWithZone:', null);
+			exception.message = objj_msgSend(reason, 'copyWithZone:', null);
 			exception.$userInfo = objj_msgSend(userInfo, 'copyWithZone:', null);
 		}
 		return exception
@@ -61,10 +62,7 @@ export default class CPException extends objj_CPObject(Error) {
 		const reason = (format !== null) ? objj_msgSend(CPString, 'stringWithFormat:', format, ...args) : null;
 		const exception = this.exceptionWithName_reason_userInfo_(name, reason, null);
 		if (exception === null)
-			throw "!? Could not create CPException object ?!";
-
-		// because we don't have a sensible way of parsing call stacks, we'll just set whatever browser gives us
-		exception.$callStackReturnAddresses = exception.$callStackSymbols = new Error().stack.split("\n");
+			throw new Error("!? Could not create CPException object ?!");
 		throw exception;
 	}
 
