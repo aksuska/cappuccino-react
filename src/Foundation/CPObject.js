@@ -448,6 +448,7 @@ export function objj_CPObject(superClass = Object) {
 
 	// we need CPObject to act as singleton, so store UID & initialized state in function
 	if (objj_CPObject.$oidCounter === undefined) objj_CPObject.$oidCounter = 1;
+	if (objj_CPObject.$initialized === undefined) objj_CPObject.$initialized = false;
 
 	// our UID always 1 so we don't have to worry about multiple invocations creating different hash values
 	metaClass.$UID = 1;
@@ -456,8 +457,6 @@ export function objj_CPObject(superClass = Object) {
 
 	return metaClass;
 }
-
-objj_CPObject.$initialized = false;
 
 // our default export is meta class as concrete class
 const CPObject = objj_CPObject();
