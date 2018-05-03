@@ -9,12 +9,12 @@ import objj_msgSend, {
 	objj_prop2setter, objj_setter2prop, objj_getMethod, objj_array
 } from '../src/Objective-J';
 import {
-	CPObject,
-	CPString,
-	CPInvocation,
-	CPInvalidArgumentException,
-	CPMethodSignature,
-	CPArray
+    CPObject,
+    CPString,
+    CPInvocation,
+    CPInvalidArgumentException,
+    CPMethodSignature,
+    CPArray, objj_CPObject
 } from '../src/Foundation/Foundation';
 
 /*
@@ -22,7 +22,7 @@ import {
 */
 
 test("objj_initialize() initializes chain", () => {
-	const MyObject = class extends CPObject { static initialize() { this.newClassProperty = 1; }	};
+	const MyObject = class extends objj_CPObject() { static initialize() { this.newClassProperty = 1; }	};
 	expect(MyObject.initialized).toBeFalsy();
 	expect(CPObject.initialized).toBeFalsy();
 	const result = objj_initialize(MyObject);
@@ -30,6 +30,7 @@ test("objj_initialize() initializes chain", () => {
 	expect(MyObject.initialized).toBeTruthy();
 	expect(MyObject.newClassProperty).toBe(1);
 	expect(CPObject.initialized).toBeTruthy();
+    expect(objj_CPObject.$initialized).toBeTruthy();
 });
 
 test("objj_function() performs expected conversion", () => {
