@@ -392,7 +392,7 @@ export function objj_CPObject(superClass = Object) {
 			this.doesNotRecognizeSelector_(invocation.selector);
 		}
 
-//! @}
+		//! @}
 
 		//! @name Dynamically Resolving Methods
 		//! @{
@@ -434,6 +434,7 @@ export function objj_CPObject(superClass = Object) {
 		}
 
 		//! @property () Object observationInfo
+		//! Our implementation returns a vanilla JS Object whose properties are observed keys with a JS Array value of sub-objects with keys "object": observing object, "options": options bit mask, "context": context value.
 		get observationInfo() {
 			return this.$observationInfo;
 		}
