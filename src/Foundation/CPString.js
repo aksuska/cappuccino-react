@@ -5,6 +5,34 @@
 import {objj_propGuard, objj_throw_arg} from '../Objective-J';
 import {objj_CPObject} from './CPObject';
 const vsprintf = require("sprintf-js").vsprintf;
+const iconv = require('iconv-lite');
+
+//! @name String Encoding Constants
+//! We use iconv-lite https://github.com/ashtuchkin/iconv-lite for conversion handling, so a number of these encodings are not supported.
+const CPASCIIStringEncoding = 'ascii',
+			CPNEXTSTEPStringEncoding = 'nextstep',
+			CPJapaneseEUCStringEncoding = 'EUC-JP',
+			CPUTF8StringEncoding = 'utf8',
+			CPISOLatin1StringEncoding = 'ISO-8859-1',
+			CPSymbolStringEncoding = 'Adobe Symbol',
+			CPNonLossyASCIIStringEncoding = 'ascii',
+			CPShiftJISStringEncoding = 'Shift_JIS',
+			CPISOLatin2StringEncoding = 'ISO-8859-2',
+			CPUnicodeStringEncoding = 'UTF-16',
+			CPWindowsCP1251StringEncoding = 'CP1251',
+			CPWindowsCP1252StringEncoding = 'CP1252',
+			CPWindowsCP1253StringEncoding = 'CP1253',
+			CPWindowsCP1254StringEncoding = 'CP1254',
+			CPWindowsCP1250StringEncoding = 'CP1250',
+			CPISO2022JPStringEncoding = 'ISO-2022-JP',
+			CPMacOSRomanStringEncoding = 'macroman',
+			CPUTF16StringEncoding = CPUnicodeStringEncoding,
+			CPUTF16BigEndianStringEncoding = 'UTF16BigEndian',
+			CPUTF16LittleEndianStringEncoding = 'UTF16LittleEndian',
+			CPUTF32StringEncoding = 'UTF-32',
+			CPUTF32BigEndianStringEncoding = 'UTF32BigEndian',
+			CPUTF32LittleEndianStringEncoding = 'UTF32LittleEndian';
+export {CPASCIIStringEncoding, CPNEXTSTEPStringEncoding, CPJapaneseEUCStringEncoding, CPUTF8StringEncoding, CPISOLatin1StringEncoding, CPSymbolStringEncoding, CPNonLossyASCIIStringEncoding, CPShiftJISStringEncoding, CPISOLatin2StringEncoding, CPUnicodeStringEncoding, CPWindowsCP1251StringEncoding, CPWindowsCP1252StringEncoding, CPWindowsCP1253StringEncoding, CPWindowsCP1254StringEncoding, CPWindowsCP1250StringEncoding, CPISO2022JPStringEncoding, CPMacOSRomanStringEncoding, CPUTF16StringEncoding, CPUTF16BigEndianStringEncoding, CPUTF16LittleEndianStringEncoding, CPUTF32StringEncoding, CPUTF32BigEndianStringEncoding, CPUTF32LittleEndianStringEncoding};
 
 //! NSString Cocoa Foundation class emulation
 export default class CPString extends objj_CPObject(Object) {
@@ -104,6 +132,30 @@ export default class CPString extends objj_CPObject(Object) {
 	copyWithZone_(zone) {
 		// cocoa just returns the same object, so we'll do the same
 		return this;
+	}
+
+	//! @}
+
+	//! @name Getting a String’s Length
+	//! @{
+
+	//! @property(readonly) CPUInteger length
+	get length() {
+		return this.$jsString.length;
+	}
+
+	//! @typed CPUInteger : CPStringEncoding
+	lengthOfBytesUsingEncoding_(enc) {
+		if (!iconv.encodingExists(enc))
+			return 0;
+
+		const buf = iconv.encode(this.jsString, enc);
+		return buf.length;
+	}
+
+	//! @typed CPUInteger : CPStringEncoding
+	maximumLengthOfBytesUsingEncoding_(enc) {
+		return this.lengthOfBytesUsingEncoding_(enc);
 	}
 
 	//! @}
