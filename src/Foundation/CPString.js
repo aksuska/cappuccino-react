@@ -9,8 +9,8 @@ const vsprintf = require("sprintf-js").vsprintf;
 //! NSString Cocoa Foundation class emulation
 export default class CPString extends objj_CPObject(Object) {
 
-	$jsString = '';
-	$hashCode = 0;
+	$jsString = null;
+	$hashCode = null;
 
 	// we use this a convenience constructor so we can do shorthand conversions
 	constructor(jsString) {
@@ -26,7 +26,17 @@ export default class CPString extends objj_CPObject(Object) {
 	//! @{
 	//! @typed instancetype : void
 	static string() {
-		return this.alloc().initWithString_(new CPString(""));
+		return this.alloc().init();
+	}
+
+	//! @typed instancetype : void
+	init() {
+		let self = super.init();
+		if (self) {
+			self.$jsString = '';
+			self.$generateHash();
+		}
+		return self;
 	}
 
 	//! @typed instancetype : CPString
