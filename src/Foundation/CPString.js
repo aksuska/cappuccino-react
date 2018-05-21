@@ -22,63 +22,11 @@ export default class CPString extends objj_CPObject(Object) {
 		}
 	}
 
-	//! @property(readonly) CPUInteger hash
-	get hash() {return this.$hashCode;}
-
-	//! @property(readonly, copy) CPString description
-	get description() {return this;}
-
-	//! @property(readonly, copy) string jsString
-	//! Returns the native JS string that backs the NSArray
-	get jsString() {return this.$jsString;}
-
+	//! @name Creating and Initializing Strings
+	//! @{
 	//! @typed instancetype : void
 	static string() {
 		return this.alloc().initWithString_(new CPString(""));
-	}
-
-	//! @typed instancetype : CPString, ...
-	static stringWithFormat_(format, ...args) {
-		return this.alloc().initWithFormat_locale_arguments_(format, null, args);
-	}
-
-	// TODO: CPLocale support: method should call [CPLocale currentLocale]
-	//! @typed instancetype : CPString, ...
-	static localizedStringWithFormat_(format, ...args) {
-		return this.alloc().initWithFormat_locale_arguments_(format, null, args);
-	}
-
-	//! @typed instancetype : CPString
-	static stringWithString_(aString) {
-		return this.alloc().initWithString_(aString);
-	}
-
-	$generateHash() {
-		let source = this.$jsString, length = source.length, result = length;
-		if (result <= 96) {
-			// First count in fours
-			for (let i = 0; i < length; i += 4) {
-				result = result * 67503105 + source.charCodeAt(i) * 16974593 + source.charCodeAt(i + 1) * 66049 + source.charCodeAt(i + 2) * 257 + source.charCodeAt(i + 3);
-			}
-			// Then for the last <4 chars, count in ones...
-			const left = length % 4;
-			for (let i = length - left; i < length; i++) {
-				result = result * 257 + source.charCodeAt(i);
-			}
-		}
-		else {
-			// larger strings we only use the first, middle, and last 32 characters
-			for (let i = 0; i < 32; i += 4) {
-				result = result * 67503105 + source.charCodeAt(i) * 16974593 + source.charCodeAt(i + 1) * 66049 + source.charCodeAt(i + 2) * 257 + source.charCodeAt(i + 3);
-			}
-			for (let i = (length >> 1) - 16; i < (length >> 1) + 16; i += 4) {
-				result = result * 67503105 + source.charCodeAt(i) * 16974593 + source.charCodeAt(i + 1) * 66049 + source.charCodeAt(i + 2) * 257 + source.charCodeAt(i + 3);
-			}
-			for (let i = length - 32; i < length; i += 4) {
-				result = result * 67503105 + source.charCodeAt(i) * 16974593 + source.charCodeAt(i + 1) * 66049 + source.charCodeAt(i + 2) * 257 + source.charCodeAt(i + 3);
-			}
-		}
-		this.$hashCode = result + (result << (length & 31));
 	}
 
 	//! @typed instancetype : CPString
@@ -126,9 +74,75 @@ export default class CPString extends objj_CPObject(Object) {
 		return this.initWithString_(new CPString(vsprintf(formatString, values)));
 	}
 
-	//! @typed id : @ignored
+	//! @typed instancetype : CPString, ...
+	static stringWithFormat_(format, ...args) {
+		return this.alloc().initWithFormat_locale_arguments_(format, null, args);
+	}
+
+	// TODO: CPLocale support: method should call [CPLocale currentLocale]
+	//! @typed instancetype : CPString, ...
+	static localizedStringWithFormat_(format, ...args) {
+		return this.alloc().initWithFormat_locale_arguments_(format, null, args);
+	}
+
+	//! @typed instancetype : CPString
+	static stringWithString_(aString) {
+		return this.alloc().initWithString_(aString);
+	}
+
+	//! @typed id : null
 	copyWithZone_(zone) {
 		// cocoa just returns the same object, so we'll do the same
 		return this;
 	}
+
+	//! @}
+
+	//! @name Identifying and Comparing Strings
+	//! @{
+
+	//! @property(readonly, copy) string jsString
+	//! Returns the native JS string that backs the NSArray
+	get jsString() {return this.$jsString;}
+
+	//! @property(readonly) CPUInteger hash
+	get hash() {return this.$hashCode;}
+
+	$generateHash() {
+		let source = this.$jsString, length = source.length, result = length;
+		if (result <= 96) {
+			// First count in fours
+			for (let i = 0; i < length; i += 4) {
+				result = result * 67503105 + source.charCodeAt(i) * 16974593 + source.charCodeAt(i + 1) * 66049 + source.charCodeAt(i + 2) * 257 + source.charCodeAt(i + 3);
+			}
+			// Then for the last <4 chars, count in ones...
+			const left = length % 4;
+			for (let i = length - left; i < length; i++) {
+				result = result * 257 + source.charCodeAt(i);
+			}
+		}
+		else {
+			// larger strings we only use the first, middle, and last 32 characters
+			for (let i = 0; i < 32; i += 4) {
+				result = result * 67503105 + source.charCodeAt(i) * 16974593 + source.charCodeAt(i + 1) * 66049 + source.charCodeAt(i + 2) * 257 + source.charCodeAt(i + 3);
+			}
+			for (let i = (length >> 1) - 16; i < (length >> 1) + 16; i += 4) {
+				result = result * 67503105 + source.charCodeAt(i) * 16974593 + source.charCodeAt(i + 1) * 66049 + source.charCodeAt(i + 2) * 257 + source.charCodeAt(i + 3);
+			}
+			for (let i = length - 32; i < length; i += 4) {
+				result = result * 67503105 + source.charCodeAt(i) * 16974593 + source.charCodeAt(i + 1) * 66049 + source.charCodeAt(i + 2) * 257 + source.charCodeAt(i + 3);
+			}
+		}
+		this.$hashCode = result + (result << (length & 31));
+	}
+
+	//! @}
+
+	//! @name Working with Encodings
+	//! @{
+
+	//! @property(readonly, copy) CPString description
+	get description() {return this;}
+
+	//! @}
 }
