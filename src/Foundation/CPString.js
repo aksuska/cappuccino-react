@@ -95,7 +95,7 @@ export default class CPString extends objj_CPObject(Object) {
 	// TODO: CPLocale support?
 	//! @typed instancetype : CPString, CPLocale, ...
 	initWithFormat_locale_(format, locale, ...args) {
-		return this.initWithFormat_locale_arguments_(format, null, args);
+		return this.initWithFormat_locale_arguments_(format, locale, args);
 	}
 
 	// TODO: CPLocale support?
