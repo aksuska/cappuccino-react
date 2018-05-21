@@ -17,7 +17,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "sprintf-js": "^1.1.1"
+    "buffer": "^5.1.0",
+    "iconv-lite": "^0.4.23",
+    "sprintf-js": "^1.1.1",
+    "stream": "0.0.2"
   },
   "devDependencies": {
     "@types/jest": "^22.2.3",
