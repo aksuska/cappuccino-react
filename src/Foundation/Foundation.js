@@ -13,7 +13,8 @@ import CPInvocation from './CPInvocation';
 import CPException, {CPInvalidArgumentException} from './CPException';
 import CPDictionary from "./CPDictionary";
 import CPArray from './CPArray';
-
+// foundation types import
+import {CPNotFound, CPEqualRanges, CPIntersectionRange, CPLocationInRange, CPMakeRange, CPMaxRange, CPRangeFromString, CPStringFromRange, CPUnionRange} from './CPRange';
 /*
  * Objective-J Runtime Exports
 */
@@ -35,3 +36,8 @@ export {CPASCIIStringEncoding, CPNEXTSTEPStringEncoding, CPJapaneseEUCStringEnco
 export const CPSelectorFromString = (selString) => selString.jsString();
 export const CPStringFromSelector = (selector) => new CPString(selector);
 
+/*
+ * CPRange Declaration and Function Exports
+ */
+
+export {CPNotFound, CPEqualRanges, CPIntersectionRange, CPLocationInRange, CPMakeRange, CPMaxRange, CPRangeFromString, CPStringFromRange, CPUnionRange};
