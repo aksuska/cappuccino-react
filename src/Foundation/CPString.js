@@ -2,7 +2,7 @@
  * Module that contains NSString class emulation and related symbols. We maintain a has-a relationship with a native JS string.
  **/
 
-const OBJJ = require('../Objective-J'), objj_propGuard = OBJJ.objj_propGuard, objj_throw_arg = OBJJ.objj_throw_arg, objj_throw = OBJJ.objj_throw;
+const OBJJ = require('../Objective-J'), objj_propGuard = OBJJ.objj_propGuard, objj_initialize = OBJJ.objj_initialize;
 const CPObjectSym = require('./CPObject'), CPObject = CPObjectSym.CPObject;
 const CPArraySym = require("./CPArray"), CPArray = CPArraySym.CPArray;
 const vsprintf = require("sprintf-js").vsprintf;
@@ -83,7 +83,7 @@ class CPString extends CPObject {
 	//! @typed instancetype : CPString
 	initWithString_(aString) {
 		if (aString === null) {
-			objj_throw_arg("-[%@ initWithString:]: null argument", this.className);
+			objj_initialize(CPException).raise_format_(CPInvalidArgumentException, new CPString("-[%@ initWithString:]: null argument"), this.className);
 			return null;
 		}
 
@@ -115,7 +115,7 @@ class CPString extends CPObject {
 	//! @typed instancetype : CPString, CPLocale, va_list
 	initWithFormat_locale_arguments_(format, locale, args) {
 		if (format === null) {
-			objj_throw_arg("-[%@ initWithFormat:locale:arguments:]: null argument", this.className);
+			objj_initialize(CPException).raise_format_(CPInvalidArgumentException, new CPString("-[%@ initWithFormat:locale:arguments:]: null argument"), this.className);
 			return null;
 		}
 
@@ -224,4 +224,4 @@ class CPString extends CPObject {
 exports.CPString = CPString;
 
 const CPRangeSym = require('./CPRange'), CPMakeRange = CPRangeSym.CPMakeRange, CPMaxRange = CPRangeSym.CPMaxRange, CPNotFound = CPRangeSym.CPNotFound, CPStringFromRange = CPRangeSym.CPStringFromRange;
-const CPExceptionSym =  require('./CPException'), CPRangeException = CPExceptionSym.CPRangeException;
+const CPExceptionSym =  require('./CPException'), CPException = CPExceptionSym.CPException, CPInvalidArgumentException = CPExceptionSym.CPInvalidArgumentException, CPRangeException = CPExceptionSym.CPRangeException;
