@@ -1,4 +1,7 @@
-import {objj_propGuard, CPObject, CPString, CPSymbolStringEncoding, CPUTF8StringEncoding, CPUTF16StringEncoding, CPInvalidArgumentException} from '../src/Foundation/Foundation';
+const OBJJ = require('../src/Objective-J'), objj_propGuard = OBJJ.objj_propGuard;
+const CPObjectSym = require('../src/Foundation/CPObject'), CPObject = CPObjectSym.CPObject;
+const CPStringSym = require('../src/Foundation/CPString'), CPString = CPStringSym.CPString, CPSymbolStringEncoding = CPStringSym.CPSymbolStringEncoding, CPUTF8StringEncoding = CPStringSym.CPUTF8StringEncoding, CPUTF16StringEncoding = CPStringSym.CPUTF16StringEncoding;
+const CPExceptionSym = require("../src/Foundation/CPException"), CPInvalidArgumentException = CPExceptionSym.CPInvalidArgumentException;
 
 function testReadOnlyProperty(target, propName, setValue) {
 	try {
