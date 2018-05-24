@@ -1,6 +1,10 @@
-import {CPInvalidArgumentException, CPObject, CPString, CPMethodSignature, Protocol} from '../src/Foundation/Foundation';
-import {objj_function, objj_initialize, objj_invocation, objj_propGuard} from "../src/Objective-J";
-import CPArray from "../src/Foundation/CPArray";
+const OBJJ = require('../src/Objective-J'), objj_initialize = OBJJ.objj_initialize, objj_propGuard = OBJJ.objj_propGuard, objj_function = OBJJ.objj_function, objj_invocation = OBJJ.objj_invocation;
+const CPObjectSym = require('../src/Foundation/CPObject'), CPObject = CPObjectSym.CPObject;
+const CPStringSym = require('../src/Foundation/CPString'), CPString = CPStringSym.CPString;
+const CPExceptionSym = require("../src/Foundation/CPException"), CPInvalidArgumentException = CPExceptionSym.CPInvalidArgumentException;
+const CPMethodSignatureSym = require('../src/Foundation/CPMethodSignature'), CPMethodSignature = CPMethodSignatureSym.CPMethodSignature;
+const ProtocolSym = require("../src/Foundation/Protocol"), Protocol = ProtocolSym.Protocol;
+const CPArraySym = require("../src/Foundation/CPArray"), CPArray = CPArraySym.CPArray;
 
 test("CPObject initialize called only once", () => {
 	CPObject.initialize = jest.fn();
