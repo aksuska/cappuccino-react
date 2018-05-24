@@ -2,11 +2,13 @@
  * Module that contains NSDictionary class emulation and related symbols. We maintain a has-a relationship with a native Map object
  **/
 
-import objj_msgSend, {objj_throw_arg} from '../Objective-J';
-import CPObject from './CPObject';
+const OBJJ = require('../Objective-J'), objj_msgSend = OBJJ.objj_msgSend, objj_initialize = OBJJ.objj_initialize;
+const CPObjectSym = require('./CPObject'), CPObject = CPObjectSym.CPObject;
+const CPStringSym = require('./CPString'), CPString = CPStringSym.CPString;
+const CPExceptionSym = require("./CPException"), CPException = CPExceptionSym.CPException, CPInvalidArgumentException = CPExceptionSym.CPInvalidArgumentException;
 
 //! NSDictionary Cocoa Foundation class emulation
-export default class CPDictionary extends CPObject {
+class CPDictionary extends CPObject {
 
 	$jsMap;
 	
@@ -41,5 +43,6 @@ export default class CPDictionary extends CPObject {
 		return this;
 	}
 }
+exports.CPDictionary = CPDictionary;
 
 CPDictionary.$conformsTo.push('CPCopying', 'CPMutableCopying');

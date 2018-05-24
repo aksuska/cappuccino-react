@@ -1,12 +1,11 @@
 /*
  * Module that contains NSArray class emulation and related symbols. We maintain a has-a relationship with a native Array object
- **/
+ */
 
-import objj_msgSend, {objj_throw_arg} from '../Objective-J';
-import CPObject from './CPObject';
+const CPObjectSym = require('./CPObject'), CPObject = CPObjectSym.CPObject;
 
 //! NSArray Cocoa Foundation class emulation
-export default class CPArray extends CPObject {
+class CPArray extends CPObject {
 
 	$jsArray;
 
@@ -32,5 +31,6 @@ export default class CPArray extends CPObject {
 		return this;
 	}
 }
+exports.CPArray = CPArray;
 
 CPArray.$conformsTo.push('CPCopying', 'CPMutableCopying');

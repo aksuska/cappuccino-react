@@ -2,7 +2,7 @@
  * Symbols for handling protocols
  **/
 
-export default class Protocol {
+class Protocol {
 
 	$name;
 	$inherits;
@@ -32,3 +32,4 @@ export default class Protocol {
 		this.$properties.push({property: property, required: required, onClass: onClass});
 	}
 }
+exports.Protocol = Protocol;

@@ -2,11 +2,13 @@
  * Module that contains NSInvocation class emulation and related symbols.
  */
 
-import {objj_throw_arg} from '../Objective-J';
-import CPObject from './CPObject';
+const OBJJ = require('../Objective-J'), objj_initialize = OBJJ.objj_initialize;
+const CPObjectSym = require('./CPObject'), CPObject = CPObjectSym.CPObject;
+const CPStringSym = require("./CPString"), CPString = CPStringSym.CPString;
+const CPExceptionSym = require("./CPException"), CPException = CPExceptionSym.CPException, CPInvalidArgumentException = CPExceptionSym.CPInvalidArgumentException;
 
 //! NSInvocation Cocoa Foundation class emulation
-export default class CPInvocation extends CPObject {
+class CPInvocation extends CPObject {
 
 	$selector = null;
 	$target = null;
@@ -115,3 +117,4 @@ export default class CPInvocation extends CPObject {
 		retLoc[retLoc.name] = this.$retValue;
 	}
 }
+exports.CPInvocation = CPInvocation;

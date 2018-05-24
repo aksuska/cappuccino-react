@@ -4,11 +4,12 @@
  * so as to preserve the type annotations, which would be accessible via the toString() method of Function.
  **/
 
-import {objj_throw_arg} from '../Objective-J';
-import CPObject from './CPObject';
+const OBJJ = require('../Objective-J'), objj_initialize = OBJJ.objj_initialize;
+const CPObjectSym = require('./CPObject'), CPObject = CPObjectSym.CPObject;
+const CPExceptionSym = require("./CPException"), CPException = CPExceptionSym.CPException, CPInvalidArgumentException = CPExceptionSym.CPInvalidArgumentException;
 
 //! NSMethodSignature Cocoa Foundation class emulation
-export default class CPMethodSignature extends CPObject {
+class CPMethodSignature extends CPObject {
 	
 	$typeList = [];
 	
@@ -50,3 +51,6 @@ export default class CPMethodSignature extends CPObject {
 		return true;
 	}
 }
+exports.CPMethodSignature = CPMethodSignature;
+
+const CPStringSym = require("./CPString"), CPString = CPStringSym.CPString;

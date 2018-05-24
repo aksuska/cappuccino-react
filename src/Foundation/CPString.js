@@ -2,8 +2,9 @@
  * Module that contains NSString class emulation and related symbols. We maintain a has-a relationship with a native JS string.
  **/
 
-import {objj_propGuard, objj_throw_arg} from '../Objective-J';
-import {objj_CPObject} from './CPObject';
+const OBJJ = require('../Objective-J'), objj_propGuard = OBJJ.objj_propGuard, objj_throw_arg = OBJJ.objj_throw_arg, objj_throw = OBJJ.objj_throw;
+const CPObjectSym = require('./CPObject'), CPObject = CPObjectSym.CPObject;
+const CPArraySym = require("./CPArray"), CPArray = CPArraySym.CPArray;
 const vsprintf = require("sprintf-js").vsprintf;
 const iconv = require('iconv-lite');
 
@@ -32,10 +33,22 @@ const CPASCIIStringEncoding = 'ascii',
 			CPUTF32StringEncoding = 'UTF-32',
 			CPUTF32BigEndianStringEncoding = 'UTF32BigEndian',
 			CPUTF32LittleEndianStringEncoding = 'UTF32LittleEndian';
-export {CPASCIIStringEncoding, CPNEXTSTEPStringEncoding, CPJapaneseEUCStringEncoding, CPUTF8StringEncoding, CPISOLatin1StringEncoding, CPSymbolStringEncoding, CPNonLossyASCIIStringEncoding, CPShiftJISStringEncoding, CPISOLatin2StringEncoding, CPUnicodeStringEncoding, CPWindowsCP1251StringEncoding, CPWindowsCP1252StringEncoding, CPWindowsCP1253StringEncoding, CPWindowsCP1254StringEncoding, CPWindowsCP1250StringEncoding, CPISO2022JPStringEncoding, CPMacOSRomanStringEncoding, CPUTF16StringEncoding, CPUTF16BigEndianStringEncoding, CPUTF16LittleEndianStringEncoding, CPUTF32StringEncoding, CPUTF32BigEndianStringEncoding, CPUTF32LittleEndianStringEncoding};
+Object.assign(exports, {CPASCIIStringEncoding, CPNEXTSTEPStringEncoding, CPJapaneseEUCStringEncoding, CPUTF8StringEncoding, CPISOLatin1StringEncoding, CPSymbolStringEncoding, CPNonLossyASCIIStringEncoding, CPShiftJISStringEncoding, CPISOLatin2StringEncoding, CPUnicodeStringEncoding, CPWindowsCP1251StringEncoding, CPWindowsCP1252StringEncoding, CPWindowsCP1253StringEncoding, CPWindowsCP1254StringEncoding, CPWindowsCP1250StringEncoding, CPISO2022JPStringEncoding, CPMacOSRomanStringEncoding, CPUTF16StringEncoding, CPUTF16BigEndianStringEncoding, CPUTF16LittleEndianStringEncoding, CPUTF32StringEncoding, CPUTF32BigEndianStringEncoding, CPUTF32LittleEndianStringEncoding});
+
+//! @name CPStringCompareOptions
+const CPCaseInsensitiveSearch = 1,
+			CPLiteralSearch = 2,
+			CPBackwardsSearch = 4,
+			CPAnchoredSearch = 8,
+			CPNumericSearch = 64,
+			CPDiacriticInsensitiveSearch = 128,
+			CPWidthInsensitiveSearch = 256,
+			CPForcedOrderingSearch = 512,
+			CPRegularExpressionSearch = 1024;
+Object.assign(exports, {CPCaseInsensitiveSearch, CPLiteralSearch, CPBackwardsSearch, CPAnchoredSearch, CPNumericSearch, CPDiacriticInsensitiveSearch, CPWidthInsensitiveSearch, CPForcedOrderingSearch, CPRegularExpressionSearch});
 
 //! NSString Cocoa Foundation class emulation
-export default class CPString extends objj_CPObject(Object) {
+class CPString extends CPObject {
 
 	$jsString = null;
 	$hashCode = null;
@@ -208,3 +221,7 @@ export default class CPString extends objj_CPObject(Object) {
 
 	//! @}
 }
+exports.CPString = CPString;
+
+const CPRangeSym = require('./CPRange'), CPMakeRange = CPRangeSym.CPMakeRange, CPMaxRange = CPRangeSym.CPMaxRange, CPNotFound = CPRangeSym.CPNotFound, CPStringFromRange = CPRangeSym.CPStringFromRange;
+const CPExceptionSym =  require('./CPException'), CPRangeException = CPExceptionSym.CPRangeException;

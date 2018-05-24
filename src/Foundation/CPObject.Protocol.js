@@ -2,7 +2,7 @@
  * Module that specifies the CPObject protocol.
  */
 
-import Protocol from "./Protocol";
+const ProtocolSym = require("./Protocol"), Protocol = ProtocolSym;
 
 const CPObjectP = new Protocol('CPObject');
 
@@ -34,4 +34,4 @@ CPObjectP.addSelector_isRequired_isClassMethod('performSelector:withObject:', tr
 CPObjectP.addSelector_isRequired_isClassMethod('performSelector:withObject:withObject:', true, true);
 CPObjectP.addSelector_isRequired_isClassMethod('performSelector:withObject:withObject:', true, false);
 CPObjectP.addSelector_isRequired_isClassMethod('isProxy', true, false);
-export default CPObjectP;
+exports.CPObjectP = CPObjectP;

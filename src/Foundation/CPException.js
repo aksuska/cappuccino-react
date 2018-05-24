@@ -2,15 +2,16 @@
  * Module that contains NSException class emulation and related symbols.
  **/
 
-import objj_msgSend, {objj_initialize} from '../Objective-J';
-import {objj_CPObject} from './CPObject';
-import CPString from './CPString';
+const OBJJ = require('../Objective-J'), objj_msgSend = OBJJ.objj_msgSend, objj_initialize = OBJJ.objj_initialize;
+const CPObjectSym = require('./CPObject'), objj_CPObject = CPObjectSym.objj_CPObject;
+const CPStringSym = require('./CPString'), CPString = CPStringSym.CPString;
 
 //! @typed CPString
-export const CPInvalidArgumentException = new CPString("CPInvalidArgumentException");
+exports.CPInvalidArgumentException = new CPString("CPInvalidArgumentException");
+exports.CPRangeException = new CPString("CPRangeException");
 
 //! NSException Cocoa Foundation class emulation
-export default class CPException extends objj_CPObject(Error) {
+class CPException extends objj_CPObject(Error) {
 
 	static $uncaughtExceptionHandler = null;
 
@@ -71,17 +72,20 @@ export default class CPException extends objj_CPObject(Error) {
 		throw this;
 	}
 }
+exports.CPException = CPException;
 
 //! @typed void (^)(Event e) : void
-export function CPGetUncaughtExceptionHandler() {
+function CPGetUncaughtExceptionHandler() {
 	return objj_initialize(CPException).$uncaughtExceptionHandler;
 }
+exports.CPGetUncaughtExceptionHandler = CPGetUncaughtExceptionHandler;
 
 //! @typed void : void (^)(Event e)
-export function CPSetUncaughtExceptionHandler(handler) {
+function CPSetUncaughtExceptionHandler(handler) {
 	if (objj_initialize(CPException).$uncaughtExceptionHandler !== null) {
 		window.removeEventListener('error', CPException.$uncaughtExceptionHandler, true);
 	}
 	CPException.$uncaughtExceptionHandler = handler;
 	window.addEventListener('error', handler, true);
 }
+exports.CPSetUncaughtExceptionHandler = CPSetUncaughtExceptionHandler;

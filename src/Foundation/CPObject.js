@@ -2,16 +2,7 @@
 	* Module that contains NSObject class emulation and related symbols. All framework classes derive from this base class, except for CPProxy.
  */
 
-import objj_msgSend, {
-	objj_propGuard,
-	objj_methodSignature,
-	objj_getMethod, objj_array, objj_initialize
-} from '../Objective-J';
-import CPString from './CPString';
-import CPException, {CPInvalidArgumentException} from "./CPException";
-const sprintf = require('sprintf-js').sprintf;
-
-export function objj_CPObject(superClass = Object) {
+function objj_CPObject(superClass = Object) {
 	//! NSObject Cocoa Foundation class emulation. Most methods in the Cocoa documentation appear to be applied by categories to add functionality
 	//!  needed only by certain subclasses. We will omit all of that as much as we we can to keep our objects lighter. Only methods/properties that
 	//!  reasonably apply to all objects should be defined here.
@@ -469,7 +460,17 @@ export function objj_CPObject(superClass = Object) {
 
 	return metaClass;
 }
+exports.objj_CPObject = objj_CPObject;
 
-// our default export is meta class as concrete class
-const CPObject = objj_CPObject();
-export default CPObject;
+// export meta class as concrete class
+exports.CPObject = objj_CPObject();
+
+// usage imports--import last so we avoid circular dependencies
+const OBJJ = require('../Objective-J'),
+		objj_msgSend = OBJJ.objj_msgSend,
+		objj_propGuard = OBJJ.objj_propGuard,
+		objj_methodSignature = OBJJ.objj_methodSignature,
+		objj_getMethod = OBJJ.objj_getMethod, objj_array = OBJJ.objj_array, objj_initialize = OBJJ.objj_initialize, objj_propertyDescriptor = OBJJ.objj_propertyDescriptor, objj_number = OBJJ.objj_number, objj_value = OBJJ.objj_value;
+const CPStringSym = require('./CPString'), CPString = CPStringSym.CPString;
+const CPExceptionSym = require("./CPException"), CPException = CPExceptionSym.CPException, CPInvalidArgumentException = CPExceptionSym.CPInvalidArgumentException;
+const sprintf = require('sprintf-js').sprintf;

@@ -3,18 +3,11 @@
  * We generally expect that these methods will only be called internally by the framework, so we allow run-time errors to occur by passing null/undefined values.
  **/
 
-import CPObject, {objj_CPObject} from './Foundation/CPObject';
-import CPString from './Foundation/CPString';
-import CPMethodSignature from './Foundation/CPMethodSignature';
-import CPInvocation from './Foundation/CPInvocation';
-import CPException, {CPInvalidArgumentException} from './Foundation/CPException';
-import CPArray from './Foundation/CPArray';
-
 /*!
 	* A "decorator" kind of function that facilitates making null-targeted methods into no-ops and handles message forwarding. Compiler rewrites all method calls to this function.
 */
 
-export default function objj_msgSend(target, selector, ...args) {
+function objj_msgSend(target, selector, ...args) {
 	// null target returns null
 	if (target === null)
 		return null;
@@ -51,13 +44,14 @@ export default function objj_msgSend(target, selector, ...args) {
 		}
 	}
 }
+exports.objj_msgSend = objj_msgSend;
 
 /*!
 	* A "decorator" kind of function that facilitates null-targeted dot syntax property access into no-ops. Compiler wraps all objects with dot syntax property access with this call.
 	* Will also support standard JS calls and chained calls: e.g. CPObject.alloc().init() -> objj_propGuard(CPObject, 'alloc', [], 'init', [])
 */
 
-export function objj_propGuard(object, ...args) {
+function objj_propGuard(object, ...args) {
 	while(args.length) {
 		if (object === null)
 			return null;
@@ -84,13 +78,14 @@ export function objj_propGuard(object, ...args) {
 
 	return object;
 }
+exports.objj_propGuard = objj_propGuard;
 
 /*!
  * +initialize support: called to run the one-time initialization of a class and its superclass. Can also be used as a wrapper to ensure initialization
  * on property access/method calls when forwarding is not needed or desired. Keeps track of what is initialized by adding classes as properties to function object.
 */
 
-export function objj_initialize(aClass) {
+function objj_initialize(aClass) {
 	// need to initialize top-down
 	let chain = [];
 	let targetClass = aClass;
@@ -116,37 +111,41 @@ export function objj_initialize(aClass) {
 	// return arg so we can use as wrapper
 	return aClass;
 }
+exports.objj_initialize = objj_initialize;
 
 /*!
  * Converts Objective-J selector string into the javascript function name
 */
 
-export function objj_function(selector) {
+function objj_function(selector) {
 	// let null be null
 	if (selector === null)
 		return null;
 
 	return selector.split(':').join('_');
 }
+exports.objj_function = objj_function;
 
 /*!
  * Converts property name to Objective-J setter selector string and visa versa
 */
 
-export function objj_prop2setter(property) {
+function objj_prop2setter(property) {
 	return 'set' + property[0].toUpperCase() + property.substr(1) + ':';
 }
+exports.objj_prop2setter = objj_prop2setter;
 
-export function objj_setter2prop(selector) {
+function objj_setter2prop(selector) {
 	const propName = selector.substr(3, selector.length - 4);
 	return propName[0].toLowerCase() + propName.substr(1);
 }
+exports.objj_setter2prop = objj_setter2prop;
 
 /*!
  * Utility function to get descriptor for property on object anywhere on the prototype chain
 */
 
-export function objj_propertyDescriptor(object, property) {
+function objj_propertyDescriptor(object, property) {
 	if (property in object === false)
 		return undefined;
 
@@ -158,12 +157,13 @@ export function objj_propertyDescriptor(object, property) {
 
 	return descriptor;
 }
+exports.objj_propertyDescriptor = objj_propertyDescriptor;
 
 /*!
  * Algorithm for returning function that matches selector, or undefined if none. Employs full search for regular method vs accessor.
 */
 
-export function objj_getMethod(object, selector) {
+function objj_getMethod(object, selector) {
 	// null just means undefined
 	if (selector === null) return undefined;
 
@@ -191,13 +191,14 @@ export function objj_getMethod(object, selector) {
 	}
 	return method;
 }
+exports.objj_getMethod = objj_getMethod;
 
 /*!
  * Convenience functions for creating objects that may depends on caller declaration, to avoid circular dependencies.
 */
 
 //! wrapper for method signature creation
-export function objj_methodSignature(object, selector) {
+function objj_methodSignature(object, selector) {
 	let method = objj_getMethod(object, selector);
 	if (method !== undefined) {
 		return objj_initialize(CPMethodSignature).signatureWithObjCTypes_('@@:' + '@'.repeat(method.length));
@@ -206,14 +207,16 @@ export function objj_methodSignature(object, selector) {
 		return null;
 	}
 }
+exports.objj_methodSignature = objj_methodSignature;
 
 //! wrapper for -[CPException raise:format:arguments:] for CPInvalidArgumentException
-export function objj_throw_arg(error, ...args) {
+function objj_throw_arg(error, ...args) {
 	objj_initialize(CPException).raise_format_arguments_(CPInvalidArgumentException, new CPString(error), args);
 }
+exports.objj_throw_arg = objj_throw_arg;
 
 //! wrapper for CPInvocation creation
-export function objj_invocation(target, selector, ...args) {
+function objj_invocation(target, selector, ...args) {
 	const methodSignature = objj_msgSend(target, 'methodSignatureForSelector:', selector);
 	if (methodSignature !== null) {
 		const invocation = objj_msgSend(CPInvocation, 'invocationWithMethodSignature:', methodSignature);
@@ -229,8 +232,19 @@ export function objj_invocation(target, selector, ...args) {
 	}
 	return null;
 }
+exports.objj_invocation = objj_invocation;
 
 //! wrapper for CPArray creation
-export function objj_array(array) {
+function objj_array(array) {
 	return new CPArray(array);
 }
+exports.objj_array = objj_array;
+
+// usage imports--import last so we avoid circular dependencies
+const CPObjectSym = require('./Foundation/CPObject'), CPObject = CPObjectSym.CPObject, objj_CPObject = CPObjectSym.objj_CPObject;
+const CPStringSym = require('./Foundation/CPString'), CPString = CPStringSym.CPString;
+const CPMethodSignatureSym = require('./Foundation/CPMethodSignature'), CPMethodSignature = CPMethodSignatureSym.CPMethodSignature;
+const CPInvocationSym = require('./Foundation/CPInvocation'), CPInvocation = CPInvocationSym.CPInvocation;
+const CPExceptionSym = require("./Foundation/CPException"), CPException = CPExceptionSym.CPException, CPInvalidArgumentException = CPExceptionSym.CPInvalidArgumentException;
+const CPArraySym = require('./Foundation/CPArray'), CPArray = CPArraySym.CPArray;
+
