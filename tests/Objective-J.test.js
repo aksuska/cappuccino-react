@@ -1,21 +1,21 @@
-import objj_msgSend, {
-	objj_propGuard,
-	objj_initialize,
-	objj_function,
-	objj_propertyDescriptor,
-	objj_invocation,
-	objj_methodSignature,
-	objj_throw_arg,
-	objj_prop2setter, objj_setter2prop, objj_getMethod, objj_array
-} from '../src/Objective-J';
-import {
-    CPObject,
-    CPString,
-    CPInvocation,
-    CPInvalidArgumentException,
-    CPMethodSignature,
-    CPArray, objj_CPObject
-} from '../src/Foundation/Foundation';
+const OBJJ = require('../src/Objective-J'),
+	objj_msgSend = OBJJ.objj_msgSend,
+	objj_propGuard = OBJJ.objj_propGuard,
+	objj_initialize = OBJJ.objj_initialize,
+	objj_function = OBJJ.objj_function,
+	objj_propertyDescriptor = OBJJ.objj_propertyDescriptor,
+	objj_invocation = OBJJ.objj_invocation,
+	objj_methodSignature = OBJJ.objj_methodSignature,
+	objj_throw_arg = OBJJ.objj_throw_arg,
+	objj_prop2setter = OBJJ.objj_prop2setter,
+	objj_setter2prop = OBJJ.objj_setter2prop,
+	objj_getMethod = OBJJ.objj_getMethod, objj_array = OBJJ.objj_array;
+const CPObjectSym = require('../src/Foundation/CPObject'), objj_CPObject = CPObjectSym.objj_CPObject, CPObject = CPObjectSym.CPObject;
+const CPStringSym = require('../src/Foundation/CPString'), CPString = CPStringSym.CPString;
+const CPInvocationSym = require('../src/Foundation/CPInvocation'), CPInvocation = CPInvocationSym.CPInvocation;
+const CPExceptionSym = require("../src/Foundation/CPException"), CPInvalidArgumentException = CPExceptionSym.CPInvalidArgumentException;
+const CPMethodSignatureSym = require('../src/Foundation/CPMethodSignature'), CPMethodSignature = CPMethodSignatureSym.CPMethodSignature;
+const CPArraySym = require("../src/Foundation/CPArray"), CPArray = CPArraySym.CPArray;
 
 /*
 	* Let's test utility function first as the main two might depend on them
