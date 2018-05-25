@@ -1,7 +1,8 @@
 const OBJJ = require('../src/Objective-J'), objj_propGuard = OBJJ.objj_propGuard;
 const CPObjectSym = require('../src/Foundation/CPObject'), CPObject = CPObjectSym.CPObject;
 const CPStringSym = require('../src/Foundation/CPString'), CPString = CPStringSym.CPString, CPSymbolStringEncoding = CPStringSym.CPSymbolStringEncoding, CPUTF8StringEncoding = CPStringSym.CPUTF8StringEncoding, CPUTF16StringEncoding = CPStringSym.CPUTF16StringEncoding;
-const CPExceptionSym = require("../src/Foundation/CPException"), CPInvalidArgumentException = CPExceptionSym.CPInvalidArgumentException;
+const CPExceptionSym = require("../src/Foundation/CPException"), CPInvalidArgumentException = CPExceptionSym.CPInvalidArgumentException, CPRangeException = CPExceptionSym.CPRangeException;
+const CPRangeSym = require('../src/Foundation/CPRange'), CPMakeRange = CPRangeSym.CPMakeRange;
 
 function testReadOnlyProperty(target, propName, setValue) {
 	try {
@@ -173,6 +174,130 @@ test("CPString -hash returns expected value", () => {
 
 test("CPString -hash is read-only", () => {
 	testReadOnlyProperty(CPString.new(), 'hash', 0);
+});
+
+test("CPString -componentsSeparatedByString: throws on null string", () => {
+	try {
+		CPString.alloc().componentsSeparatedByString_(null);
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.$jsString).toBe(CPInvalidArgumentException.$jsString);
+		expect(e.reason.$jsString).toBe(`-[CPString componentsSeparatedByString:]: nil argument`);
+	}
+});
+
+test("CPString -componentsSeparatedByString: returns array of self when separator empty", () => {
+	const testString = "test string", array = new CPString(testString).componentsSeparatedByString_(new CPString(''));
+	expect(array.count).toBe(1);
+	expect(array.$jsArray[0].$jsString).toEqual(testString);
+});
+
+test("CPString -componentsSeparatedByString: returns expected value", () => {
+	const testString = "test string", array = new CPString(testString).componentsSeparatedByString_(new CPString(' '));
+	expect(array.count).toBe(2);
+	const jsStringArray = array.$jsArray.map((string) => string.$jsString);
+	expect(jsStringArray).toEqual(["test", "string"]);
+});
+
+test("CPString -substringFromIndex: throws on index out of range", () => {
+	const testString = new CPString("test string");
+	try {
+		testString.substringFromIndex_(-1);
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.$jsString).toBe(CPRangeException.$jsString);
+		expect(e.reason.$jsString).toBe(`-[CPString substringFromIndex:]: Index 4294967295 out of bounds; string length ${testString.length}`);
+	}
+	try {
+		testString.substringFromIndex_(testString.length);
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.$jsString).toBe(CPRangeException.$jsString);
+		expect(e.reason.$jsString).toBe(`-[CPString substringFromIndex:]: Index ${testString.length} out of bounds; string length ${testString.length}`);
+	}
+});
+
+test("CPString -substringFromIndex: returns expected value", () => {
+	const testString = new CPString("test string");
+	expect(testString.substringFromIndex_(3).$jsString).toEqual("t string");
+});
+
+test("CPString -substringWithRange: throws on index out of range", () => {
+	const testString = new CPString("test string");
+	try {
+		testString.substringWithRange_(CPMakeRange(testString.length, 3));
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.$jsString).toBe(CPRangeException.$jsString);
+		expect(e.reason.$jsString).toBe(`-[CPString substringWithRange:]: Range {${testString.length}, 3} out of bounds; string length ${testString.length}`);
+	}
+	try {
+		testString.substringWithRange_(CPMakeRange(3, 10));
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.$jsString).toBe(CPRangeException.$jsString);
+		expect(e.reason.$jsString).toBe(`-[CPString substringWithRange:]: Range {3, 10} out of bounds; string length ${testString.length}`);
+	}
+	try {
+		testString.substringWithRange_(CPMakeRange(-1, 5));
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.$jsString).toBe(CPRangeException.$jsString);
+		expect(e.reason.$jsString).toBe(`-[CPString substringWithRange:]: Range {4294967295, 5} out of bounds; string length ${testString.length}`);
+	}
+	try {
+		testString.substringWithRange_(CPMakeRange(3, -1));
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.$jsString).toBe(CPRangeException.$jsString);
+		expect(e.reason.$jsString).toBe(`-[CPString substringWithRange:]: Range {3, 4294967295} out of bounds; string length ${testString.length}`);
+	}
+});
+
+test("CPString -substringWithRange: returns expected value", () => {
+	const testString = new CPString("test string");
+	expect(testString.substringWithRange_(CPMakeRange(3, 5)).$jsString).toEqual("t str");
+});
+
+test("CPString -substringToIndex: throws on index out of range", () => {
+	const testString = new CPString("test string");
+	try {
+		testString.substringToIndex_(-1);
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.$jsString).toBe(CPRangeException.$jsString);
+		expect(e.reason.$jsString).toBe(`-[CPString substringToIndex:]: Index 4294967295 out of bounds; string length ${testString.length}`);
+	}
+	try {
+		testString.substringToIndex_(15);
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.$jsString).toBe(CPRangeException.$jsString);
+		expect(e.reason.$jsString).toBe(`-[CPString substringToIndex:]: Index 15 out of bounds; string length ${testString.length}`);
+	}
+});
+
+test("CPString -substringToIndex: returns expected value", () => {
+	const testString = new CPString("test string");
+	expect(testString.substringToIndex_(6).$jsString).toEqual("test s");
 });
 
 test("CPString -description returns self", () => {
