@@ -83,7 +83,7 @@ class CPString extends CPObject {
 	//! @typed instancetype : CPString
 	initWithString_(aString) {
 		if (aString === null) {
-			objj_initialize(CPException).raise_format_(CPInvalidArgumentException, new CPString("-[%@ initWithString:]: null argument"), this.className);
+			objj_initialize(CPException).raise_format_(CPInvalidArgumentException, new CPString("-[%@ initWithString:]: nil argument"), this.className);
 			return null;
 		}
 
@@ -115,7 +115,7 @@ class CPString extends CPObject {
 	//! @typed instancetype : CPString, CPLocale, va_list
 	initWithFormat_locale_arguments_(format, locale, args) {
 		if (format === null) {
-			objj_initialize(CPException).raise_format_(CPInvalidArgumentException, new CPString("-[%@ initWithFormat:locale:arguments:]: null argument"), this.className);
+			objj_initialize(CPException).raise_format_(CPInvalidArgumentException, new CPString("-[%@ initWithFormat:locale:arguments:]: nil argument"), this.className);
 			return null;
 		}
 

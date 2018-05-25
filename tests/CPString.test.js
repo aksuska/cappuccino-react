@@ -44,7 +44,7 @@ test("CPString -initWithString: throws on null string", () => {
 	}
 	catch (e) {
 		expect(e.name.$jsString).toBe(CPInvalidArgumentException.$jsString);
-		expect(e.reason.$jsString).toBe(`-[CPString initWithString:]: null argument`);
+		expect(e.reason.$jsString).toBe(`-[CPString initWithString:]: nil argument`);
 	}
 });
 
@@ -62,7 +62,7 @@ test("CPString -initWithFormat:locale:arguments: throws on null format string", 
 	}
 	catch (e) {
 		expect(e.name.$jsString).toBe(CPInvalidArgumentException.$jsString);
-		expect(e.reason.$jsString).toBe(`-[CPString initWithFormat:locale:arguments:]: null argument`);
+		expect(e.reason.$jsString).toBe(`-[CPString initWithFormat:locale:arguments:]: nil argument`);
 	}
 });
 
