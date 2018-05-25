@@ -371,4 +371,4 @@ class CPString extends CPObject {
 exports.CPString = CPString;
 
 const CPRangeSym = require('./CPRange'), CPMakeRange = CPRangeSym.CPMakeRange, CPMaxRange = CPRangeSym.CPMaxRange, CPNotFound = CPRangeSym.CPNotFound, CPStringFromRange = CPRangeSym.CPStringFromRange;
-const CPExceptionSym =  require('./CPException'), CPException = CPExceptionSym.CPException, CPInvalidArgumentException = CPExceptionSym.CPInvalidArgumentException, CPRangeException = CPExceptionSym.CPRangeException;
+const CPExceptionSym =  require('./CPException'), CPException = CPExceptionSym.CPException, CPInvalidArgumentException = CPExceptionSym.CPInvalidArgumentException, CPRangeException = CPExceptionSym.CPRangeException, CPInternalInconsistencyException = CPExceptionSym.CPInternalInconsistencyException;
