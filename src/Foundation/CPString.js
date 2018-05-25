@@ -222,6 +222,169 @@ class CPString extends CPObject {
 
 	//! @}
 
+	//! @name Dividing Strings
+	//! @{
+
+	//! @typed CPArray<CPString> : CPString
+	componentsSeparatedByString_(separator) {
+		if (separator === null)
+			objj_initialize(CPException).raise_format_(CPInvalidArgumentException, new CPString("-[%@ componentsSeparatedByString:]: nil argument"), this.className);
+
+		// to imitate Cocoa behavior, we must return whole string if separator empty
+		if (separator.length === 0)
+			return new CPArray([this]);
+
+		// otherwise use split with literal string
+		const parts = this.$jsString.split(separator.$jsString);
+		for (let i=0; i<parts.length; i++) {
+			parts[i] = new CPString(parts[i]);
+		}
+		return new CPArray(parts);
+	}
+
+	//! @typed CPString : CPUInteger
+	substringFromIndex_(from) {
+		if (from >= this.length || from < 0)
+			objj_initialize(CPException).raise_format_(CPRangeException, new CPString("-[%@ substringFromIndex:]: Index %d out of bounds; string length %d"), this.className, (new Uint32Array([from]))[0], this.length);
+
+		return new CPString(this.$jsString.substr(from));
+	}
+
+	//! @typed CPString : CPRange
+	substringWithRange_(range) {
+		if (range.location >= this.length || CPMaxRange(range) > this.length || range.location < 0 || range.length < 0)
+			objj_initialize(CPException).raise_format_(CPRangeException, new CPString("-[%@ substringWithRange:]: Range %@ out of bounds; string length %d"), this.className, CPStringFromRange(range), this.length);
+
+		return new CPString(this.$jsString.substr(range.location, range.length));
+	}
+
+	//! @typed CPString : CPUInteger
+	substringToIndex_(to) {
+		if (to > this.length || to < 0)
+			objj_initialize(CPException).raise_format_(CPRangeException, new CPString("-[%@ substringToIndex:]: Index %d out of bounds; string length %d"), this.className, (new Uint32Array([to]))[0], this.length);
+
+		return new CPString(this.$jsString.substr(0, to));
+	}
+
+	//! @}
+
+	//! @name Finding Characters and Substrings
+	//! @{
+
+	// TODO: CPLocale support?
+	//! @typed CPRange : CPString, CPStringCompareOptions, CPRange, CPLocale
+	rangeOfString_options_range_locale_(searchString, mask, rangeOfReceiverToSearch, locale) {
+		if (searchString === null)
+			objj_initialize(CPException).raise_format_(CPInvalidArgumentException, new CPString("-[%@ rangeOfString:options:range:locale:]: nil argument"), this.className);
+		if (rangeOfReceiverToSearch.location >= this.length || CPMaxRange(rangeOfReceiverToSearch) > this.length || rangeOfReceiverToSearch.location < 0 || rangeOfReceiverToSearch.length < 0)
+			objj_initialize(CPException).raise_format_(CPRangeException, new CPString("-[%@ rangeOfString:options:range:locale:]: Range %@ out of bounds; string length %d"), this.className, CPStringFromRange(rangeOfReceiverToSearch), this.$jsString.length);
+
+		let candidate = this.substringWithRange_(rangeOfReceiverToSearch);
+		if (mask & CPCaseInsensitiveSearch === CPCaseInsensitiveSearch) {
+			searchString = searchString.lowercaseStringWithLocale_(locale);
+			candidate = candidate.lowercaseStringWithLocale_(locale);
+		}
+
+		const range = CPMakeRange(CPNotFound, 0);
+		candidate = candidate.$jsString;
+		searchString = searchString.$jsString;
+
+		if (mask & CPAnchoredSearch === CPAnchoredSearch) {
+			if (mask & CPBackwardsSearch === CPBackwardsSearch) {
+				if (candidate.endsWith(searchString)) {
+					range.location = candidate.length - searchString.length;
+					range.length = searchString.length;
+				}
+			}
+			else {
+				if (candidate.startsWith(searchString)) {
+					range.location = 0;
+					range.length = searchString.length;
+				}
+			}
+		}
+		else if (mask & CPBackwardsSearch === CPBackwardsSearch) {
+			// basically we just look for the last occurrence
+			let pos = 0;
+			while ((pos = candidate.indexOf(searchString, pos)) !== CPNotFound) {
+				range.location = pos;
+				pos += searchString.length;
+			}
+			if (range.location !== CPNotFound)
+				range.length = searchString.length;
+		}
+		else {
+			const idx = candidate.indexOf(searchString);
+			if (idx !== CPNotFound)
+			{
+				range.location = idx;
+				range.length = searchString.length;
+			}
+		}
+		return range;
+	}
+
+	//! @}
+
+	//! @name Changing Case
+	//! @{
+
+	//! @property(readonly, copy) CPString lowercaseString
+	get lowercaseString() {
+		return new CPString(this.$jsString.toLowerCase());
+	}
+
+	//! @property(readonly, copy) CPString localizedLowercaseString
+	get localizedLowercaseString() {
+		return new CPString(this.$jsString.toLocaleLowerCase());
+	}
+
+	// TODO: CPLocale support?
+	//! @typed CPString : CPLocale
+	lowercaseStringWithLocale_(locale) {
+		return new CPString(this.$jsString.toLocaleLowerCase());
+	}
+
+	//! @property(readonly, copy) CPString uppercaseString
+	get uppercaseString() {
+		return new CPString(this.$jsString.toUpperCase());
+	}
+
+	//! @property(readonly, copy) CPString localizedUppercaseString
+	get localizedUppercaseString() {
+		return new CPString(this.$jsString.toLocaleUpperCase());
+	}
+
+	// TODO: CPLocale support?
+	//! @typed CPString : CPLocale
+	uppercaseStringWithLocale_(locale) {
+		return new CPString(this.$jsString.toLocaleUpperCase());
+	}
+
+	//! @property(readonly, copy) CPString capitalizedString
+	get capitalizedString() {
+		let string = this.$jsString.toLowerCase();
+		string = string.replace(/(^|\s+)(\S)/, (match) => match.toUpperCase());
+		return new CPString(string);
+	}
+
+	//! @property(readonly, copy) CPString localizedCapitalizedString
+	get localizedCapitalizedString() {
+		let string = this.$jsString.toLocaleLowerCase();
+		string = string.replace(/(^|\s+)(\S)/, (match) => match.toLocaleUpperCase());
+		return new CPString(string);
+	}
+
+	// TODO: CPLocale support?
+	//! @typed CPString : CPLocale
+	capitalizedStringWithLocale_(locale) {
+		let string = this.$jsString.toLocaleLowerCase();
+		string = string.replace(/(^|\s+)(\S)/, (match) => match.toLocaleUpperCase());
+		return new CPString(string);
+	}
+
+	//! @}
+
 	//! @name Working with Encodings
 	//! @{
 
