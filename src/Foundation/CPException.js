@@ -9,6 +9,7 @@ const CPStringSym = require('./CPString'), CPString = CPStringSym.CPString;
 //! @typed CPString
 exports.CPInvalidArgumentException = new CPString("CPInvalidArgumentException");
 exports.CPRangeException = new CPString("CPRangeException");
+exports.CPInternalInconsistencyException = new CPString("CPInternalInconsistencyException");
 
 //! NSException Cocoa Foundation class emulation
 class CPException extends objj_CPObject(Error) {
