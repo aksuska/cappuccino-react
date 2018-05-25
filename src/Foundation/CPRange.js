@@ -2,7 +2,7 @@
  * Module that contains NSRange struct emulation and related symbols.
  */
 
-const CPStringSym = require("./CPString"), CPString = CPStringSym;
+const CPStringSym = require("./CPString"), CPString = CPStringSym.CPString;
 
 //! @typed CPInteger
 const CPNotFound = -1;
