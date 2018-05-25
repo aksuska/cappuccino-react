@@ -184,6 +184,15 @@ class CPString extends CPObject {
 	get hash() {return this.$hashCode;}
 
 	$generateHash() {
+		let source = this.$jsString, length = source.length, result = 2166136261;
+		for (let i = 0; i < length; i++) {
+			result = result ^ source.charCodeAt(i);
+			result = result * 16777619;
+		}
+		// check--throw exception  if hash is NaN
+		if (Number.isNaN(result))
+			objj_initialize(CPException).raise_format_(CPInternalInconsistencyException, new CPString("-[%@ $generateHash]: hash result of '%@' is NaN"), this.className, this);
+		this.$hashCode = (new Uint32Array([result]))[0];
 		let source = this.$jsString, length = source.length, result = length;
 		if (result <= 96) {
 			// First count in fours
