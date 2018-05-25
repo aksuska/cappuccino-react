@@ -6,7 +6,6 @@ const OBJJ = require('../src/Objective-J'),
 	objj_propertyDescriptor = OBJJ.objj_propertyDescriptor,
 	objj_invocation = OBJJ.objj_invocation,
 	objj_methodSignature = OBJJ.objj_methodSignature,
-	objj_throw_arg = OBJJ.objj_throw_arg,
 	objj_prop2setter = OBJJ.objj_prop2setter,
 	objj_setter2prop = OBJJ.objj_setter2prop,
 	objj_getMethod = OBJJ.objj_getMethod, objj_array = OBJJ.objj_array;
@@ -98,18 +97,6 @@ test("objj_methodSignature() returns signature or null", () => {
 	let sig = objj_methodSignature(new MyObject(), 'testMethod:');
 	expect(sig).toBeInstanceOf(CPMethodSignature);
 	expect(sig.$typeList.join('')).toBe('@@:@');
-});
-
-test("objj_throw_arg() throws expected exception", () => {
-	try {
-		objj_throw_arg("Exception with args %d, %d, %d", 1, 2, 3);
-		// this actually means the above failed to throw
-		expect(true).toBe(false);
-	}
-	catch (e) {
-		expect(e.name.jsString).toBe(CPInvalidArgumentException.jsString);
-		expect(e.reason.jsString).toBe("Exception with args 1, 2, 3");
-	}
 });
 
 test("objj_invocation() returns configured CPInvocation instance", () => {

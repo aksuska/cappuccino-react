@@ -60,7 +60,7 @@ function objj_propGuard(object, ...args) {
 
 		// must exist
 		if ((typeof object === 'object' && property in target === false) || (typeof object !== 'object' && target[property] === undefined))
-			objj_throw_arg(`Property '%s' not found on %s of type '%s'`, property, typeof target === 'function' ? 'class' : 'object', typeof target === 'function' ? target.name : target.constructor.name);
+			objj_initialize(CPException).raise_format_(CPInvalidArgumentException, new CPString(`Property '%s' not found on %s of type '%s'`), property, (typeof target === 'function' ? 'class' : 'object'), (typeof target === 'function' ? target.name : target.constructor.name));
 
 		object = object[property];
 		if (typeof object === 'function')
@@ -72,7 +72,7 @@ function objj_propGuard(object, ...args) {
 			if (descriptor.set)
 				target[property] = args.shift()[0];
 			else
-				objj_throw_arg("Assignment to readonly property");
+				objj_initialize(CPException).raise_format_(CPInvalidArgumentException, new CPString("Assignment to readonly property"));
 		}
 	}
 
@@ -208,12 +208,6 @@ function objj_methodSignature(object, selector) {
 	}
 }
 exports.objj_methodSignature = objj_methodSignature;
-
-//! wrapper for -[CPException raise:format:arguments:] for CPInvalidArgumentException
-function objj_throw_arg(error, ...args) {
-	objj_initialize(CPException).raise_format_arguments_(CPInvalidArgumentException, new CPString(error), args);
-}
-exports.objj_throw_arg = objj_throw_arg;
 
 //! wrapper for CPInvocation creation
 function objj_invocation(target, selector, ...args) {
