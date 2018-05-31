@@ -228,7 +228,7 @@ test("CPString -substringFromIndex: returns expected value", () => {
 	expect(testString.substringFromIndex_(3).$jsString).toEqual("t string");
 });
 
-test("CPString -substringWithRange: throws on index out of range", () => {
+test("CPString -substringWithRange: throws on out of range", () => {
 	const testString = new CPString("test string");
 	try {
 		testString.substringWithRange_(CPMakeRange(testString.length, 3));
