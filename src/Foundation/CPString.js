@@ -255,7 +255,7 @@ class CPString extends CPObject {
 			objj_initialize(CPException).raise_format_(CPRangeException, new CPString("-[%@ rangeOfString:options:range:locale:]: Range %@ out of bounds; string length %d"), this.className, CPStringFromRange(rangeOfReceiverToSearch), this.$jsString.length);
 
 		let candidate = this.substringWithRange_(rangeOfReceiverToSearch);
-		if (mask & CPCaseInsensitiveSearch === CPCaseInsensitiveSearch) {
+		if ((mask & CPCaseInsensitiveSearch) === CPCaseInsensitiveSearch) {
 			searchString = searchString.lowercaseStringWithLocale_(locale);
 			candidate = candidate.lowercaseStringWithLocale_(locale);
 		}
@@ -264,8 +264,8 @@ class CPString extends CPObject {
 		candidate = candidate.$jsString;
 		searchString = searchString.$jsString;
 
-		if (mask & CPAnchoredSearch === CPAnchoredSearch) {
-			if (mask & CPBackwardsSearch === CPBackwardsSearch) {
+		if ((mask & CPAnchoredSearch) === CPAnchoredSearch) {
+			if ((mask & CPBackwardsSearch) === CPBackwardsSearch) {
 				if (candidate.endsWith(searchString)) {
 					range.location = candidate.length - searchString.length;
 					range.length = searchString.length;
@@ -278,7 +278,7 @@ class CPString extends CPObject {
 				}
 			}
 		}
-		else if (mask & CPBackwardsSearch === CPBackwardsSearch) {
+		else if ((mask & CPBackwardsSearch) === CPBackwardsSearch) {
 			// basically we just look for the last occurrence
 			let pos = 0;
 			while ((pos = candidate.indexOf(searchString, pos)) !== CPNotFound) {
@@ -296,6 +296,11 @@ class CPString extends CPObject {
 				range.length = searchString.length;
 			}
 		}
+
+		// adjust range as it matches candidate rather than orig string
+		if (range.location !== CPNotFound)
+			range.location +=  rangeOfReceiverToSearch.location;
+
 		return range;
 	}
 
