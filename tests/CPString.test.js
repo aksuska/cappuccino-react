@@ -1,8 +1,10 @@
 const OBJJ = require('../src/Objective-J'), objj_propGuard = OBJJ.objj_propGuard;
 const CPObjectSym = require('../src/Foundation/CPObject'), CPObject = CPObjectSym.CPObject;
-const CPStringSym = require('../src/Foundation/CPString'), CPString = CPStringSym.CPString, CPSymbolStringEncoding = CPStringSym.CPSymbolStringEncoding, CPUTF8StringEncoding = CPStringSym.CPUTF8StringEncoding, CPUTF16StringEncoding = CPStringSym.CPUTF16StringEncoding;
+const CPStringSym = require('../src/Foundation/CPString'), CPString = CPStringSym.CPString,
+				CPSymbolStringEncoding = CPStringSym.CPSymbolStringEncoding, CPUTF8StringEncoding = CPStringSym.CPUTF8StringEncoding, CPUTF16StringEncoding = CPStringSym.CPUTF16StringEncoding,
+				CPCaseInsensitiveSearch = CPStringSym.CPCaseInsensitiveSearch, CPAnchoredSearch = CPStringSym.CPAnchoredSearch, CPBackwardsSearch = CPStringSym.CPBackwardsSearch;
 const CPExceptionSym = require("../src/Foundation/CPException"), CPInvalidArgumentException = CPExceptionSym.CPInvalidArgumentException, CPRangeException = CPExceptionSym.CPRangeException;
-const CPRangeSym = require('../src/Foundation/CPRange'), CPMakeRange = CPRangeSym.CPMakeRange;
+const CPRangeSym = require('../src/Foundation/CPRange'), CPMakeRange = CPRangeSym.CPMakeRange, CPNotFound = CPRangeSym.CPNotFound;
 
 function testReadOnlyProperty(target, propName, setValue) {
 	try {
@@ -298,6 +300,84 @@ test("CPString -substringToIndex: throws on index out of range", () => {
 test("CPString -substringToIndex: returns expected value", () => {
 	const testString = new CPString("test string");
 	expect(testString.substringToIndex_(6).$jsString).toEqual("test s");
+});
+
+test("CPString -rangeOfString:options:range:locale: throws on nil string", () => {
+	try {
+		CPString.alloc().rangeOfString_options_range_locale_(null, 0, CPMakeRange(0, 3), null);
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.$jsString).toBe(CPInvalidArgumentException.$jsString);
+		expect(e.reason.$jsString).toBe(`-[CPString rangeOfString:options:range:locale:]: nil argument`);
+	}
+});
+
+test("CPString -rangeOfString:options:range:locale: throws on out of range", () => {
+	const testString = new CPString("test string");
+	try {
+		testString.rangeOfString_options_range_locale_(new CPString('string'), 0, CPMakeRange(testString.length, 3), null);
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.$jsString).toBe(CPRangeException.$jsString);
+		expect(e.reason.$jsString).toBe(`-[CPString rangeOfString:options:range:locale:]: Range {${testString.length}, 3} out of bounds; string length ${testString.length}`);
+	}
+	try {
+		testString.rangeOfString_options_range_locale_(new CPString('string'), 0, CPMakeRange(3, 10), null);
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.$jsString).toBe(CPRangeException.$jsString);
+		expect(e.reason.$jsString).toBe(`-[CPString rangeOfString:options:range:locale:]: Range {3, 10} out of bounds; string length ${testString.length}`);
+	}
+	try {
+		testString.rangeOfString_options_range_locale_(new CPString('string'), 0, CPMakeRange(-1, 5), null);
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.$jsString).toBe(CPRangeException.$jsString);
+		expect(e.reason.$jsString).toBe(`-[CPString rangeOfString:options:range:locale:]: Range {4294967295, 5} out of bounds; string length ${testString.length}`);
+	}
+	try {
+		testString.rangeOfString_options_range_locale_(new CPString('string'), 0, CPMakeRange(3, -1), null);
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.$jsString).toBe(CPRangeException.$jsString);
+		expect(e.reason.$jsString).toBe(`-[CPString rangeOfString:options:range:locale:]: Range {3, 4294967295} out of bounds; string length ${testString.length}`);
+	}
+});
+
+test("CPString -rangeOfString:options:range:locale: returns expected value (no options, full string range)", () => {
+	const testString = new CPString("test string");
+	expect(testString.rangeOfString_options_range_locale_(new CPString("bogus"), 0, CPMakeRange(0, testString.length), null)).toEqual(CPMakeRange(CPNotFound, 0));
+	expect(testString.rangeOfString_options_range_locale_(new CPString("string"), 0, CPMakeRange(0, testString.length), null)).toEqual(CPMakeRange(5, 6));
+});
+
+
+test("CPString -rangeOfString:options:range:locale: returns expected value (case insensitive, partial string range)", () => {
+	const testString = new CPString("test string");
+	expect(testString.rangeOfString_options_range_locale_(new CPString("T"), 0, CPMakeRange(2, 6), null)).toEqual(CPMakeRange(CPNotFound, 0));
+	expect(testString.rangeOfString_options_range_locale_(new CPString("T"), CPCaseInsensitiveSearch, CPMakeRange(2, 6), null)).toEqual(CPMakeRange(3, 1));
+});
+
+test("CPString -rangeOfString:options:range:locale: returns expected value (anchored, partial string range)", () => {
+	const testString = new CPString("test string");
+	expect(testString.rangeOfString_options_range_locale_(new CPString("t"), CPAnchoredSearch, CPMakeRange(2, 6), null)).toEqual(CPMakeRange(CPNotFound, 0));
+	expect(testString.rangeOfString_options_range_locale_(new CPString("t"), CPAnchoredSearch, CPMakeRange(3, 6), null)).toEqual(CPMakeRange(3, 1));
+	expect(testString.rangeOfString_options_range_locale_(new CPString("t"), CPAnchoredSearch|CPBackwardsSearch, CPMakeRange(2, 6), null)).toEqual(CPMakeRange(CPNotFound, 0));
+	expect(testString.rangeOfString_options_range_locale_(new CPString("t"), CPAnchoredSearch|CPBackwardsSearch, CPMakeRange(2, 5), null)).toEqual(CPMakeRange(6, 1));
+});
+
+test("CPString -rangeOfString:options:range:locale: returns expected value (backwards search, full string range)", () => {
+	const testString = new CPString("test string");
+	expect(testString.rangeOfString_options_range_locale_(new CPString("t"), CPBackwardsSearch, CPMakeRange(0, testString.length), null)).toEqual(CPMakeRange(6, 1));
 });
 
 test("CPString -description returns self", () => {
