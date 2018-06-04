@@ -536,6 +536,6 @@ const OBJJ = require('../Objective-J'),
 		objj_propGuard = OBJJ.objj_propGuard,
 		objj_methodSignature = OBJJ.objj_methodSignature,
 		objj_getMethod = OBJJ.objj_getMethod, objj_array = OBJJ.objj_array, objj_initialize = OBJJ.objj_initialize, objj_propertyDescriptor = OBJJ.objj_propertyDescriptor, objj_number = OBJJ.objj_number, objj_value = OBJJ.objj_value;
-const CRStringSym = require('./CPString'), CRString = CRStringSym.CRString;
-const CRExceptionSym = require("./CPException"), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
+const CRStringSym = require('./CRString'), CRString = CRStringSym.CRString;
+const CRExceptionSym = require("./CRException"), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
 const sprintf = require('sprintf-js').sprintf;

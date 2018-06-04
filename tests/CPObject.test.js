@@ -1,10 +1,10 @@
 const OBJJ = require('../src/Objective-J'), objj_initialize = OBJJ.objj_initialize, objj_propGuard = OBJJ.objj_propGuard, objj_function = OBJJ.objj_function, objj_invocation = OBJJ.objj_invocation;
-const CRObjectSym = require('../src/Foundation/CPObject'), CRObject = CRObjectSym.CRObject;
-const CRStringSym = require('../src/Foundation/CPString'), CRString = CRStringSym.CRString;
-const CRExceptionSym = require("../src/Foundation/CPException"), CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
-const CRMethodSignatureSym = require('../src/Foundation/CPMethodSignature'), CRMethodSignature = CRMethodSignatureSym.CRMethodSignature;
+const CRObjectSym = require('../src/Foundation/CRObject'), CRObject = CRObjectSym.CRObject;
+const CRStringSym = require('../src/Foundation/CRString'), CRString = CRStringSym.CRString;
+const CRExceptionSym = require("../src/Foundation/CRException"), CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
+const CRMethodSignatureSym = require('../src/Foundation/CRMethodSignature'), CRMethodSignature = CRMethodSignatureSym.CRMethodSignature;
 const ProtocolSym = require("../src/Foundation/Protocol"), Protocol = ProtocolSym.Protocol;
-const CRArraySym = require("../src/Foundation/CPArray"), CRArray = CRArraySym.CRArray;
+const CRArraySym = require("../src/Foundation/CRArray"), CRArray = CRArraySym.CRArray;
 
 test("CRObject initialize called only once", () => {
 	CRObject.initialize = jest.fn();

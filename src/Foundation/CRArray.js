@@ -2,7 +2,7 @@
  * Module that contains NSArray class emulation and related symbols. We maintain a has-a relationship with a native Array object
  */
 
-const CRObjectSym = require('./CPObject'), CRObject = CRObjectSym.CRObject;
+const CRObjectSym = require('./CRObject'), CRObject = CRObjectSym.CRObject;
 
 //! NSArray Cocoa Foundation class emulation
 class CRArray extends CRObject {

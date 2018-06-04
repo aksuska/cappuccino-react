@@ -3,8 +3,8 @@
  **/
 
 const OBJJ = require('../Objective-J'), objj_msgSend = OBJJ.objj_msgSend, objj_initialize = OBJJ.objj_initialize;
-const CRObjectSym = require('./CPObject'), objj_CRObject = CRObjectSym.objj_CRObject;
-const CRStringSym = require('./CPString'), CRString = CRStringSym.CRString;
+const CRObjectSym = require('./CRObject'), objj_CRObject = CRObjectSym.objj_CRObject;
+const CRStringSym = require('./CRString'), CRString = CRStringSym.CRString;
 
 //! @typed CRString
 exports.CRInvalidArgumentException = new CRString("CRInvalidArgumentException");

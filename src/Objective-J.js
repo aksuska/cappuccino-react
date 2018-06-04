@@ -235,10 +235,10 @@ function objj_array(array) {
 exports.objj_array = objj_array;
 
 // usage imports--import last so we avoid circular dependencies
-const CRObjectSym = require('./Foundation/CPObject'), CRObject = CRObjectSym.CRObject, objj_CRObject = CRObjectSym.objj_CRObject;
-const CRStringSym = require('./Foundation/CPString'), CRString = CRStringSym.CRString;
-const CRMethodSignatureSym = require('./Foundation/CPMethodSignature'), CRMethodSignature = CRMethodSignatureSym.CRMethodSignature;
-const CRInvocationSym = require('./Foundation/CPInvocation'), CRInvocation = CRInvocationSym.CRInvocation;
-const CRExceptionSym = require("./Foundation/CPException"), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
-const CRArraySym = require('./Foundation/CPArray'), CRArray = CRArraySym.CRArray;
+const CRObjectSym = require('./Foundation/CRObject'), CRObject = CRObjectSym.CRObject, objj_CRObject = CRObjectSym.objj_CRObject;
+const CRStringSym = require('./Foundation/CRString'), CRString = CRStringSym.CRString;
+const CRMethodSignatureSym = require('./Foundation/CRMethodSignature'), CRMethodSignature = CRMethodSignatureSym.CRMethodSignature;
+const CRInvocationSym = require('./Foundation/CRInvocation'), CRInvocation = CRInvocationSym.CRInvocation;
+const CRExceptionSym = require("./Foundation/CRException"), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
+const CRArraySym = require('./Foundation/CRArray'), CRArray = CRArraySym.CRArray;
 

@@ -3,8 +3,8 @@
  **/
 
 const OBJJ = require('../Objective-J'), objj_propGuard = OBJJ.objj_propGuard, objj_initialize = OBJJ.objj_initialize;
-const CRObjectSym = require('./CPObject'), CRObject = CRObjectSym.CRObject;
-const CRArraySym = require("./CPArray"), CRArray = CRArraySym.CRArray;
+const CRObjectSym = require('./CRObject'), CRObject = CRObjectSym.CRObject;
+const CRArraySym = require("./CRArray"), CRArray = CRArraySym.CRArray;
 const vsprintf = require("sprintf-js").vsprintf;
 const iconv = require('iconv-lite');
 
@@ -375,5 +375,5 @@ class CRString extends CRObject {
 }
 exports.CRString = CRString;
 
-const CRRangeSym = require('./CPRange'), CRMakeRange = CRRangeSym.CRMakeRange, CRMaxRange = CRRangeSym.CRMaxRange, CRNotFound = CRRangeSym.CRNotFound, CRStringFromRange = CRRangeSym.CRStringFromRange;
-const CRExceptionSym =  require('./CPException'), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException, CRRangeException = CRExceptionSym.CRRangeException, CRInternalInconsistencyException = CRExceptionSym.CRInternalInconsistencyException;
+const CRRangeSym = require('./CRRange'), CRMakeRange = CRRangeSym.CRMakeRange, CRMaxRange = CRRangeSym.CRMaxRange, CRNotFound = CRRangeSym.CRNotFound, CRStringFromRange = CRRangeSym.CRStringFromRange;
+const CRExceptionSym =  require('./CRException'), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException, CRRangeException = CRExceptionSym.CRRangeException, CRInternalInconsistencyException = CRExceptionSym.CRInternalInconsistencyException;

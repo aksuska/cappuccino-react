@@ -1,10 +1,10 @@
 const OBJJ = require('../src/Objective-J'), objj_propGuard = OBJJ.objj_propGuard;
-const CRObjectSym = require('../src/Foundation/CPObject'), CRObject = CRObjectSym.CRObject;
-const CRStringSym = require('../src/Foundation/CPString'), CRString = CRStringSym.CRString,
+const CRObjectSym = require('../src/Foundation/CRObject'), CRObject = CRObjectSym.CRObject;
+const CRStringSym = require('../src/Foundation/CRString'), CRString = CRStringSym.CRString,
 				CRSymbolStringEncoding = CRStringSym.CRSymbolStringEncoding, CRUTF8StringEncoding = CRStringSym.CRUTF8StringEncoding, CRUTF16StringEncoding = CRStringSym.CRUTF16StringEncoding,
 				CRCaseInsensitiveSearch = CRStringSym.CRCaseInsensitiveSearch, CRAnchoredSearch = CRStringSym.CRAnchoredSearch, CRBackwardsSearch = CRStringSym.CRBackwardsSearch;
-const CRExceptionSym = require("../src/Foundation/CPException"), CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException, CRRangeException = CRExceptionSym.CRRangeException;
-const CRRangeSym = require('../src/Foundation/CPRange'), CRMakeRange = CRRangeSym.CRMakeRange, CRNotFound = CRRangeSym.CRNotFound;
+const CRExceptionSym = require("../src/Foundation/CRException"), CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException, CRRangeException = CRExceptionSym.CRRangeException;
+const CRRangeSym = require('../src/Foundation/CRRange'), CRMakeRange = CRRangeSym.CRMakeRange, CRNotFound = CRRangeSym.CRNotFound;
 
 function testReadOnlyProperty(target, propName, setValue) {
 	try {

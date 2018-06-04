@@ -6,7 +6,7 @@
 import objj_msgSend, {objj_propGuard} from '../Objective-J';
 import Protocol from './Protocol';
 // object imports
-import CRObject, {objj_CRObject} from './CPObject';
+import CRObject, {objj_CRObject} from './CRObject';
 import CRString, {
 	CRASCIIStringEncoding,
 	CRNEXTSTEPStringEncoding,
@@ -40,14 +40,14 @@ import CRString, {
 	CRWidthInsensitiveSearch,
 	CRForcedOrderingSearch,
 	CRRegularExpressionSearch
-} from './CPString';
-import CRMethodSignature from './CPMethodSignature';
-import CRInvocation from './CPInvocation';
-import CRException, {CRInvalidArgumentException} from './CPException';
-import CRDictionary from "./CPDictionary";
-import CRArray from './CPArray';
+} from './CRString';
+import CRMethodSignature from './CRMethodSignature';
+import CRInvocation from './CRInvocation';
+import CRException, {CRInvalidArgumentException} from './CRException';
+import CRDictionary from "./CRDictionary";
+import CRArray from './CRArray';
 // foundation types import
-import {CRNotFound, CREqualRanges, CRIntersectionRange, CRLocationInRange, CRMakeRange, CRMaxRange, CRRangeFromString, CRStringFromRange, CRUnionRange} from './CPRange';
+import {CRNotFound, CREqualRanges, CRIntersectionRange, CRLocationInRange, CRMakeRange, CRMaxRange, CRRangeFromString, CRStringFromRange, CRUnionRange} from './CRRange';
 /*
  * Objective-J Runtime Exports
 */

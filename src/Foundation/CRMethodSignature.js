@@ -5,8 +5,8 @@
  **/
 
 const OBJJ = require('../Objective-J'), objj_initialize = OBJJ.objj_initialize;
-const CRObjectSym = require('./CPObject'), CRObject = CRObjectSym.CRObject;
-const CRExceptionSym = require("./CPException"), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
+const CRObjectSym = require('./CRObject'), CRObject = CRObjectSym.CRObject;
+const CRExceptionSym = require("./CRException"), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
 
 //! NSMethodSignature Cocoa Foundation class emulation
 class CRMethodSignature extends CRObject {
@@ -53,4 +53,4 @@ class CRMethodSignature extends CRObject {
 }
 exports.CRMethodSignature = CRMethodSignature;
 
-const CRStringSym = require("./CPString"), CRString = CRStringSym.CRString;
+const CRStringSym = require("./CRString"), CRString = CRStringSym.CRString;

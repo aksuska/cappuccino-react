@@ -9,12 +9,12 @@ const OBJJ = require('../src/Objective-J'),
 	objj_prop2setter = OBJJ.objj_prop2setter,
 	objj_setter2prop = OBJJ.objj_setter2prop,
 	objj_getMethod = OBJJ.objj_getMethod, objj_array = OBJJ.objj_array;
-const CRObjectSym = require('../src/Foundation/CPObject'), objj_CRObject = CRObjectSym.objj_CRObject, CRObject = CRObjectSym.CRObject;
-const CRStringSym = require('../src/Foundation/CPString'), CRString = CRStringSym.CRString;
-const CRInvocationSym = require('../src/Foundation/CPInvocation'), CRInvocation = CRInvocationSym.CRInvocation;
-const CRExceptionSym = require("../src/Foundation/CPException"), CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
-const CRMethodSignatureSym = require('../src/Foundation/CPMethodSignature'), CRMethodSignature = CRMethodSignatureSym.CRMethodSignature;
-const CRArraySym = require("../src/Foundation/CPArray"), CRArray = CRArraySym.CRArray;
+const CRObjectSym = require('../src/Foundation/CRObject'), objj_CRObject = CRObjectSym.objj_CRObject, CRObject = CRObjectSym.CRObject;
+const CRStringSym = require('../src/Foundation/CRString'), CRString = CRStringSym.CRString;
+const CRInvocationSym = require('../src/Foundation/CRInvocation'), CRInvocation = CRInvocationSym.CRInvocation;
+const CRExceptionSym = require("../src/Foundation/CRException"), CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
+const CRMethodSignatureSym = require('../src/Foundation/CRMethodSignature'), CRMethodSignature = CRMethodSignatureSym.CRMethodSignature;
+const CRArraySym = require("../src/Foundation/CRArray"), CRArray = CRArraySym.CRArray;
 
 /*
 	* Let's test utility function first as the main two might depend on them

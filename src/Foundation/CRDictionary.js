@@ -3,9 +3,9 @@
  **/
 
 const OBJJ = require('../Objective-J'), objj_msgSend = OBJJ.objj_msgSend, objj_initialize = OBJJ.objj_initialize;
-const CRObjectSym = require('./CPObject'), CRObject = CRObjectSym.CRObject;
-const CRStringSym = require('./CPString'), CRString = CRStringSym.CRString;
-const CRExceptionSym = require("./CPException"), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
+const CRObjectSym = require('./CRObject'), CRObject = CRObjectSym.CRObject;
+const CRStringSym = require('./CRString'), CRString = CRStringSym.CRString;
+const CRExceptionSym = require("./CRException"), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
 
 //! NSDictionary Cocoa Foundation class emulation
 class CRDictionary extends CRObject {
