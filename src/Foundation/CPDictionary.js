@@ -3,12 +3,12 @@
  **/
 
 const OBJJ = require('../Objective-J'), objj_msgSend = OBJJ.objj_msgSend, objj_initialize = OBJJ.objj_initialize;
-const CPObjectSym = require('./CPObject'), CPObject = CPObjectSym.CPObject;
-const CPStringSym = require('./CPString'), CPString = CPStringSym.CPString;
-const CPExceptionSym = require("./CPException"), CPException = CPExceptionSym.CPException, CPInvalidArgumentException = CPExceptionSym.CPInvalidArgumentException;
+const CRObjectSym = require('./CPObject'), CRObject = CRObjectSym.CRObject;
+const CRStringSym = require('./CPString'), CRString = CRStringSym.CRString;
+const CRExceptionSym = require("./CPException"), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
 
 //! NSDictionary Cocoa Foundation class emulation
-class CPDictionary extends CPObject {
+class CRDictionary extends CRObject {
 
 	$jsMap;
 	
@@ -43,6 +43,6 @@ class CPDictionary extends CPObject {
 		return this;
 	}
 }
-exports.CPDictionary = CPDictionary;
+exports.CRDictionary = CRDictionary;
 
-CPDictionary.$conformsTo.push('CPCopying', 'CPMutableCopying');
+CRDictionary.$conformsTo.push('CRCopying', 'CRMutableCopying');

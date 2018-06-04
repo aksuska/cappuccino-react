@@ -1,17 +1,17 @@
 const OBJJ = require('../src/Objective-J'), objj_initialize = OBJJ.objj_initialize, objj_propGuard = OBJJ.objj_propGuard, objj_function = OBJJ.objj_function, objj_invocation = OBJJ.objj_invocation;
-const CPObjectSym = require('../src/Foundation/CPObject'), CPObject = CPObjectSym.CPObject;
-const CPStringSym = require('../src/Foundation/CPString'), CPString = CPStringSym.CPString;
-const CPExceptionSym = require("../src/Foundation/CPException"), CPInvalidArgumentException = CPExceptionSym.CPInvalidArgumentException;
-const CPMethodSignatureSym = require('../src/Foundation/CPMethodSignature'), CPMethodSignature = CPMethodSignatureSym.CPMethodSignature;
+const CRObjectSym = require('../src/Foundation/CPObject'), CRObject = CRObjectSym.CRObject;
+const CRStringSym = require('../src/Foundation/CPString'), CRString = CRStringSym.CRString;
+const CRExceptionSym = require("../src/Foundation/CPException"), CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
+const CRMethodSignatureSym = require('../src/Foundation/CPMethodSignature'), CRMethodSignature = CRMethodSignatureSym.CRMethodSignature;
 const ProtocolSym = require("../src/Foundation/Protocol"), Protocol = ProtocolSym.Protocol;
-const CPArraySym = require("../src/Foundation/CPArray"), CPArray = CPArraySym.CPArray;
+const CRArraySym = require("../src/Foundation/CPArray"), CRArray = CRArraySym.CRArray;
 
-test("CPObject initialize called only once", () => {
-	CPObject.initialize = jest.fn();
-	objj_initialize(CPObject);
-	const MyObject = class extends CPObject { static initialize() { this.newClassProperty = 1; }	};
+test("CRObject initialize called only once", () => {
+	CRObject.initialize = jest.fn();
+	objj_initialize(CRObject);
+	const MyObject = class extends CRObject { static initialize() { this.newClassProperty = 1; }	};
 	objj_initialize(MyObject);
-	expect(CPObject.initialize).toHaveBeenCalledTimes(1);
+	expect(CRObject.initialize).toHaveBeenCalledTimes(1);
 });
 
 function testReadOnlyProperty(target, propName, setValue) {
@@ -21,256 +21,256 @@ function testReadOnlyProperty(target, propName, setValue) {
 		expect(true).toBe(false);
 	}
 	catch (e) {
-		expect(e.name.jsString).toBe(CPInvalidArgumentException.jsString);
+		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
 		expect(e.reason.jsString).toBe("Assignment to readonly property");
 	}
 }
 
-test("CPObject +initialized is read-only", () => {
-	testReadOnlyProperty(CPObject, 'initialized', false);
+test("CRObject +initialized is read-only", () => {
+	testReadOnlyProperty(CRObject, 'initialized', false);
 });
 
-test("CPObject construct() gets unique UID", () => {
-	const object1 = new CPObject();
+test("CRObject construct() gets unique UID", () => {
+	const object1 = new CRObject();
 	expect(object1.$UID).toBeGreaterThan(0);
-	const object2 = new CPObject();
+	const object2 = new CRObject();
 	expect(object2.$UID).not.toBe(object1.$UID);
-	const object3 = new CPObject();
+	const object3 = new CRObject();
 	expect(object3.$UID).not.toBe(object1.$UID);
 	expect(object3.$UID).not.toBe(object2.$UID);
 });
 
-test("CPObject +alloc returns new, uninitialized object", () => {
-	const object = CPObject.alloc();
-	expect(object).toBeInstanceOf(CPObject);
+test("CRObject +alloc returns new, uninitialized object", () => {
+	const object = CRObject.alloc();
+	expect(object).toBeInstanceOf(CRObject);
 	expect(object.$exposedBindings).toBeNull();
 	expect(object.$observationInfo).toBeNull();
 });
 
-test("CPObject -init returns initialized object", () => {
-	const object = CPObject.alloc().init();
-	expect(object).toBeInstanceOf(CPObject);
+test("CRObject -init returns initialized object", () => {
+	const object = CRObject.alloc().init();
+	expect(object).toBeInstanceOf(CRObject);
 	expect(object.$exposedBindings).not.toBeNull();
 	expect(object.$observationInfo).not.toBeNull();
 });
 
-test("CPObject +copy returns self", () => {
-	expect(CPObject.copy()).toBe(CPObject);
+test("CRObject +copy returns self", () => {
+	expect(CRObject.copy()).toBe(CRObject);
 });
 
-test("CPObject -copy raises does-not-recognize exception", () => {
-	const object = CPObject.alloc().init();
+test("CRObject -copy raises does-not-recognize exception", () => {
+	const object = CRObject.alloc().init();
 	try {
 		object.copy();
 		// this actually means the above failed to throw
 		expect(true).toBe(false);
 	}
 	catch (e) {
-		expect(e.name.jsString).toBe(CPInvalidArgumentException.jsString);
-		expect(e.reason.jsString).toBe(`-[CPObject copyWithZone:]: unrecognized selector sent to instance ${object.$uidString()}`);
+		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
+		expect(e.reason.jsString).toBe(`-[CRObject copyWithZone:]: unrecognized selector sent to instance ${object.$uidString()}`);
 	}
 });
 
-test("CPObject +copyWithZone: returns self", () => {
-	expect(CPObject.copyWithZone_()).toBe(CPObject);
+test("CRObject +copyWithZone: returns self", () => {
+	expect(CRObject.copyWithZone_()).toBe(CRObject);
 });
 
-test("CPObject +mutableCopy returns self", () => {
-	expect(CPObject.mutableCopy()).toBe(CPObject);
+test("CRObject +mutableCopy returns self", () => {
+	expect(CRObject.mutableCopy()).toBe(CRObject);
 });
 
-test("CPObject +mutableCopyWithZone: returns self", () => {
-	expect(CPObject.mutableCopyWithZone_()).toBe(CPObject);
+test("CRObject +mutableCopyWithZone: returns self", () => {
+	expect(CRObject.mutableCopyWithZone_()).toBe(CRObject);
 });
 
-test("CPObject +new returns initialized object", () => {
-	const object = CPObject.new();
-	expect(object).toBeInstanceOf(CPObject);
+test("CRObject +new returns initialized object", () => {
+	const object = CRObject.new();
+	expect(object).toBeInstanceOf(CRObject);
 	expect(object.$exposedBindings).not.toBeNull();
 	expect(object.$observationInfo).not.toBeNull();
 });
 
-test("CPObject +class returns self", () => {
-	expect(CPObject.class()).toBe(CPObject);
+test("CRObject +class returns self", () => {
+	expect(CRObject.class()).toBe(CRObject);
 });
 
-test("CPObject +superclass on CPObject returns null", () => {
-	expect(CPObject.superclass).toBeNull();
+test("CRObject +superclass on CRObject returns null", () => {
+	expect(CRObject.superclass).toBeNull();
 });
 
-test("CPObject +superclass returns super class", () => {
-	const MyClass = class extends CPObject {};
-	expect(MyClass.superclass).toBe(CPObject);
+test("CRObject +superclass returns super class", () => {
+	const MyClass = class extends CRObject {};
+	expect(MyClass.superclass).toBe(CRObject);
 	const MyClass2 = class extends MyClass {};
 	expect(MyClass2.superclass).toBe(MyClass);
 });
 
-test("CPObject +superclass is read-only", () => {
-	testReadOnlyProperty(CPObject, 'superclass', CPObject);
+test("CRObject +superclass is read-only", () => {
+	testReadOnlyProperty(CRObject, 'superclass', CRObject);
 });
 
-test("CPObject -superclass on CPObject returns null", () => {
-	expect(CPObject.new().superclass).toBeNull();
+test("CRObject -superclass on CRObject returns null", () => {
+	expect(CRObject.new().superclass).toBeNull();
 });
 
-test("CPObject -superclass returns super class", () => {
-	const MyClass = class extends CPObject {};
-	expect(MyClass.new().superclass).toBe(CPObject);
+test("CRObject -superclass returns super class", () => {
+	const MyClass = class extends CRObject {};
+	expect(MyClass.new().superclass).toBe(CRObject);
 	const MyClass2 = class extends MyClass {};
 	expect(MyClass2.new().superclass).toBe(MyClass);
 });
 
-test("CPObject -superclass is read-only", () => {
-	testReadOnlyProperty(CPObject.new(), 'superclass', CPObject)
+test("CRObject -superclass is read-only", () => {
+	testReadOnlyProperty(CRObject.new(), 'superclass', CRObject)
 });
 
-test("CPObject +isSubclassOfClass: returns expected value", () => {
-	const MyClass = class extends CPObject {};
-	expect(MyClass.isSubclassOfClass_(CPObject)).toBeTruthy();
+test("CRObject +isSubclassOfClass: returns expected value", () => {
+	const MyClass = class extends CRObject {};
+	expect(MyClass.isSubclassOfClass_(CRObject)).toBeTruthy();
 	const MyClass2 = class extends MyClass {};
-	expect(MyClass2.isSubclassOfClass_(CPObject)).toBeTruthy();
-	const MyClass3 = class extends CPObject {};
+	expect(MyClass2.isSubclassOfClass_(CRObject)).toBeTruthy();
+	const MyClass3 = class extends CRObject {};
 	expect(MyClass3.isSubclassOfClass_(MyClass2)).toBeFalsy();
 });
 
-test("CPObject +className returns expected class name as CPString", () => {
-	const className = CPObject.className;
-	expect(className).toBeInstanceOf(CPString);
-	expect(className.jsString).toBe("CPObject");
-	const MyClass = class extends CPObject {};
+test("CRObject +className returns expected class name as CRString", () => {
+	const className = CRObject.className;
+	expect(className).toBeInstanceOf(CRString);
+	expect(className.jsString).toBe("CRObject");
+	const MyClass = class extends CRObject {};
 	expect(MyClass.className.jsString).toBe("MyClass");
 });
 
-test("CPObject +className is read-only", () => {
-	testReadOnlyProperty(CPObject, 'className', "MyClass");
+test("CRObject +className is read-only", () => {
+	testReadOnlyProperty(CRObject, 'className', "MyClass");
 });
 
-test("CPObject -className returns expected class name as CPString", () => {
-	const object = CPObject.new();
+test("CRObject -className returns expected class name as CRString", () => {
+	const object = CRObject.new();
 	const className = object.className;
-	expect(className).toBeInstanceOf(CPString);
-	expect(className.jsString).toBe("CPObject");
-	const MyClass = class extends CPObject {};
+	expect(className).toBeInstanceOf(CRString);
+	expect(className.jsString).toBe("CRObject");
+	const MyClass = class extends CRObject {};
 	const object2 = MyClass.new();
 	expect(object2.className.jsString).toBe("MyClass");
 });
 
-test("CPObject -className is read-only", () => {
-	testReadOnlyProperty(CPObject.new(), 'className', "MyClass");
+test("CRObject -className is read-only", () => {
+	testReadOnlyProperty(CRObject.new(), 'className', "MyClass");
 });
 
-test("CPObject +isEqual: returns expected value", () => {
-	const MyClass = class extends CPObject {};
-	expect(CPObject.isEqual_(CPObject)).toBeTruthy();
-	expect(MyClass.isEqual_(CPObject)).toBeFalsy();
+test("CRObject +isEqual: returns expected value", () => {
+	const MyClass = class extends CRObject {};
+	expect(CRObject.isEqual_(CRObject)).toBeTruthy();
+	expect(MyClass.isEqual_(CRObject)).toBeFalsy();
 	expect(MyClass.isEqual_(MyClass)).toBeTruthy();
 });
 
-test("CPObject -isEqual: returns expected value", () => {
-	const object = CPObject.new();
+test("CRObject -isEqual: returns expected value", () => {
+	const object = CRObject.new();
 	const clone = object;
 	expect(object.isEqual_(clone)).toBeTruthy();
-	const object2 = CPObject.new();
+	const object2 = CRObject.new();
 	expect(object2.isEqual_(clone)).toBeFalsy();
 });
 
-test("CPObject +hash returns expected value", () => {
-	expect(CPObject.hash).toBe(CPObject.$UID);
+test("CRObject +hash returns expected value", () => {
+	expect(CRObject.hash).toBe(CRObject.$UID);
 });
 
-test("CPObject +hash is read-only", () => {
-	testReadOnlyProperty(CPObject, 'hash', 0);
+test("CRObject +hash is read-only", () => {
+	testReadOnlyProperty(CRObject, 'hash', 0);
 });
 
-test("CPObject -hash returns expected value", () => {
-	const object = CPObject.new();
+test("CRObject -hash returns expected value", () => {
+	const object = CRObject.new();
 	expect(object.hash).toBe(object.$UID);
 });
 
-test("CPObject -hash is read-only", () => {
-	testReadOnlyProperty(CPObject.new(), 'hash', 0);
+test("CRObject -hash is read-only", () => {
+	testReadOnlyProperty(CRObject.new(), 'hash', 0);
 });
 
-test("CPObject +self returns self", () => {
-	expect(CPObject.self()).toBe(CPObject);
+test("CRObject +self returns self", () => {
+	expect(CRObject.self()).toBe(CRObject);
 });
 
-test("CPObject -self returns self", () => {
-	const object = CPObject.new();
+test("CRObject -self returns self", () => {
+	const object = CRObject.new();
 	expect(object.self()).toBe(object);
 });
 
-test("CPObject +isKindOfClass: returns expected value", () => {
-	const MyClass = class extends CPObject {};
+test("CRObject +isKindOfClass: returns expected value", () => {
+	const MyClass = class extends CRObject {};
 	const MyClass2 = class extends MyClass {};
-	expect(CPObject.isKindOfClass_(CPObject)).toBeTruthy();
-	expect(MyClass.isKindOfClass_(CPObject)).toBeTruthy();
-	expect(MyClass2.isKindOfClass_(CPObject)).toBeTruthy();
+	expect(CRObject.isKindOfClass_(CRObject)).toBeTruthy();
+	expect(MyClass.isKindOfClass_(CRObject)).toBeTruthy();
+	expect(MyClass2.isKindOfClass_(CRObject)).toBeTruthy();
 	expect(MyClass.isKindOfClass_(MyClass2)).toBeFalsy();
 });
 
-test("CPObject -isKindOfClass: returns expected value", () => {
-	const MyClass = class extends CPObject {};
+test("CRObject -isKindOfClass: returns expected value", () => {
+	const MyClass = class extends CRObject {};
 	const MyClass2 = class extends MyClass {};
-	expect(CPObject.new().isKindOfClass_(CPObject)).toBeTruthy();
-	expect(MyClass.new().isKindOfClass_(CPObject)).toBeTruthy();
-	expect(MyClass2.new().isKindOfClass_(CPObject)).toBeTruthy();
+	expect(CRObject.new().isKindOfClass_(CRObject)).toBeTruthy();
+	expect(MyClass.new().isKindOfClass_(CRObject)).toBeTruthy();
+	expect(MyClass2.new().isKindOfClass_(CRObject)).toBeTruthy();
 	expect(MyClass.new().isKindOfClass_(MyClass2)).toBeFalsy();
 });
 
-test("CPObject -isMemberOfClass: returns expected value", () => {
-	const MyClass = class extends CPObject {};
-	expect(CPObject.new().isMemberOfClass_(CPObject)).toBeTruthy();
-	expect(MyClass.new().isMemberOfClass_(CPObject)).toBeFalsy();
+test("CRObject -isMemberOfClass: returns expected value", () => {
+	const MyClass = class extends CRObject {};
+	expect(CRObject.new().isMemberOfClass_(CRObject)).toBeTruthy();
+	expect(MyClass.new().isMemberOfClass_(CRObject)).toBeFalsy();
 	expect(MyClass.new().isMemberOfClass_(MyClass)).toBeTruthy();
 });
 
-test("CPObject +instancesRespondToSelector: returns expected value", () => {
-	const MyClass = class extends CPObject { constructor() {super(); this.prop = true;} };
+test("CRObject +instancesRespondToSelector: returns expected value", () => {
+	const MyClass = class extends CRObject { constructor() {super(); this.prop = true;} };
 	expect(MyClass.instancesRespondToSelector_("hash")).toBeTruthy();
 	expect(MyClass.instancesRespondToSelector_("prop")).toBeFalsy();
 });
 
-test("CPObject +respondsToSelector: returns expected value", () => {
-	const MyClass = class extends CPObject {};
+test("CRObject +respondsToSelector: returns expected value", () => {
+	const MyClass = class extends CRObject {};
 	MyClass.prop = true;
 	expect(MyClass.respondsToSelector_("initialized")).toBeTruthy();
 	expect(MyClass.respondsToSelector_("prop")).toBeFalsy();
 });
 
-test("CPObject -respondsToSelector: returns expected value", () => {
-	const MyClass = class extends CPObject { constructor() {super(); this.prop = true;} };
+test("CRObject -respondsToSelector: returns expected value", () => {
+	const MyClass = class extends CRObject { constructor() {super(); this.prop = true;} };
 	const object = MyClass.new();
 	expect(object.respondsToSelector_("hash")).toBeTruthy();
 	expect(object.respondsToSelector_("prop")).toBeFalsy();
 });
 
-test("CPObject +conformsToProtocol: returns expected value; also CPObject conforms to CPObject", () => {
-	const CPObjectProtocol = new Protocol('CPObject');
-	expect(CPObject.conformsToProtocol_(CPObjectProtocol)).toBeTruthy();
+test("CRObject +conformsToProtocol: returns expected value; also CRObject conforms to CRObject", () => {
+	const CRObjectProtocol = new Protocol('CRObject');
+	expect(CRObject.conformsToProtocol_(CRObjectProtocol)).toBeTruthy();
 	const protocol = new Protocol('Bogus');
-	expect(CPObject.conformsToProtocol_(protocol)).toBeFalsy();
+	expect(CRObject.conformsToProtocol_(protocol)).toBeFalsy();
 });
 
-test("CPObject -conformsToProtocol: returns expected value; also CPObject conforms to CPObject", () => {
-	const CPObjectProtocol = new Protocol('CPObject');
-	const object = CPObject.new();
-	expect(object.conformsToProtocol_(CPObjectProtocol)).toBeTruthy();
+test("CRObject -conformsToProtocol: returns expected value; also CRObject conforms to CRObject", () => {
+	const CRObjectProtocol = new Protocol('CRObject');
+	const object = CRObject.new();
+	expect(object.conformsToProtocol_(CRObjectProtocol)).toBeTruthy();
 	const protocol = new Protocol('Bogus');
 	expect(object.conformsToProtocol_(protocol)).toBeFalsy();
 });
 
-test("CPObject +methodForSelector: returns expected value", () => {
-	const MyClass = class extends CPObject { static myMethod_(value) { return value * 2; } };
+test("CRObject +methodForSelector: returns expected value", () => {
+	const MyClass = class extends CRObject { static myMethod_(value) { return value * 2; } };
 	// unknown throws does not recognize exception
 	const unknown = MyClass.methodForSelector_('isMemberOfClass:');
 	try {
-		unknown(MyClass, 'isMemberOfClass:', CPObject);
+		unknown(MyClass, 'isMemberOfClass:', CRObject);
 		// this actually means the above failed to throw
 		expect(true).toBe(false);
 	}
 	catch (e) {
-		expect(e.name.jsString).toBe(CPInvalidArgumentException.jsString);
+		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
 		expect(e.reason.jsString).toBe("+[MyClass isMemberOfClass:]: unrecognized selector sent to class");
 	}
 	const method = MyClass.methodForSelector_('myMethod:');
@@ -278,11 +278,11 @@ test("CPObject +methodForSelector: returns expected value", () => {
 	expect(method(MyClass, 'myMethod:', 4)).toBe(8);
 	const inherited = MyClass.methodForSelector_('conformsToProtocol:');
 	expect(typeof inherited).toBe('function');
-	expect(inherited(MyClass, 'conformsToProtocol:', new Protocol('CPObject'))).toBeTruthy();
+	expect(inherited(MyClass, 'conformsToProtocol:', new Protocol('CRObject'))).toBeTruthy();
 });
 
-test("CPObject -methodForSelector: returns expected value", () => {
-	const MyClass = class extends CPObject { myMethod_(value) { return value * 2; } };
+test("CRObject -methodForSelector: returns expected value", () => {
+	const MyClass = class extends CRObject { myMethod_(value) { return value * 2; } };
 	const object = MyClass.new();
 	// unknown throws does not recognize exception
 	const unknown = object.methodForSelector_('initialized');
@@ -292,7 +292,7 @@ test("CPObject -methodForSelector: returns expected value", () => {
 		expect(true).toBe(false);
 	}
 	catch (e) {
-		expect(e.name.jsString).toBe(CPInvalidArgumentException.jsString);
+		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
 		expect(e.reason.jsString).toBe(`-[MyClass initialized]: unrecognized selector sent to instance ${object.$uidString()}`);
 	}
 	const method = object.methodForSelector_('myMethod:');
@@ -300,11 +300,11 @@ test("CPObject -methodForSelector: returns expected value", () => {
 	expect(method(object, 'myMethod:', 4)).toBe(8);
 	const inherited = object.methodForSelector_('conformsToProtocol:');
 	expect(typeof inherited).toBe('function');
-	expect(inherited(object, 'conformsToProtocol:', new Protocol('CPObject'))).toBeTruthy();
+	expect(inherited(object, 'conformsToProtocol:', new Protocol('CRObject'))).toBeTruthy();
 });
 
-test("CPObject +instanceMethodForSelector: returns expected value", () => {
-	const MyClass = class extends CPObject { myMethod_(value) { return value * 2; } };
+test("CRObject +instanceMethodForSelector: returns expected value", () => {
+	const MyClass = class extends CRObject { myMethod_(value) { return value * 2; } };
 	const object = MyClass.new();
 	// unknown throws does not recognize exception
 	const unknown = MyClass.instanceMethodForSelector_('initialized');
@@ -314,7 +314,7 @@ test("CPObject +instanceMethodForSelector: returns expected value", () => {
 		expect(true).toBe(false);
 	}
 	catch (e) {
-		expect(e.name.jsString).toBe(CPInvalidArgumentException.jsString);
+		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
 		expect(e.reason.jsString).toBe(`-[MyClass initialized]: unrecognized selector sent to instance ${object.$uidString()}`);
 	}
 	const method = MyClass.instanceMethodForSelector_('myMethod:');
@@ -322,131 +322,131 @@ test("CPObject +instanceMethodForSelector: returns expected value", () => {
 	expect(method(object, 'myMethod:', 4)).toBe(8);
 	const inherited = MyClass.instanceMethodForSelector_('conformsToProtocol:');
 	expect(typeof inherited).toBe('function');
-	expect(inherited(object, 'conformsToProtocol:', new Protocol('CPObject'))).toBeTruthy();
+	expect(inherited(object, 'conformsToProtocol:', new Protocol('CRObject'))).toBeTruthy();
 });
 
-test("CPObject +instanceMethodSignatureForSelector: returns expected value", () => {
-	const MyClass = class extends CPObject {};
+test("CRObject +instanceMethodSignatureForSelector: returns expected value", () => {
+	const MyClass = class extends CRObject {};
 	expect(MyClass.instanceMethodSignatureForSelector_('initialized')).toBeNull();
-	expect(MyClass.instanceMethodSignatureForSelector_('hash')).toBeInstanceOf(CPMethodSignature);
+	expect(MyClass.instanceMethodSignatureForSelector_('hash')).toBeInstanceOf(CRMethodSignature);
 });
 
-test("CPObject +methodSignatureForSelector: returns expected value", () => {
-	const MyClass = class extends CPObject {};
+test("CRObject +methodSignatureForSelector: returns expected value", () => {
+	const MyClass = class extends CRObject {};
 	expect(MyClass.methodSignatureForSelector_('isMemberOfClass:')).toBeNull();
-	expect(MyClass.methodSignatureForSelector_('initialized')).toBeInstanceOf(CPMethodSignature);
+	expect(MyClass.methodSignatureForSelector_('initialized')).toBeInstanceOf(CRMethodSignature);
 });
 
-test("CPObject -methodSignatureForSelector: returns expected value", () => {
-	const MyClass = class extends CPObject {};
+test("CRObject -methodSignatureForSelector: returns expected value", () => {
+	const MyClass = class extends CRObject {};
 	const object = MyClass.new();
 	expect(object.methodSignatureForSelector_('initialized')).toBeNull();
-	expect(object.methodSignatureForSelector_('hash')).toBeInstanceOf(CPMethodSignature);
+	expect(object.methodSignatureForSelector_('hash')).toBeInstanceOf(CRMethodSignature);
 });
 
-test("CPObject +description returns class name as CPString", () => {
-	const MyClass = class extends CPObject {};
-	expect(MyClass.description).toBeInstanceOf(CPString);
+test("CRObject +description returns class name as CRString", () => {
+	const MyClass = class extends CRObject {};
+	expect(MyClass.description).toBeInstanceOf(CRString);
 	expect(MyClass.description.jsString).toBe("MyClass");
 });
 
-test("CPObject +description is read-only", () => {
-	testReadOnlyProperty(CPObject, 'description', 'Bogus');
+test("CRObject +description is read-only", () => {
+	testReadOnlyProperty(CRObject, 'description', 'Bogus');
 });
 
-test("CPObject -description returns expected value as CPString", () => {
-	const MyClass = class extends CPObject {};
+test("CRObject -description returns expected value as CRString", () => {
+	const MyClass = class extends CRObject {};
 	const object = MyClass.new();
-	expect(object.description).toBeInstanceOf(CPString);
+	expect(object.description).toBeInstanceOf(CRString);
 	expect(object.description.jsString).toBe(`<MyClass: ${object.$uidString()}>`);
 });
 
-test("CPObject -description is read-only", () => {
-	testReadOnlyProperty(CPObject.new(), 'description', 'Bogus');
+test("CRObject -description is read-only", () => {
+	testReadOnlyProperty(CRObject.new(), 'description', 'Bogus');
 });
 
-test("CPObject +debugDescription returns class name as CPString", () => {
-	const MyClass = class extends CPObject {};
-	expect(MyClass.description).toBeInstanceOf(CPString);
+test("CRObject +debugDescription returns class name as CRString", () => {
+	const MyClass = class extends CRObject {};
+	expect(MyClass.description).toBeInstanceOf(CRString);
 	expect(MyClass.description.jsString).toBe("MyClass");
 });
 
-test("CPObject +debugDescription is read-only", () => {
-	testReadOnlyProperty(CPObject, 'debugDescription', 'Bogus');
+test("CRObject +debugDescription is read-only", () => {
+	testReadOnlyProperty(CRObject, 'debugDescription', 'Bogus');
 });
 
-test("CPObject -debugDescription returns class name as CPString", () => {
-	const MyClass = class extends CPObject {};
+test("CRObject -debugDescription returns class name as CRString", () => {
+	const MyClass = class extends CRObject {};
 	const object = MyClass.new();
-	expect(object.debugDescription).toBeInstanceOf(CPString);
+	expect(object.debugDescription).toBeInstanceOf(CRString);
 	expect(object.debugDescription.jsString).toBe(`<MyClass: ${object.$uidString()}>`);
 });
 
-test("CPObject -debugDescription is read-only", () => {
-	testReadOnlyProperty(CPObject.new(), 'debugDescription', 'Bogus');
+test("CRObject -debugDescription is read-only", () => {
+	testReadOnlyProperty(CRObject.new(), 'debugDescription', 'Bogus');
 });
 
 function testClassPerformSelector(result, performSelector, ...args) {
-	test(`CPObject +${performSelector} throws on null selector`, () => {
+	test(`CRObject +${performSelector} throws on null selector`, () => {
 		try {
-			CPObject[objj_function(performSelector)](null, ...args);
+			CRObject[objj_function(performSelector)](null, ...args);
 			// this actually means the above failed to throw
 			expect(true).toBe(false);
 		}
 		catch (e) {
-			expect(e.name.jsString).toBe(CPInvalidArgumentException.jsString);
-			expect(e.reason.jsString).toBe(`+[CPObject null]: unrecognized selector sent to class`);
+			expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
+			expect(e.reason.jsString).toBe(`+[CRObject null]: unrecognized selector sent to class`);
 		}
 	});
 
-	test(`CPObject +${performSelector} throws on unknown selector`, () => {
+	test(`CRObject +${performSelector} throws on unknown selector`, () => {
 		try {
-			CPObject[objj_function(performSelector)]('bogus:', ...args);
+			CRObject[objj_function(performSelector)]('bogus:', ...args);
 			// this actually means the above failed to throw
 			expect(true).toBe(false);
 		}
 		catch (e) {
-			expect(e.name.jsString).toBe(CPInvalidArgumentException.jsString);
-			expect(e.reason.jsString).toBe(`+[CPObject bogus:]: unrecognized selector sent to class`);
+			expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
+			expect(e.reason.jsString).toBe(`+[CRObject bogus:]: unrecognized selector sent to class`);
 		}
 	});
 
-	test(`CPObject +${performSelector} executes expected method`, () => {
-		const MyClass = class extends CPObject { static testMethod(arg1, arg2, arg3, arg4) {let val = {args: 0, nulls: 0}; for(let i=0;i<arguments.length;i++) {if(arguments[i] !== null) val.args++; else val.nulls++} return val} };
+	test(`CRObject +${performSelector} executes expected method`, () => {
+		const MyClass = class extends CRObject { static testMethod(arg1, arg2, arg3, arg4) {let val = {args: 0, nulls: 0}; for(let i=0;i<arguments.length;i++) {if(arguments[i] !== null) val.args++; else val.nulls++} return val} };
 		expect(MyClass[objj_function(performSelector)]('testMethod', ...args)).toEqual(result);
 	});
 
 }
 
 function testPerformSelector(result, performSelector, ...args) {
-	test(`CPObject -${performSelector} throws on null selector`, () => {
-		const object = CPObject.new();
+	test(`CRObject -${performSelector} throws on null selector`, () => {
+		const object = CRObject.new();
 		try {
 			object[objj_function(performSelector)](null, ...args);
 			// this actually means the above failed to throw
 			expect(true).toBe(false);
 		}
 		catch (e) {
-			expect(e.name.jsString).toBe(CPInvalidArgumentException.jsString);
-			expect(e.reason.jsString).toBe(`-[CPObject null]: unrecognized selector sent to instance ${object.$uidString()}`);
+			expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
+			expect(e.reason.jsString).toBe(`-[CRObject null]: unrecognized selector sent to instance ${object.$uidString()}`);
 		}
 	});
 
-	test(`CPObject -${performSelector} throws on unknown selector`, () => {
-		const object = CPObject.new();
+	test(`CRObject -${performSelector} throws on unknown selector`, () => {
+		const object = CRObject.new();
 		try {
 			object[objj_function(performSelector)]('bogus:', ...args);
 			// this actually means the above failed to throw
 			expect(true).toBe(false);
 		}
 		catch (e) {
-			expect(e.name.jsString).toBe(CPInvalidArgumentException.jsString);
-			expect(e.reason.jsString).toBe(`-[CPObject bogus:]: unrecognized selector sent to instance ${object.$uidString()}`);
+			expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
+			expect(e.reason.jsString).toBe(`-[CRObject bogus:]: unrecognized selector sent to instance ${object.$uidString()}`);
 		}
 	});
 
-	test(`CPObject +${performSelector} executes expected method`, () => {
-		const MyClass = class extends CPObject { testMethod(arg1, arg2, arg3, arg4) {let val = {args: 0, nulls: 0}; for(let i=0;i<arguments.length;i++) {if(arguments[i] !== null) val.args++; else val.nulls++} return val} };
+	test(`CRObject +${performSelector} executes expected method`, () => {
+		const MyClass = class extends CRObject { testMethod(arg1, arg2, arg3, arg4) {let val = {args: 0, nulls: 0}; for(let i=0;i<arguments.length;i++) {if(arguments[i] !== null) val.args++; else val.nulls++} return val} };
 		expect(MyClass.new()[objj_function(performSelector)]('testMethod', ...args)).toEqual(result);
 	});
 }
@@ -460,97 +460,97 @@ testPerformSelector({args: 1, nulls: 3}, 'performSelector:withObject:', 'arg1');
 testClassPerformSelector({args: 0, nulls: 4}, 'performSelector:');
 testPerformSelector({args: 0, nulls: 4}, 'performSelector:');
 
-test("CPObject +forwardingTargetForSelector: returns null", () => {
-	expect(CPObject.forwardingTargetForSelector_('any')).toBeNull();
+test("CRObject +forwardingTargetForSelector: returns null", () => {
+	expect(CRObject.forwardingTargetForSelector_('any')).toBeNull();
 });
 
-test("CPObject -forwardingTargetForSelector: returns null", () => {
-	expect(CPObject.new().forwardingTargetForSelector_('any')).toBeNull();
+test("CRObject -forwardingTargetForSelector: returns null", () => {
+	expect(CRObject.new().forwardingTargetForSelector_('any')).toBeNull();
 });
 
-test("CPObject +forwardInvocation: always throws does not recognize", () => {
+test("CRObject +forwardInvocation: always throws does not recognize", () => {
 	try {
-		CPObject.forwardInvocation_(objj_invocation(CPObject, 'initialized'));
+		CRObject.forwardInvocation_(objj_invocation(CRObject, 'initialized'));
 		// this actually means the above failed to throw
 		expect(true).toBe(false);
 	}
 	catch (e) {
-		expect(e.name.jsString).toBe(CPInvalidArgumentException.jsString);
-		expect(e.reason.jsString).toBe("+[CPObject initialized]: unrecognized selector sent to class");
+		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
+		expect(e.reason.jsString).toBe("+[CRObject initialized]: unrecognized selector sent to class");
 	}
 });
 
-test("CPObject -forwardInvocation: always throws does not recognize", () => {
-	const object = CPObject.new();
+test("CRObject -forwardInvocation: always throws does not recognize", () => {
+	const object = CRObject.new();
 	try {
-		object.forwardInvocation_(objj_invocation(CPObject, 'description'));
+		object.forwardInvocation_(objj_invocation(CRObject, 'description'));
 		// this actually means the above failed to throw
 		expect(true).toBe(false);
 	}
 	catch (e) {
-		expect(e.name.jsString).toBe(CPInvalidArgumentException.jsString);
-		expect(e.reason.jsString).toBe(`-[CPObject description]: unrecognized selector sent to instance ${object.$uidString()}`);
+		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
+		expect(e.reason.jsString).toBe(`-[CRObject description]: unrecognized selector sent to instance ${object.$uidString()}`);
 	}
 });
 
-test("CPObject +resolveClassMethod: always returns false", () => {
-	expect(CPObject.resolveClassMethod_('initialized')).toBeFalsy();
+test("CRObject +resolveClassMethod: always returns false", () => {
+	expect(CRObject.resolveClassMethod_('initialized')).toBeFalsy();
 });
 
-test("CPObject +resolveInstanceMethod: always returns false", () => {
-	expect(CPObject.resolveInstanceMethod_('forwardInvocation:')).toBeFalsy();
+test("CRObject +resolveInstanceMethod: always returns false", () => {
+	expect(CRObject.resolveInstanceMethod_('forwardInvocation:')).toBeFalsy();
 });
 
-test("CPObject +doesNotRecognizeSelector: always throws does not recognize", () => {
+test("CRObject +doesNotRecognizeSelector: always throws does not recognize", () => {
 	try {
-		CPObject.doesNotRecognizeSelector_('initialized');
+		CRObject.doesNotRecognizeSelector_('initialized');
 		// this actually means the above failed to throw
 		expect(true).toBe(false);
 	}
 	catch (e) {
-		expect(e.name.jsString).toBe(CPInvalidArgumentException.jsString);
-		expect(e.reason.jsString).toBe("+[CPObject initialized]: unrecognized selector sent to class");
+		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
+		expect(e.reason.jsString).toBe("+[CRObject initialized]: unrecognized selector sent to class");
 	}
 });
 
-test("CPObject -doesNotRecognizeSelector: always throws does not recognize", () => {
-	const object = CPObject.new();
+test("CRObject -doesNotRecognizeSelector: always throws does not recognize", () => {
+	const object = CRObject.new();
 	try {
 		object.doesNotRecognizeSelector_('description');
 		// this actually means the above failed to throw
 		expect(true).toBe(false);
 	}
 	catch (e) {
-		expect(e.name.jsString).toBe(CPInvalidArgumentException.jsString);
-		expect(e.reason.jsString).toBe(`-[CPObject description]: unrecognized selector sent to instance ${object.$uidString()}`);
+		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
+		expect(e.reason.jsString).toBe(`-[CRObject description]: unrecognized selector sent to instance ${object.$uidString()}`);
 	}
 });
 
-test("CPObject -exposedBindings returns empty array", () => {
-	const object = CPObject.new();
+test("CRObject -exposedBindings returns empty array", () => {
+	const object = CRObject.new();
 	const exposedBindings = object.exposedBindings;
-	expect(exposedBindings).toBeInstanceOf(CPArray);
+	expect(exposedBindings).toBeInstanceOf(CRArray);
 	expect(exposedBindings.count).toBe(0);
 });
 
-test("CPObject -exposedBindings is read-only", () => {
-	testReadOnlyProperty(CPObject.new(), 'exposedBindings', false);
+test("CRObject -exposedBindings is read-only", () => {
+	testReadOnlyProperty(CRObject.new(), 'exposedBindings', new CRArray([]));
 });
 
-test("CPObject -observationInfo returns empty object", () => {
-	const object = CPObject.new();
+test("CRObject -observationInfo returns empty object", () => {
+	const object = CRObject.new();
 	expect(object.observationInfo).toEqual({});
 });
 
-test("CPObject -setObservationInfo sets value", () => {
+test("CRObject -setObservationInfo sets value", () => {
 	const observationInfo = {'key': [{'object': null, 'options': 0, "context": "testContext"}]};
-	const object = CPObject.new();
+	const object = CRObject.new();
 	object.observationInfo = observationInfo;
 	expect(object.observationInfo).toEqual(observationInfo);
 });
 
-test("CPObject -isProxy returns false", () => {
-	const object = CPObject.new();
+test("CRObject -isProxy returns false", () => {
+	const object = CRObject.new();
 	expect(object.isProxy()).toBeFalsy();
 });
 

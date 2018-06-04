@@ -1,25 +1,25 @@
 /*
-	* Module that contains NSObject class emulation and related symbols. All framework classes derive from this base class, except for CPProxy.
+	* Module that contains NSObject class emulation and related symbols. All framework classes derive from this base class, except for CRProxy.
  */
 
-function objj_CPObject(superClass = Object) {
+function objj_CRObject(superClass = Object) {
 	//! NSObject Cocoa Foundation class emulation. Most methods in the Cocoa documentation appear to be applied by categories to add functionality
 	//!  needed only by certain subclasses. We will omit all of that as much as we we can to keep our objects lighter. Only methods/properties that
 	//!  reasonably apply to all objects should be defined here.
-	const metaClass = class CPObject extends superClass {
+	const metaClass = class CRObject extends superClass {
 
 		static $UID = null;
 		static $initialized = false;
 		static $conformsTo = [];
 
-		$ISA = 'CPObject';
+		$ISA = 'CRObject';
 		$UID = null;
 		$exposedBindings = null;
 		$observationInfo = null;
 
 		constructor(...args) {
 			super(...args);
-			this.$UID = objj_CPObject.$oidCounter++;
+			this.$UID = objj_CRObject.$oidCounter++;
 		}
 
 		// private method to return UID as hex value
@@ -115,12 +115,12 @@ function objj_CPObject(superClass = Object) {
 
 		//! @property(class, readonly) Class superclass
 		static get superclass() {
-			return (this.name === 'CPObject') ? null : Object.getPrototypeOf(this);
+			return (this.name === 'CRObject') ? null : Object.getPrototypeOf(this);
 		}
 
 		//! @property(readonly) Class superclass
 		get superclass() {
-			return (this.constructor.name === 'CPObject') ? null : Object.getPrototypeOf(this.constructor);
+			return (this.constructor.name === 'CRObject') ? null : Object.getPrototypeOf(this.constructor);
 		}
 
 		//! @typed BOOL : Class
@@ -133,15 +133,15 @@ function objj_CPObject(superClass = Object) {
 		}
 
 		//! This property shows under the "Scripting" group in Cocoa docs but since there is no useful equivalent in JS, and this property is otherwise useful, we put it here.
-		//! @property(class, readonly, copy) CPString className
+		//! @property(class, readonly, copy) CRString className
 		static get className() {
-			return new CPString(this.name);
+			return new CRString(this.name);
 		}
 
 		//! This property shows under the "Scripting" group in Cocoa docs but since there is no useful equivalent in JS, and this property is otherwise useful, we put it here.
-		//! @property(readonly, copy) CPString className
+		//! @property(readonly, copy) CRString className
 		get className() {
-			return new CPString(this.constructor.name);
+			return new CRString(this.constructor.name);
 		}
 
 		//! @}
@@ -158,12 +158,12 @@ function objj_CPObject(superClass = Object) {
 			return this.hash === object.hash;
 		}
 
-		//! @property(class, readonly) CPUInteger hash
+		//! @property(class, readonly) CRUInteger hash
 		static get hash() {
-			return this.hasOwnProperty("$UID") ? this.$UID : this.$UID = objj_CPObject.$oidCounter++;
+			return this.hasOwnProperty("$UID") ? this.$UID : this.$UID = objj_CRObject.$oidCounter++;
 		}
 
-		//! @property(readonly) CPUInteger hash
+		//! @property(readonly) CRUInteger hash
 		get hash() {
 			return this.$UID;
 		}
@@ -196,7 +196,7 @@ function objj_CPObject(superClass = Object) {
 			return this instanceof aClass;
 		}
 
-		//! Technically, CPObject should respond to +isMemberOfClass: but the answer is always NO and since there is no use case we just don't include it.
+		//! Technically, CRObject should respond to +isMemberOfClass: but the answer is always NO and since there is no use case we just don't include it.
 		//! @typed BOOL : Class
 		isMemberOfClass_(aClass) {
 			return this.constructor === aClass;
@@ -260,12 +260,12 @@ function objj_CPObject(superClass = Object) {
 			}
 		}
 
-		//! @typed CPMethodSignature : SEL
+		//! @typed CRMethodSignature : SEL
 		static instanceMethodSignatureForSelector_(aSelector) {
 			return objj_msgSend(this.prototype, 'methodSignatureForSelector:', aSelector);
 		}
 
-		//! @typed CPMethodSignature : SEL
+		//! @typed CRMethodSignature : SEL
 		static methodSignatureForSelector_(aSelector) {
 			if (this.respondsToSelector_(aSelector)) {
 				return objj_methodSignature(this, aSelector);
@@ -273,7 +273,7 @@ function objj_CPObject(superClass = Object) {
 			return null;
 		}
 
-		//! @typed CPMethodSignature : SEL
+		//! @typed CRMethodSignature : SEL
 		methodSignatureForSelector_(aSelector) {
 			if (this.respondsToSelector_(aSelector)) {
 				return objj_methodSignature(this, aSelector);
@@ -285,22 +285,22 @@ function objj_CPObject(superClass = Object) {
 
 		//! @name Describing Objects
 		//! @{
-		//! @property(class, readonly, copy) CPString description
+		//! @property(class, readonly, copy) CRString description
 		static get description() {
-			return new CPString(this.name);
+			return new CRString(this.name);
 		}
 
-		//! @property(readonly, copy) CPString description
+		//! @property(readonly, copy) CRString description
 		get description() {
-			return new CPString(`<${this.constructor.name}: ${this.$uidString()}>`);
+			return new CRString(`<${this.constructor.name}: ${this.$uidString()}>`);
 		}
 
-		//! @property(class, readonly, copy) CPString debugDescription
+		//! @property(class, readonly, copy) CRString debugDescription
 		static get debugDescription() {
 			return this.description;
 		}
 
-		//! @property(readonly, copy) CPString debugDescription
+		//! @property(readonly, copy) CRString debugDescription
 		get debugDescription() {
 			return this.description;
 		}
@@ -373,12 +373,12 @@ function objj_CPObject(superClass = Object) {
 			return null;
 		}
 
-		//! @typed void : CPInvocation
+		//! @typed void : CRInvocation
 		static forwardInvocation_(invocation) {
 			this.doesNotRecognizeSelector_(objj_propGuard(invocation, 'selector'));
 		}
 
-		//! @typed void : CPInvocation
+		//! @typed void : CRInvocation
 		forwardInvocation_(invocation) {
 			this.doesNotRecognizeSelector_(invocation.selector);
 		}
@@ -406,12 +406,12 @@ function objj_CPObject(superClass = Object) {
 		//! @{
 		//! @typed void : SEL
 		static doesNotRecognizeSelector_(aSelector) {
-			objj_initialize(CPException).raise_format_(CPInvalidArgumentException, new CPString("+[%s %s]: unrecognized selector sent to class"), this.name, aSelector);
+			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, new CRString("+[%s %s]: unrecognized selector sent to class"), this.name, aSelector);
 		}
 
 		//! @typed void : SEL
 		doesNotRecognizeSelector_(aSelector) {
-			objj_initialize(CPException).raise_format_(CPInvalidArgumentException, new CPString("-[%@ %s]: unrecognized selector sent to instance %s"), this.className, aSelector, this.$uidString());
+			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, new CRString("-[%@ %s]: unrecognized selector sent to instance %s"), this.className, aSelector, this.$uidString());
 		}
 
 		//! @}
@@ -419,7 +419,7 @@ function objj_CPObject(superClass = Object) {
 		//! @name Instance Properties
 		//! TODO: do we think that there is a use case to implement the accessibility API? Is it mappable to ARIA?
 		//! @{
-		//! @property(readonly, copy) CPArray<CPString> exposedBindings
+		//! @property(readonly, copy) CRArray<CRString> exposedBindings
 		get exposedBindings() {
 			return this.$exposedBindings;
 		}
@@ -439,7 +439,7 @@ function objj_CPObject(superClass = Object) {
 		//! @name Instance Methods
 		//! TODO: do we think that there is a use case to implement the accessibility API? Is it mappable to ARIA?
 		//! @{
-		//! Technically, CPObject should respond to +isProxy but the answer is always NO and since there is no use case we just don't include it.
+		//! Technically, CRObject should respond to +isProxy but the answer is always NO and since there is no use case we just don't include it.
 		//! @typed BOOL : void
 		isProxy() {
 			return false;
@@ -449,21 +449,21 @@ function objj_CPObject(superClass = Object) {
 
 	};
 
-	// we need CPObject to act as singleton, so store UID & initialized state in function
-	if (objj_CPObject.$oidCounter === undefined) objj_CPObject.$oidCounter = 1;
-	if (objj_CPObject.$initialized === undefined) objj_CPObject.$initialized = false;
+	// we need CRObject to act as singleton, so store UID & initialized state in function
+	if (objj_CRObject.$oidCounter === undefined) objj_CRObject.$oidCounter = 1;
+	if (objj_CRObject.$initialized === undefined) objj_CRObject.$initialized = false;
 
 	// our UID always 1 so we don't have to worry about multiple invocations creating different hash values
 	metaClass.$UID = 1;
-	metaClass.$initialized = objj_CPObject.$initialized;
-	metaClass.$conformsTo.push('CPObject');
+	metaClass.$initialized = objj_CRObject.$initialized;
+	metaClass.$conformsTo.push('CRObject');
 
 	return metaClass;
 }
-exports.objj_CPObject = objj_CPObject;
+exports.objj_CRObject = objj_CRObject;
 
 // export meta class as concrete class
-exports.CPObject = objj_CPObject();
+exports.CRObject = objj_CRObject();
 
 // usage imports--import last so we avoid circular dependencies
 const OBJJ = require('../Objective-J'),
@@ -471,6 +471,6 @@ const OBJJ = require('../Objective-J'),
 		objj_propGuard = OBJJ.objj_propGuard,
 		objj_methodSignature = OBJJ.objj_methodSignature,
 		objj_getMethod = OBJJ.objj_getMethod, objj_array = OBJJ.objj_array, objj_initialize = OBJJ.objj_initialize, objj_propertyDescriptor = OBJJ.objj_propertyDescriptor, objj_number = OBJJ.objj_number, objj_value = OBJJ.objj_value;
-const CPStringSym = require('./CPString'), CPString = CPStringSym.CPString;
-const CPExceptionSym = require("./CPException"), CPException = CPExceptionSym.CPException, CPInvalidArgumentException = CPExceptionSym.CPInvalidArgumentException;
+const CRStringSym = require('./CPString'), CRString = CRStringSym.CRString;
+const CRExceptionSym = require("./CPException"), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
 const sprintf = require('sprintf-js').sprintf;

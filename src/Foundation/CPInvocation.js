@@ -3,12 +3,12 @@
  */
 
 const OBJJ = require('../Objective-J'), objj_initialize = OBJJ.objj_initialize;
-const CPObjectSym = require('./CPObject'), CPObject = CPObjectSym.CPObject;
-const CPStringSym = require("./CPString"), CPString = CPStringSym.CPString;
-const CPExceptionSym = require("./CPException"), CPException = CPExceptionSym.CPException, CPInvalidArgumentException = CPExceptionSym.CPInvalidArgumentException;
+const CRObjectSym = require('./CPObject'), CRObject = CRObjectSym.CRObject;
+const CRStringSym = require("./CPString"), CRString = CRStringSym.CRString;
+const CRExceptionSym = require("./CPException"), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
 
 //! NSInvocation Cocoa Foundation class emulation
-class CPInvocation extends CPObject {
+class CRInvocation extends CRObject {
 
 	$selector = null;
 	$target = null;
@@ -24,14 +24,14 @@ class CPInvocation extends CPObject {
 	get target () {return this.$target;}
 	set target(aTarget) {this.$target = aTarget;}
 
-	//! @property(readonly, strong) CPMethodSignature methodSignature
+	//! @property(readonly, strong) CRMethodSignature methodSignature
 	get methodSignature() {return this.$methodSignature;}
 
 	//! Property will always be YES. See -retainArguments for more information.
 	//! @property(readonly) BOOL argumentsRetained
 	get argumentsRetained() {return true;}
 
-	//! @typed CPInvocation : CPMethodSignature
+	//! @typed CRInvocation : CRMethodSignature
 	static invocationWithMethodSignature_(sig) {
 		// exception if signature null
 		if (sig === null)
@@ -45,7 +45,7 @@ class CPInvocation extends CPObject {
 	}
 
 	//! The argumentLocation argument must be a value created by the @ref() directive or a runtime error will occur.
-	//! @typed void : @ref, CPInteger
+	//! @typed void : @ref, CRInteger
 	setArgument_atIndex_(argumentLocation, idx) {
 		// silently ignore if we are not initialized properly
 		if (this.$methodSignature === null)
@@ -65,7 +65,7 @@ class CPInvocation extends CPObject {
 	}
 
 	//! The argumentLocation argument must be a value created by the @ref() directive or a runtime error will occur.
-	//! @typed void : @ref, CPInteger
+	//! @typed void : @ref, CRInteger
 	getArgument_atIndex_(argumentLocation, idx) {
 		// silently ignore if we are not initialized properly
 		if (this.$methodSignature === null)
@@ -117,4 +117,4 @@ class CPInvocation extends CPObject {
 		retLoc[retLoc.name] = this.$retValue;
 	}
 }
-exports.CPInvocation = CPInvocation;
+exports.CRInvocation = CRInvocation;

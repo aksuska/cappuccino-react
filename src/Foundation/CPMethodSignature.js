@@ -5,11 +5,11 @@
  **/
 
 const OBJJ = require('../Objective-J'), objj_initialize = OBJJ.objj_initialize;
-const CPObjectSym = require('./CPObject'), CPObject = CPObjectSym.CPObject;
-const CPExceptionSym = require("./CPException"), CPException = CPExceptionSym.CPException, CPInvalidArgumentException = CPExceptionSym.CPInvalidArgumentException;
+const CRObjectSym = require('./CPObject'), CRObject = CRObjectSym.CRObject;
+const CRExceptionSym = require("./CPException"), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
 
 //! NSMethodSignature Cocoa Foundation class emulation
-class CPMethodSignature extends CPObject {
+class CRMethodSignature extends CRObject {
 	
 	$typeList = [];
 	
@@ -18,17 +18,17 @@ class CPMethodSignature extends CPObject {
 	get methodReturnType() {return this.$typeList[0];}
 
 	//! Property will always be 1 since there is no real JS equivalent
-	//! @property(readonly) CPUInteger methodReturnLength
+	//! @property(readonly) CRUInteger methodReturnLength
 	get methodReturnLength() {return 1;}
 
-	//! @property(readonly) CPUInteger numberOfArguments
+	//! @property(readonly) CRUInteger numberOfArguments
 	get numberOfArguments() {return this.$typeList.length - 1;}
 
 	//! Property will always be 1 since there is no real JS equivalent
-	//! @property(readonly) CPUInteger frameLength
+	//! @property(readonly) CRUInteger frameLength
 	get frameLength() {return 1;}
 
-	//! @typed CPMethodSignature : string
+	//! @typed CRMethodSignature : string
 	static signatureWithObjCTypes_(typeString) {
 		let sig = this.new();
 		if (sig) {
@@ -37,7 +37,7 @@ class CPMethodSignature extends CPObject {
 		return sig;
 	}
 
-	//! @typed string : CPUInteger
+	//! @typed string : CRUInteger
 	getArgumentTypeAtIndex_(idx) {
 		if (idx >= this.$typeList.length)
 			objj_throw_arg( "-[%@ getArgumentTypeAtIndex:]: index (%i) out of bounds [0, %i]", this.className, idx, this.$typeList.length - 1);
@@ -51,6 +51,6 @@ class CPMethodSignature extends CPObject {
 		return true;
 	}
 }
-exports.CPMethodSignature = CPMethodSignature;
+exports.CRMethodSignature = CRMethodSignature;
 
-const CPStringSym = require("./CPString"), CPString = CPStringSym.CPString;
+const CRStringSym = require("./CPString"), CRString = CRStringSym.CRString;

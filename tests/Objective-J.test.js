@@ -9,27 +9,27 @@ const OBJJ = require('../src/Objective-J'),
 	objj_prop2setter = OBJJ.objj_prop2setter,
 	objj_setter2prop = OBJJ.objj_setter2prop,
 	objj_getMethod = OBJJ.objj_getMethod, objj_array = OBJJ.objj_array;
-const CPObjectSym = require('../src/Foundation/CPObject'), objj_CPObject = CPObjectSym.objj_CPObject, CPObject = CPObjectSym.CPObject;
-const CPStringSym = require('../src/Foundation/CPString'), CPString = CPStringSym.CPString;
-const CPInvocationSym = require('../src/Foundation/CPInvocation'), CPInvocation = CPInvocationSym.CPInvocation;
-const CPExceptionSym = require("../src/Foundation/CPException"), CPInvalidArgumentException = CPExceptionSym.CPInvalidArgumentException;
-const CPMethodSignatureSym = require('../src/Foundation/CPMethodSignature'), CPMethodSignature = CPMethodSignatureSym.CPMethodSignature;
-const CPArraySym = require("../src/Foundation/CPArray"), CPArray = CPArraySym.CPArray;
+const CRObjectSym = require('../src/Foundation/CPObject'), objj_CRObject = CRObjectSym.objj_CRObject, CRObject = CRObjectSym.CRObject;
+const CRStringSym = require('../src/Foundation/CPString'), CRString = CRStringSym.CRString;
+const CRInvocationSym = require('../src/Foundation/CPInvocation'), CRInvocation = CRInvocationSym.CRInvocation;
+const CRExceptionSym = require("../src/Foundation/CPException"), CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
+const CRMethodSignatureSym = require('../src/Foundation/CPMethodSignature'), CRMethodSignature = CRMethodSignatureSym.CRMethodSignature;
+const CRArraySym = require("../src/Foundation/CPArray"), CRArray = CRArraySym.CRArray;
 
 /*
 	* Let's test utility function first as the main two might depend on them
 */
 
 test("objj_initialize() initializes chain", () => {
-	const MyObject = class extends objj_CPObject() { static initialize() { this.newClassProperty = 1; }	};
+	const MyObject = class extends objj_CRObject() { static initialize() { this.newClassProperty = 1; }	};
 	expect(MyObject.initialized).toBeFalsy();
-	expect(CPObject.initialized).toBeFalsy();
+	expect(CRObject.initialized).toBeFalsy();
 	const result = objj_initialize(MyObject);
 	expect(result).toBe(MyObject);
 	expect(MyObject.initialized).toBeTruthy();
 	expect(MyObject.newClassProperty).toBe(1);
-	expect(CPObject.initialized).toBeTruthy();
-    expect(objj_CPObject.$initialized).toBeTruthy();
+	expect(CRObject.initialized).toBeTruthy();
+    expect(objj_CRObject.$initialized).toBeTruthy();
 });
 
 test("objj_function() performs expected conversion", () => {
@@ -40,7 +40,7 @@ test("objj_function() performs expected conversion", () => {
 });
 
 test("objj_propertyDescriptor() returns descriptor anywhere on prototype chain", () => {
-	const MyObject = class extends CPObject { constructor() { super(); this.myProperty = 1; }	};
+	const MyObject = class extends CRObject { constructor() { super(); this.myProperty = 1; }	};
 	const MyObject2 = class extends MyObject {};
 	const object = new MyObject2();
 	expect(objj_propertyDescriptor(object, 'bogus')).toBeUndefined();
@@ -57,20 +57,20 @@ test("objj_setter2prop() returns proper property name from setter selector", () 
 });
 
 test("objj_getMethod() returns undefined for null selector", () => {
-	expect(objj_getMethod(CPObject, null)).toBeUndefined();
+	expect(objj_getMethod(CRObject, null)).toBeUndefined();
 });
 
 test("objj_getMethod() returns undefined for no such selector", () => {
-	expect(objj_getMethod(CPObject, 'bogus')).toBeUndefined();
+	expect(objj_getMethod(CRObject, 'bogus')).toBeUndefined();
 });
 
 test("objj_getMethod() checks for setter pattern, returns undefined for no such selector", () => {
-	const MyObject = class extends CPObject { constructor() {super(); this.$propValue = false} get propValue() { return this.$propValue} set propValue(value) { this.$propValue = value} testMethod() {return true;} };
+	const MyObject = class extends CRObject { constructor() {super(); this.$propValue = false} get propValue() { return this.$propValue} set propValue(value) { this.$propValue = value} testMethod() {return true;} };
 	expect(objj_getMethod(new MyObject(), 'tesPropValue:')).toBeUndefined();
 });
 
 test("objj_getMethod() returns undefined for property returning class without defined getter", () => {
-	const MyObject = class extends CPObject { constructor() {super(); this.propValue = CPObject} };
+	const MyObject = class extends CRObject { constructor() {super(); this.propValue = CRObject} };
 	const object = new MyObject();
 	expect(objj_getMethod(object, 'propValue')).toBeUndefined();
 	Object.defineProperty(object, 'prop', {get() { return this.propValue } });
@@ -78,12 +78,12 @@ test("objj_getMethod() returns undefined for property returning class without de
 });
 
 test("objj_getMethod() returns function for regular method", () => {
-	const MyObject = class extends CPObject { constructor() {super(); this.$propValue = false} get propValue() { return this.$propValue} set propValue(value) { this.$propValue = value} testMethod() {return true;} };
+	const MyObject = class extends CRObject { constructor() {super(); this.$propValue = false} get propValue() { return this.$propValue} set propValue(value) { this.$propValue = value} testMethod() {return true;} };
 	expect(typeof objj_getMethod(new MyObject(), 'testMethod')).toBe('function');
 });
 
 test("objj_getMethod() returns function for defined accessors", () => {
-	const MyObject = class extends CPObject { constructor() {super(); this.$propValue = false} get propValue() { return this.$propValue} set propValue(value) { this.$propValue = value} testMethod() {return true;} };
+	const MyObject = class extends CRObject { constructor() {super(); this.$propValue = false} get propValue() { return this.$propValue} set propValue(value) { this.$propValue = value} testMethod() {return true;} };
 	const object = new MyObject();
 	expect(typeof objj_getMethod(object, 'propValue')).toBe('function');
 	expect(typeof objj_getMethod(object, 'setPropValue:')).toBe('function');
@@ -91,19 +91,19 @@ test("objj_getMethod() returns function for defined accessors", () => {
 
 test("objj_methodSignature() returns signature or null", () => {
 	// unrecognized returns null
-	expect(objj_methodSignature(CPObject, 'bogus')).toBeNull();
+	expect(objj_methodSignature(CRObject, 'bogus')).toBeNull();
 	// selector returns method signature object
-	const MyObject = class extends CPObject { testMethod_(arg) {return true;} };
+	const MyObject = class extends CRObject { testMethod_(arg) {return true;} };
 	let sig = objj_methodSignature(new MyObject(), 'testMethod:');
-	expect(sig).toBeInstanceOf(CPMethodSignature);
+	expect(sig).toBeInstanceOf(CRMethodSignature);
 	expect(sig.$typeList.join('')).toBe('@@:@');
 });
 
-test("objj_invocation() returns configured CPInvocation instance", () => {
-	const MyObject = class extends CPObject { testMethod__(arg1, arg2) {return true;} };
+test("objj_invocation() returns configured CRInvocation instance", () => {
+	const MyObject = class extends CRObject { testMethod__(arg1, arg2) {return true;} };
 	const object = new MyObject();
 	const invocation = objj_invocation(object, 'testMethod::', 'arg1', 'arg2');
-	expect(invocation).toBeInstanceOf(CPInvocation);
+	expect(invocation).toBeInstanceOf(CRInvocation);
 	expect(invocation.target).toBe(object);
 	expect(invocation.selector).toBe('testMethod::');
 	let arg = null, argRef = { get name() { return 'arg' }, get arg() { return arg }, set arg(value) { arg = value } };
@@ -113,9 +113,9 @@ test("objj_invocation() returns configured CPInvocation instance", () => {
 	expect(arg).toBe('arg2');
 });
 
-test("objj_array() returns CPArray instance", () => {
+test("objj_array() returns CRArray instance", () => {
 	const array = objj_array([1, 2, 3]);
-	expect(array).toBeInstanceOf(CPArray);
+	expect(array).toBeInstanceOf(CRArray);
 	expect(array.jsArray).toEqual([1, 2, 3]);
 });
 
@@ -128,29 +128,29 @@ test("objj_msgSend() returns null for null target", () => {
 });
 
 test("objj_msgSend() calls objj_initialize()", () => {
-	const MyObject = class extends CPObject {static testMethod() {return true;}};
+	const MyObject = class extends CRObject {static testMethod() {return true;}};
 	expect(MyObject.initialized).toBeFalsy();
 	objj_msgSend(MyObject, 'testMethod');
 	expect(MyObject.initialized).toBeTruthy();
 });
 
 test("objj_msgSend() performs selector", () => {
-	const MyObject = class extends CPObject { testMethod_(num) { return 1 + num; }	};
+	const MyObject = class extends CRObject { testMethod_(num) { return 1 + num; }	};
 	expect(objj_msgSend(new MyObject(), 'testMethod:', 1)).toBe(2);
 });
 
 test("objj_msgSend() calls resolveInstanceMethod", () => {
-	const MyObject = class extends CPObject { static resolveInstanceMethod_(aSelector) { this.prototype.newProperty = function () {return "hello"}; return true }};
+	const MyObject = class extends CRObject { static resolveInstanceMethod_(aSelector) { this.prototype.newProperty = function () {return "hello"}; return true }};
 	expect(objj_msgSend(new MyObject(), 'newProperty')).toBe("hello");
 });
 
 test("objj_msgSend() calls resolveClassMethod", () => {
-	const MyObject = class extends CPObject { static resolveClassMethod_(aSelector) { this.newProperty = function () {return "hello"}; return true }};
+	const MyObject = class extends CRObject { static resolveClassMethod_(aSelector) { this.newProperty = function () {return "hello"}; return true }};
 	expect(objj_msgSend(MyObject, 'newProperty')).toBe("hello");
 });
 
 test("objj_msgSend() missing defined getter throws 'does not recognize' exception", () => {
-	const MyObject = class extends CPObject { constructor() { super(); this.prop = 1} };
+	const MyObject = class extends CRObject { constructor() { super(); this.prop = 1} };
 	const object = new MyObject();
 	try {
 		objj_msgSend(object, 'prop');
@@ -158,18 +158,18 @@ test("objj_msgSend() missing defined getter throws 'does not recognize' exceptio
 		expect(true).toBe(false);
 	}
 	catch (e) {
-		expect(e.name.jsString).toBe(CPInvalidArgumentException.jsString);
+		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
 		expect(e.reason.jsString).toBe(`-[MyObject prop]: unrecognized selector sent to instance ${object.$uidString()}`);
 	}
 });
 
 test("objj_msgSend() executes getter as method", () => {
-	const MyObject = class extends CPObject { constructor() { super(); this.$prop = 1; } get prop() { return this.$prop }	};
+	const MyObject = class extends CRObject { constructor() { super(); this.$prop = 1; } get prop() { return this.$prop }	};
 	expect(objj_msgSend(new MyObject(), 'prop')).toBe(1);
 });
 
 test("objj_msgSend() setter as selector: missing defined setter throws 'does not recognize' exception (also tests any non-recognized method throws)", () => {
-	const MyObject = class extends CPObject { constructor() { super(); this.$prop = 1; } get prop() { return this.$prop }	};
+	const MyObject = class extends CRObject { constructor() { super(); this.$prop = 1; } get prop() { return this.$prop }	};
 	const object = new MyObject();
 	try {
 		objj_msgSend(object, 'setProp:', 2);
@@ -177,27 +177,27 @@ test("objj_msgSend() setter as selector: missing defined setter throws 'does not
 		expect(true).toBe(false);
 	}
 	catch (e) {
-		expect(e.name.jsString).toBe(CPInvalidArgumentException.jsString);
+		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
 		expect(e.reason.jsString).toBe(`-[MyObject setProp:]: unrecognized selector sent to instance ${object.$uidString()}`);
 	}
 });
 
 test("objj_msgSend() executes setter as method", () => {
-	const MyObject = class extends CPObject { constructor() { super(); this.$propValue = 1; } set propValue(value) { this.$propValue = value }	};
+	const MyObject = class extends CRObject { constructor() { super(); this.$propValue = 1; } set propValue(value) { this.$propValue = value }	};
 	const object = new MyObject();
 	objj_msgSend(object, 'setPropValue:', 3);
 	expect(object.$propValue).toBe(3);
 });
 
 test("objj_msgSend() calls forwarding target", () => {
-	const MyObject = class extends CPObject { forwarded() { return true }	};
-	const MyObject2 = class extends CPObject { forwardingTargetForSelector_(aSelector) {return new MyObject()} };
+	const MyObject = class extends CRObject { forwarded() { return true }	};
+	const MyObject2 = class extends CRObject { forwardingTargetForSelector_(aSelector) {return new MyObject()} };
 	expect(objj_msgSend(new MyObject2(), 'forwarded')).toBeTruthy();
 });
 
 test("objj_msgSend() calls forwardInvocation:", () => {
-	const MyObject = class extends CPObject { forwarded() { return true }	};
-	const MyObject2 = class extends CPObject { constructor() {super(); this.forwardee = new MyObject();} methodSignatureForSelector_(aSelector) {return objj_methodSignature(this.forwardee, aSelector)} forwardInvocation_(invocation) {invocation.invokeWithTarget_(this.forwardee)} };
+	const MyObject = class extends CRObject { forwarded() { return true }	};
+	const MyObject2 = class extends CRObject { constructor() {super(); this.forwardee = new MyObject();} methodSignatureForSelector_(aSelector) {return objj_methodSignature(this.forwardee, aSelector)} forwardInvocation_(invocation) {invocation.invokeWithTarget_(this.forwardee)} };
 	expect(objj_msgSend(new MyObject2(), 'forwarded')).toBeTruthy();
 });
 
@@ -218,7 +218,7 @@ test("objj_propGuard() throws on nonexistent property", () => {
 		expect(true).toBe(false);
 	}
 	catch (e) {
-		expect(e.name.jsString).toBe(CPInvalidArgumentException.jsString);
+		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
 		expect(e.reason.jsString).toBe(`Property 'prop' not found on object of type 'Object'`);
 	}
 });
@@ -230,17 +230,17 @@ test("objj_propGuard() throws on assignment to property without defined setter",
 		expect(true).toBe(false);
 	}
 	catch (e) {
-		expect(e.name.jsString).toBe(CPInvalidArgumentException.jsString);
+		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
 		expect(e.reason.jsString).toBe("Assignment to readonly property");
 	}
 });
 
 test("objj_propGuard() returns correct value on property chain", () => {
-	expect(objj_propGuard(new CPString("hello"), 'jsString', 'length')).toBe(5);
+	expect(objj_propGuard(new CRString("hello"), 'jsString', 'length')).toBe(5);
 });
 
 test("objj_propGuard() executes property chain setter", () => {
-	const MyObject = class extends CPObject { constructor() { super(); this.$prop = false } get prop() { return this.$prop } set prop(value) { this.$prop = value }	};
+	const MyObject = class extends CRObject { constructor() { super(); this.$prop = false } get prop() { return this.$prop } set prop(value) { this.$prop = value }	};
 	const object = new MyObject();
 	objj_propGuard(object, 'prop', [true]);
 	expect(object.prop).toBeTruthy();

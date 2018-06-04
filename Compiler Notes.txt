@@ -61,15 +61,15 @@ II. TRANSFORMATIONS
     D. Methods
         1. Definitions/Declarations
             a. Colons are converted to underscores
-            b. (void)setArgument:(id)argument atIndex:(CPUInteger)idx -> setArgument_atIndex_(argument: id, idx: CPUInteger): void
+            b. (void)setArgument:(id)argument atIndex:(CRUInteger)idx -> setArgument_atIndex_(argument: id, idx: CRUInteger): void
         2. All recognized method calls are converted to objj_msgSend() calls
             a. [object selector:arg1 with:arg2] -> objj_msgSend(object, 'selector:with:', arg1, arg2)
-            a. [[CPObject alloc] init] -> objj_msgSend(objj_msgSend(CPObject, 'alloc'), 'init')
+            a. [[CRObject alloc] init] -> objj_msgSend(objj_msgSend(CRObject, 'alloc'), 'init')
     E. Object literals
-        1. @"string" -> new CPString("string")
-        2. @'A', @99[FLU], @YES/NO -> new CPNumber(''##') (constructor will work out how to interpret value)
-        3. @{key: value} -> new CPDictionary(key, value)
-        4. @[value1, value2] -> new CPArray(value1, value2)
+        1. @"string" -> new CRString("string")
+        2. @'A', @99[FLU], @YES/NO -> new CRNumber(''##') (constructor will work out how to interpret value)
+        3. @{key: value} -> new CRDictionary(key, value)
+        4. @[value1, value2] -> new CRArray(value1, value2)
         5. We can support boxed expressions if we want, we will just need to wrap them in a function and figure out what the result type is
     F. Imports
         1. Class is always default export; also export all other defined symbols.

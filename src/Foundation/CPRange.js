@@ -2,69 +2,69 @@
  * Module that contains NSRange struct emulation and related symbols.
  */
 
-const CPStringSym = require("./CPString"), CPString = CPStringSym.CPString;
+const CRStringSym = require("./CPString"), CRString = CRStringSym.CRString;
 
-//! @typed CPInteger
-const CPNotFound = -1;
-exports.CPNotFound = CPNotFound;
+//! @typed CRInteger
+const CRNotFound = -1;
+exports.CRNotFound = CRNotFound;
 
-//! @typed BOOL : CPRange, CPRange
-function CPEqualRanges(range1, range2) {
+//! @typed BOOL : CRRange, CRRange
+function CREqualRanges(range1, range2) {
 	return range1.location === range2.location && range1.length === range2.length;
 }
-exports.CPEqualRanges = CPEqualRanges;
+exports.CREqualRanges = CREqualRanges;
 
-//! @typed CPRange : CPRange, CPRange
-function CPIntersectionRange(range1, range2) {
-	if (range1.location < range2.location && CPMaxRange(range1) > range2.location) {
-		return CPMakeRange(range2.location, range1.length - range2.location);
+//! @typed CRRange : CRRange, CRRange
+function CRIntersectionRange(range1, range2) {
+	if (range1.location < range2.location && CRMaxRange(range1) > range2.location) {
+		return CRMakeRange(range2.location, range1.length - range2.location);
 	}
-	else if (range1.location > range2.location && CPMaxRange(range2) > range1.location) {
-		return CPMakeRange(range1.location, range2.length - range1.location);
+	else if (range1.location > range2.location && CRMaxRange(range2) > range1.location) {
+		return CRMakeRange(range1.location, range2.length - range1.location);
 	}
 	else if (range1.location === range2.location) {
-		return CPMakeRange(range1.location, (range2.length >= range1.length ? range1.length : range2.length));
+		return CRMakeRange(range1.location, (range2.length >= range1.length ? range1.length : range2.length));
 	}
-	return CPMakeRange(undefined, 0);
+	return CRMakeRange(undefined, 0);
 }
-exports.CPIntersectionRange = CPIntersectionRange;
+exports.CRIntersectionRange = CRIntersectionRange;
 
-//! @typed BOOL : CPUInteger, CPRange
-function CPLocationInRange(loc, range) {
-	return loc >= range.location && loc < CPMaxRange(range);
+//! @typed BOOL : CRUInteger, CRRange
+function CRLocationInRange(loc, range) {
+	return loc >= range.location && loc < CRMaxRange(range);
 }
-exports.CPLocationInRange = CPLocationInRange;
+exports.CRLocationInRange = CRLocationInRange;
 
-//! @typed CPRange : CPUInteger, CPUInteger
-function CPMakeRange(loc, len) {
+//! @typed CRRange : CRUInteger, CRUInteger
+function CRMakeRange(loc, len) {
 	return {location: loc, length: len};
 }
 
-//! @typed CPUInteger : CPRange
-export function CPMaxRange(range) {
+//! @typed CRUInteger : CRRange
+export function CRMaxRange(range) {
 	return range.location + range.length;
 }
-exports.CPMakeRange = CPMakeRange;
+exports.CRMakeRange = CRMakeRange;
 
-//! @typed CPRange : CPString
-export function CPRangeFromString(aString) {
+//! @typed CRRange : CRString
+export function CRRangeFromString(aString) {
 	const numbers = aString.$jsString.match(/(\d+)/g);
 	if (numbers === null)
-		return CPMakeRange(0, 0);
-	return CPMakeRange(parseInt(numbers[0], 10), (numbers.length > 1 ? parseInt(numbers[1], 10) : 0));
+		return CRMakeRange(0, 0);
+	return CRMakeRange(parseInt(numbers[0], 10), (numbers.length > 1 ? parseInt(numbers[1], 10) : 0));
 }
-exports.CPRangeFromString = CPRangeFromString;
+exports.CRRangeFromString = CRRangeFromString;
 
-//! @typed CPString : CPRange
-function CPStringFromRange(range) {
-	return new CPString(`{${(new Uint32Array([range.location]))[0]}, ${(new Uint32Array([range.length]))[0]}}`);
+//! @typed CRString : CRRange
+function CRStringFromRange(range) {
+	return new CRString(`{${(new Uint32Array([range.location]))[0]}, ${(new Uint32Array([range.length]))[0]}}`);
 }
-exports.CPStringFromRange = CPStringFromRange;
+exports.CRStringFromRange = CRStringFromRange;
 
-//! @typed CPRange : CPRange, CPRange
-function CPUnionRange(range1, range2) {
+//! @typed CRRange : CRRange, CRRange
+function CRUnionRange(range1, range2) {
 	const loc = (range1.location < range2.location ? range1.location : range2.location);
-	const len = (CPMaxRange(range2) >= CPMaxRange(range1) ? CPMaxRange(range2) - range1.length : CPMaxRange(range1) - range2.length);
-	return CPMakeRange(loc, len);
+	const len = (CRMaxRange(range2) >= CRMaxRange(range1) ? CRMaxRange(range2) - range1.length : CRMaxRange(range1) - range2.length);
+	return CRMakeRange(loc, len);
 }
-exports.CPUnionRange = CPUnionRange;
+exports.CRUnionRange = CRUnionRange;

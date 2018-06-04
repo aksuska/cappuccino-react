@@ -48,7 +48,7 @@ exports.objj_msgSend = objj_msgSend;
 
 /*!
 	* A "decorator" kind of function that facilitates null-targeted dot syntax property access into no-ops. Compiler wraps all objects with dot syntax property access with this call.
-	* Will also support standard JS calls and chained calls: e.g. CPObject.alloc().init() -> objj_propGuard(CPObject, 'alloc', [], 'init', [])
+	* Will also support standard JS calls and chained calls: e.g. CRObject.alloc().init() -> objj_propGuard(CRObject, 'alloc', [], 'init', [])
 */
 
 function objj_propGuard(object, ...args) {
@@ -60,7 +60,7 @@ function objj_propGuard(object, ...args) {
 
 		// must exist
 		if ((typeof object === 'object' && property in target === false) || (typeof object !== 'object' && target[property] === undefined))
-			objj_initialize(CPException).raise_format_(CPInvalidArgumentException, new CPString(`Property '%s' not found on %s of type '%s'`), property, (typeof target === 'function' ? 'class' : 'object'), (typeof target === 'function' ? target.name : target.constructor.name));
+			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, new CRString(`Property '%s' not found on %s of type '%s'`), property, (typeof target === 'function' ? 'class' : 'object'), (typeof target === 'function' ? target.name : target.constructor.name));
 
 		object = object[property];
 		if (typeof object === 'function')
@@ -72,7 +72,7 @@ function objj_propGuard(object, ...args) {
 			if (descriptor.set)
 				target[property] = args.shift()[0];
 			else
-				objj_initialize(CPException).raise_format_(CPInvalidArgumentException, new CPString("Assignment to readonly property"));
+				objj_initialize(CRException).raise_format_(CRInvalidArgumentException, new CRString("Assignment to readonly property"));
 		}
 	}
 
@@ -89,16 +89,16 @@ function objj_initialize(aClass) {
 	// need to initialize top-down
 	let chain = [];
 	let targetClass = aClass;
-	while (targetClass.name !== 'CPObject') {
+	while (targetClass.name !== 'CRObject') {
 		if (!targetClass.initialized)
 			chain.unshift(targetClass);
 		targetClass = Object.getPrototypeOf(targetClass);
 	}
 
-	// now check CPObject--we do this separately as mixin maintains state
-	if (objj_CPObject.$initialized === false) {
-		objj_CPObject.$initialized = true;
-		chain.unshift(CPObject);
+	// now check CRObject--we do this separately as mixin maintains state
+	if (objj_CRObject.$initialized === false) {
+		objj_CRObject.$initialized = true;
+		chain.unshift(CRObject);
 	}
 
 	for (let i = 0; i < chain.length; i++) {
@@ -169,7 +169,7 @@ function objj_getMethod(object, selector) {
 
 	let functionName = objj_function(selector), method;
 	// It is not possible in JS to reliably determine whether a property is a data member returning a function or a method, so we have
-	// to treat them as if they are the same thing. One exception is if it inherits from CPObject, which we can check for.
+	// to treat them as if they are the same thing. One exception is if it inherits from CRObject, which we can check for.
 	if (typeof object[functionName] === 'function' && '$initialized' in object[functionName] === false) {
 		method = object[functionName];
 	}
@@ -201,7 +201,7 @@ exports.objj_getMethod = objj_getMethod;
 function objj_methodSignature(object, selector) {
 	let method = objj_getMethod(object, selector);
 	if (method !== undefined) {
-		return objj_initialize(CPMethodSignature).signatureWithObjCTypes_('@@:' + '@'.repeat(method.length));
+		return objj_initialize(CRMethodSignature).signatureWithObjCTypes_('@@:' + '@'.repeat(method.length));
 	}
 	else {
 		return null;
@@ -209,11 +209,11 @@ function objj_methodSignature(object, selector) {
 }
 exports.objj_methodSignature = objj_methodSignature;
 
-//! wrapper for CPInvocation creation
+//! wrapper for CRInvocation creation
 function objj_invocation(target, selector, ...args) {
 	const methodSignature = objj_msgSend(target, 'methodSignatureForSelector:', selector);
 	if (methodSignature !== null) {
-		const invocation = objj_msgSend(CPInvocation, 'invocationWithMethodSignature:', methodSignature);
+		const invocation = objj_msgSend(CRInvocation, 'invocationWithMethodSignature:', methodSignature);
 		if (invocation) {
 			invocation.target = target;
 			invocation.selector = selector;
@@ -228,17 +228,17 @@ function objj_invocation(target, selector, ...args) {
 }
 exports.objj_invocation = objj_invocation;
 
-//! wrapper for CPArray creation
+//! wrapper for CRArray creation
 function objj_array(array) {
-	return new CPArray(array);
+	return new CRArray(array);
 }
 exports.objj_array = objj_array;
 
 // usage imports--import last so we avoid circular dependencies
-const CPObjectSym = require('./Foundation/CPObject'), CPObject = CPObjectSym.CPObject, objj_CPObject = CPObjectSym.objj_CPObject;
-const CPStringSym = require('./Foundation/CPString'), CPString = CPStringSym.CPString;
-const CPMethodSignatureSym = require('./Foundation/CPMethodSignature'), CPMethodSignature = CPMethodSignatureSym.CPMethodSignature;
-const CPInvocationSym = require('./Foundation/CPInvocation'), CPInvocation = CPInvocationSym.CPInvocation;
-const CPExceptionSym = require("./Foundation/CPException"), CPException = CPExceptionSym.CPException, CPInvalidArgumentException = CPExceptionSym.CPInvalidArgumentException;
-const CPArraySym = require('./Foundation/CPArray'), CPArray = CPArraySym.CPArray;
+const CRObjectSym = require('./Foundation/CPObject'), CRObject = CRObjectSym.CRObject, objj_CRObject = CRObjectSym.objj_CRObject;
+const CRStringSym = require('./Foundation/CPString'), CRString = CRStringSym.CRString;
+const CRMethodSignatureSym = require('./Foundation/CPMethodSignature'), CRMethodSignature = CRMethodSignatureSym.CRMethodSignature;
+const CRInvocationSym = require('./Foundation/CPInvocation'), CRInvocation = CRInvocationSym.CRInvocation;
+const CRExceptionSym = require("./Foundation/CPException"), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
+const CRArraySym = require('./Foundation/CPArray'), CRArray = CRArraySym.CRArray;
 

@@ -1,37 +1,37 @@
 /*
- * Module that specifies the CPObject protocol.
+ * Module that specifies the CRObject protocol.
  */
 
 const ProtocolSym = require("./Protocol"), Protocol = ProtocolSym;
 
-const CPObjectP = new Protocol('CPObject');
+const CRObjectP = new Protocol('CRObject');
 
-CPObjectP.addSelector_isRequired_isClassMethod('class', true, true);
-CPObjectP.addSelector_isRequired_isClassMethod('class', true, false);
-CPObjectP.addProperty_isRequired_onClass('superclass', true, true);
-CPObjectP.addProperty_isRequired_onClass('superclass', true, false);
-CPObjectP.addSelector_isRequired_isClassMethod('isEqual:', true, true);
-CPObjectP.addSelector_isRequired_isClassMethod('isEqual:', true, false);
-CPObjectP.addProperty_isRequired_onClass('hash', true, true);
-CPObjectP.addProperty_isRequired_onClass('hash', true, false);
-CPObjectP.addSelector_isRequired_isClassMethod('self', true, true);
-CPObjectP.addSelector_isRequired_isClassMethod('self', true, false);
-CPObjectP.addSelector_isRequired_isClassMethod('isKindOfClass:', true, true);
-CPObjectP.addSelector_isRequired_isClassMethod('isKindOfClass:', true, false);
-CPObjectP.addSelector_isRequired_isClassMethod('isMemberOfClass:', true, false);
-CPObjectP.addSelector_isRequired_isClassMethod('respondsToSelector:', true, true);
-CPObjectP.addSelector_isRequired_isClassMethod('respondsToSelector:', true, false);
-CPObjectP.addSelector_isRequired_isClassMethod('conformsToProtocol:', true, true);
-CPObjectP.addSelector_isRequired_isClassMethod('conformsToProtocol:', true, false);
-CPObjectP.addProperty_isRequired_onClass('description', true, true);
-CPObjectP.addProperty_isRequired_onClass('description', true, false);
-CPObjectP.addProperty_isRequired_onClass('debugDescription', false, true);
-CPObjectP.addProperty_isRequired_onClass('debugDescription', false, false);
-CPObjectP.addSelector_isRequired_isClassMethod('performSelector:', true, true);
-CPObjectP.addSelector_isRequired_isClassMethod('performSelector:', true, false);
-CPObjectP.addSelector_isRequired_isClassMethod('performSelector:withObject:', true, true);
-CPObjectP.addSelector_isRequired_isClassMethod('performSelector:withObject:', true, false);
-CPObjectP.addSelector_isRequired_isClassMethod('performSelector:withObject:withObject:', true, true);
-CPObjectP.addSelector_isRequired_isClassMethod('performSelector:withObject:withObject:', true, false);
-CPObjectP.addSelector_isRequired_isClassMethod('isProxy', true, false);
-exports.CPObjectP = CPObjectP;
+CRObjectP.addSelector_isRequired_isClassMethod('class', true, true);
+CRObjectP.addSelector_isRequired_isClassMethod('class', true, false);
+CRObjectP.addProperty_isRequired_onClass('superclass', true, true);
+CRObjectP.addProperty_isRequired_onClass('superclass', true, false);
+CRObjectP.addSelector_isRequired_isClassMethod('isEqual:', true, true);
+CRObjectP.addSelector_isRequired_isClassMethod('isEqual:', true, false);
+CRObjectP.addProperty_isRequired_onClass('hash', true, true);
+CRObjectP.addProperty_isRequired_onClass('hash', true, false);
+CRObjectP.addSelector_isRequired_isClassMethod('self', true, true);
+CRObjectP.addSelector_isRequired_isClassMethod('self', true, false);
+CRObjectP.addSelector_isRequired_isClassMethod('isKindOfClass:', true, true);
+CRObjectP.addSelector_isRequired_isClassMethod('isKindOfClass:', true, false);
+CRObjectP.addSelector_isRequired_isClassMethod('isMemberOfClass:', true, false);
+CRObjectP.addSelector_isRequired_isClassMethod('respondsToSelector:', true, true);
+CRObjectP.addSelector_isRequired_isClassMethod('respondsToSelector:', true, false);
+CRObjectP.addSelector_isRequired_isClassMethod('conformsToProtocol:', true, true);
+CRObjectP.addSelector_isRequired_isClassMethod('conformsToProtocol:', true, false);
+CRObjectP.addProperty_isRequired_onClass('description', true, true);
+CRObjectP.addProperty_isRequired_onClass('description', true, false);
+CRObjectP.addProperty_isRequired_onClass('debugDescription', false, true);
+CRObjectP.addProperty_isRequired_onClass('debugDescription', false, false);
+CRObjectP.addSelector_isRequired_isClassMethod('performSelector:', true, true);
+CRObjectP.addSelector_isRequired_isClassMethod('performSelector:', true, false);
+CRObjectP.addSelector_isRequired_isClassMethod('performSelector:withObject:', true, true);
+CRObjectP.addSelector_isRequired_isClassMethod('performSelector:withObject:', true, false);
+CRObjectP.addSelector_isRequired_isClassMethod('performSelector:withObject:withObject:', true, true);
+CRObjectP.addSelector_isRequired_isClassMethod('performSelector:withObject:withObject:', true, false);
+CRObjectP.addSelector_isRequired_isClassMethod('isProxy', true, false);
+exports.CRObjectP = CRObjectP;

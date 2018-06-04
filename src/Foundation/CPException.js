@@ -3,16 +3,16 @@
  **/
 
 const OBJJ = require('../Objective-J'), objj_msgSend = OBJJ.objj_msgSend, objj_initialize = OBJJ.objj_initialize;
-const CPObjectSym = require('./CPObject'), objj_CPObject = CPObjectSym.objj_CPObject;
-const CPStringSym = require('./CPString'), CPString = CPStringSym.CPString;
+const CRObjectSym = require('./CPObject'), objj_CRObject = CRObjectSym.objj_CRObject;
+const CRStringSym = require('./CPString'), CRString = CRStringSym.CRString;
 
-//! @typed CPString
-exports.CPInvalidArgumentException = new CPString("CPInvalidArgumentException");
-exports.CPRangeException = new CPString("CPRangeException");
-exports.CPInternalInconsistencyException = new CPString("CPInternalInconsistencyException");
+//! @typed CRString
+exports.CRInvalidArgumentException = new CRString("CRInvalidArgumentException");
+exports.CRRangeException = new CRString("CRRangeException");
+exports.CRInternalInconsistencyException = new CRString("CRInternalInconsistencyException");
 
 //! NSException Cocoa Foundation class emulation
-class CPException extends objj_CPObject(Error) {
+class CRException extends objj_CRObject(Error) {
 
 	static $uncaughtExceptionHandler = null;
 
@@ -24,25 +24,25 @@ class CPException extends objj_CPObject(Error) {
 	}
 
 	// we declare this for consistency with Cocoa, but don't implerment because it already exists in superclass.
-	//! @property(readonly, copy) CPString name
+	//! @property(readonly, copy) CRString name
 
-	//! @property(readonly, copy) CPString reason
+	//! @property(readonly, copy) CRString reason
 	get reason() {return this.message;}
 
-	//! @property(readonly, copy) CPDictionary userInfo
+	//! @property(readonly, copy) CRDictionary userInfo
 	get userInfo() {return this.$userInfo;}
 
 	/*!
 	 * Browsers don't provide a reliable way to parse a call stack, so we just return the entries from new Error().stack
-	 * @property(readonly, copy) CPArray<CPString> callStackReturnAddresses
+	 * @property(readonly, copy) CRArray<CRString> callStackReturnAddresses
 	 */
 	get callStackReturnAddresses() {return this.stack.split("\n");}
 
 	//! Browsers don't provide a reliable way to parse a call stack, so we just return the entries from new Error().stack
-	//! @property(readonly, copy) CPArray<CPString> callStackSymbols
+	//! @property(readonly, copy) CRArray<CRString> callStackSymbols
 	get callStackSymbols() {return this.stack.split("\n");}
 
-	//! @typed CPException : CPString, CPString, CPDictionary
+	//! @typed CRException : CRString, CRString, CRDictionary
 	static exceptionWithName_reason_userInfo_(name, reason, userInfo) {
 		const exception = this.new();
 		if (exception) {
@@ -53,18 +53,18 @@ class CPException extends objj_CPObject(Error) {
 		return exception
 	}
 
-	//! @typed void : CPString, CPString
+	//! @typed void : CRString, CRString
 	static raise_format_(name, format, ...args) {
 		this.raise_format_arguments_(name, format, args);
 	}
 
-	//! @typed void : CPString, CPString, CPArray
+	//! @typed void : CRString, CRString, CRArray
 	static raise_format_arguments_(name, format, args) {
 		// null format seems to be ignored in cocoa, so we'll do that too
-		const reason = (format !== null) ? objj_msgSend(CPString, 'stringWithFormat:', format, ...args) : null;
+		const reason = (format !== null) ? objj_msgSend(CRString, 'stringWithFormat:', format, ...args) : null;
 		const exception = this.exceptionWithName_reason_userInfo_(name, reason, null);
 		if (exception === null)
-			throw new Error("!? Could not create CPException object ?!");
+			throw new Error("!? Could not create CRException object ?!");
 		throw exception;
 	}
 
@@ -73,20 +73,20 @@ class CPException extends objj_CPObject(Error) {
 		throw this;
 	}
 }
-exports.CPException = CPException;
+exports.CRException = CRException;
 
 //! @typed void (^)(Event e) : void
-function CPGetUncaughtExceptionHandler() {
-	return objj_initialize(CPException).$uncaughtExceptionHandler;
+function CRGetUncaughtExceptionHandler() {
+	return objj_initialize(CRException).$uncaughtExceptionHandler;
 }
-exports.CPGetUncaughtExceptionHandler = CPGetUncaughtExceptionHandler;
+exports.CRGetUncaughtExceptionHandler = CRGetUncaughtExceptionHandler;
 
 //! @typed void : void (^)(Event e)
-function CPSetUncaughtExceptionHandler(handler) {
-	if (objj_initialize(CPException).$uncaughtExceptionHandler !== null) {
-		window.removeEventListener('error', CPException.$uncaughtExceptionHandler, true);
+function CRSetUncaughtExceptionHandler(handler) {
+	if (objj_initialize(CRException).$uncaughtExceptionHandler !== null) {
+		window.removeEventListener('error', CRException.$uncaughtExceptionHandler, true);
 	}
-	CPException.$uncaughtExceptionHandler = handler;
+	CRException.$uncaughtExceptionHandler = handler;
 	window.addEventListener('error', handler, true);
 }
-exports.CPSetUncaughtExceptionHandler = CPSetUncaughtExceptionHandler;
+exports.CRSetUncaughtExceptionHandler = CRSetUncaughtExceptionHandler;

@@ -2,10 +2,10 @@
  * Module that contains NSArray class emulation and related symbols. We maintain a has-a relationship with a native Array object
  */
 
-const CPObjectSym = require('./CPObject'), CPObject = CPObjectSym.CPObject;
+const CRObjectSym = require('./CPObject'), CRObject = CRObjectSym.CRObject;
 
 //! NSArray Cocoa Foundation class emulation
-class CPArray extends CPObject {
+class CRArray extends CRObject {
 
 	$jsArray;
 
@@ -21,7 +21,7 @@ class CPArray extends CPObject {
 
 	//! @name Querying an Array
 	//! @{
-	//! @property(readonly) CPUInteger count
+	//! @property(readonly) CRUInteger count
 	get count() { return this.$jsArray.length}
 	//! @}
 
@@ -31,6 +31,6 @@ class CPArray extends CPObject {
 		return this;
 	}
 }
-exports.CPArray = CPArray;
+exports.CRArray = CRArray;
 
-CPArray.$conformsTo.push('CPCopying', 'CPMutableCopying');
+CRArray.$conformsTo.push('CRCopying', 'CRMutableCopying');
