@@ -549,6 +549,24 @@ test("CRObject -setObservationInfo sets value", () => {
 	expect(object.observationInfo).toEqual(observationInfo);
 });
 
+test("CRObject +accessInstanceVariablesDirectly returns true", () => {
+	expect(CRObject.accessInstanceVariablesDirectly).toBeTruthy();
+});
+
+
+test("CRObject -setNilValueForKey: always throws", () => {
+	const object = CRObject.new();
+	try {
+		object.setNilValueForKey_('observationInfo');
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
+		expect(e.reason.jsString).toBe(`-[<CRObject ${object.$uidString()}> setNilValueForKey:]: could not set nil as the value for the key observationInfo`);
+	}
+});
+
 test("CRObject -isProxy returns false", () => {
 	const object = CRObject.new();
 	expect(object.isProxy()).toBeFalsy();
