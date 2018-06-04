@@ -2,7 +2,7 @@
  * Module that specifies the CRObject protocol.
  */
 
-const ProtocolSym = require("./Protocol"), Protocol = ProtocolSym;
+const ProtocolSym = require("./Protocol"), Protocol = ProtocolSym.Protocol;
 
 const CRObjectP = new Protocol('CRObject');
 
