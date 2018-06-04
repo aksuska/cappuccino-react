@@ -436,9 +436,74 @@ function objj_CRObject(superClass = Object) {
 
 		//! @}
 
+		//! @name Type Properties
+		//! @{
+		//! @property(class, readonly) BOOL accessInstanceVariablesDirectly
+		static get accessInstanceVariablesDirectly() {
+			return true;
+		}
+
+		//! @}
+
 		//! @name Instance Methods
 		//! TODO: do we think that there is a use case to implement the accessibility API? Is it mappable to ARIA?
 		//! @{
+		//! @typed void : CRString
+		setNilValueForKey_(key) {
+			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, new CRString("-[<%@ %s> setNilValueForKey:]: could not set nil as the value for the key %s"), this.className, this.$uidString(), key);
+		}
+
+		//! @typed id : CRString
+		valueForKey_(key) {
+			const keyString = key.jsString, properKey = keyString[0].toUpperCase() + keyString.substr(1);
+			let value = undefined;
+			// first check for basic accessors
+			for (let propName of [`get${properKey}`, keyString, `is${properKey}`, `_${keyString}`]) {
+				if (propName in this && objj_propertyDescriptor(this, propName).get !== undefined) {
+					value = this[propName];
+				}
+			}
+			// if none, check for array to-many accessors
+			if (value === undefined && `countOf${properKey}` in this && (`objectIn${properKey}AtIndex_` in this || `${keyString}AtIndexes_` in this)) {
+				// value is mutable array proxy
+			}
+			// if none, check for set to-many accessors
+			else if (`countOf${properKey}` in this && `enumeratorOf${properKey}` in this && `memberOf${properKey}_` in this) {
+				// value is mutable set proxy
+			}
+			else if (this.constructor.accessInstanceVariablesDirectly) {
+				for (let propName of [`_${keyString}`, `_is${properKey}`, keyString, `is${properKey}`]) {
+					if (propName in this) {
+						value = this[propName];
+					}
+				}
+			}
+			// did we find a value?
+			if (value !== undefined) {
+				if (typeof value === 'object')
+					return value;
+				else if (typeof value === 'number' || typeof value === 'boolean')
+					return objj_number(value);
+				else
+					return objj_value(value);
+			}
+			else {
+				return this.valueForUndefinedKey_(key);
+			}
+		}
+
+		//! @typed id : CRString
+		valueForKeyPath_(keyPath) {
+			const pathString = keyPath.jsString,
+						periodIdx = pathString.indexOf('.'),
+						key = (periodIdx > 0 ? pathString.slice(0, periodIdx) : pathString),
+						path = (periodIdx > 0 ? pathString.slice(periodIdx+1) : '');
+			if (path === '')
+				return this.valueForKey_(new CRString(key));
+			else
+				return objj_propGuard(this[key], 'valueForKeyPath_', [new CRString(path)]);
+		}
+
 		//! Technically, CRObject should respond to +isProxy but the answer is always NO and since there is no use case we just don't include it.
 		//! @typed BOOL : void
 		isProxy() {
