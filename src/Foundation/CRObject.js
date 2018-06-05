@@ -159,12 +159,12 @@ function objj_CRObject(superClass = Object) {
 		//! @{
 		//! @typed BOOL : Class
 		static isEqual_(aClass) {
-			return aClass !== null && this.hash === aClass.hash;
+			return this.hash === objj_propGuard(aClass, 'hash');
 		}
 
 		//! @typed BOOL : id
 		isEqual_(object) {
-			return object !== null && this.hash === object.hash;
+			return this.hash === objj_propGuard(object, 'hash');
 		}
 
 		//! @property(class, readonly) CRUInteger hash
@@ -226,12 +226,12 @@ function objj_CRObject(superClass = Object) {
 		}
 
 		static conformsToProtocol_(protocol) {
-			return protocol !== null && this.$conformsTo.includes(protocol.name);
+			return this.$conformsTo.includes(objj_propGuard(protocol, 'name'));
 		}
 
 		//! @typed BOOL : Protocol
 		conformsToProtocol_(protocol) {
-			return protocol !== null && this.constructor.$conformsTo.includes(protocol.name);
+			return this.constructor.$conformsTo.includes(objj_propGuard(protocol, 'name'));
 		}
 
 		//! @}
@@ -389,7 +389,7 @@ function objj_CRObject(superClass = Object) {
 
 		//! @typed void : CRInvocation
 		forwardInvocation_(invocation) {
-			this.doesNotRecognizeSelector_(invocation.selector);
+			this.doesNotRecognizeSelector_(objj_propGuard(invocation, 'selector'));
 		}
 
 		//! @}
