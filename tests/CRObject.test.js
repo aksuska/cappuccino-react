@@ -143,6 +143,7 @@ test("CRObject +isSubclassOfClass: returns expected value", () => {
 	expect(MyClass3.isSubclassOfClass_(MyClass2)).toBeFalsy();
 	const MyClass4 = class extends objj_CRObject(Array) {};
 	expect(MyClass4.isSubclassOfClass_(CRObject)).toBeTruthy();
+	expect(CRObject.isSubclassOfClass_(null)).toBeFalsy();
 });
 
 test("CRObject +className returns expected class name as CRString", () => {
@@ -176,6 +177,7 @@ test("CRObject +isEqual: returns expected value", () => {
 	expect(CRObject.isEqual_(CRObject)).toBeTruthy();
 	expect(MyClass.isEqual_(CRObject)).toBeFalsy();
 	expect(MyClass.isEqual_(MyClass)).toBeTruthy();
+	expect(MyClass.isEqual_(null)).toBeFalsy();
 });
 
 test("CRObject -isEqual: returns expected value", () => {
@@ -184,6 +186,7 @@ test("CRObject -isEqual: returns expected value", () => {
 	expect(object.isEqual_(clone)).toBeTruthy();
 	const object2 = CRObject.new();
 	expect(object2.isEqual_(clone)).toBeFalsy();
+	expect(object2.isEqual_(null)).toBeFalsy();
 });
 
 test("CRObject +hash returns expected value", () => {
@@ -221,6 +224,7 @@ test("CRObject +isKindOfClass: returns expected value", () => {
 	expect(MyClass.isKindOfClass_(MyClass2)).toBeFalsy();
 	const MyClass4 = class extends objj_CRObject(Array) {};
 	expect(MyClass4.isKindOfClass_(CRObject)).toBeTruthy();
+	expect(CRObject.isKindOfClass_(null)).toBeFalsy();
 });
 
 test("CRObject -isKindOfClass: returns expected value", () => {
@@ -232,6 +236,7 @@ test("CRObject -isKindOfClass: returns expected value", () => {
 	expect(MyClass.new().isKindOfClass_(MyClass2)).toBeFalsy();
 	const MyClass4 = class extends objj_CRObject(Array) {};
 	expect(MyClass4.new().isKindOfClass_(CRObject)).toBeTruthy();
+	expect(CRObject.new().isKindOfClass_(null)).toBeFalsy();
 });
 
 test("CRObject -isMemberOfClass: returns expected value", () => {
@@ -239,12 +244,14 @@ test("CRObject -isMemberOfClass: returns expected value", () => {
 	expect(CRObject.new().isMemberOfClass_(CRObject)).toBeTruthy();
 	expect(MyClass.new().isMemberOfClass_(CRObject)).toBeFalsy();
 	expect(MyClass.new().isMemberOfClass_(MyClass)).toBeTruthy();
+	expect(CRObject.new().isMemberOfClass_(null)).toBeFalsy();
 });
 
 test("CRObject +instancesRespondToSelector: returns expected value", () => {
 	const MyClass = class extends CRObject { constructor() {super(); this.prop = true;} };
 	expect(MyClass.instancesRespondToSelector_("hash")).toBeTruthy();
 	expect(MyClass.instancesRespondToSelector_("prop")).toBeFalsy();
+	expect(MyClass.instancesRespondToSelector_(null)).toBeFalsy();
 });
 
 test("CRObject +respondsToSelector: returns expected value", () => {
@@ -252,6 +259,7 @@ test("CRObject +respondsToSelector: returns expected value", () => {
 	MyClass.prop = true;
 	expect(MyClass.respondsToSelector_("initialized")).toBeTruthy();
 	expect(MyClass.respondsToSelector_("prop")).toBeFalsy();
+	expect(MyClass.respondsToSelector_(null)).toBeFalsy();
 });
 
 test("CRObject -respondsToSelector: returns expected value", () => {
@@ -259,6 +267,7 @@ test("CRObject -respondsToSelector: returns expected value", () => {
 	const object = MyClass.new();
 	expect(object.respondsToSelector_("hash")).toBeTruthy();
 	expect(object.respondsToSelector_("prop")).toBeFalsy();
+	expect(object.respondsToSelector_(null)).toBeFalsy();
 });
 
 test("CRObject +conformsToProtocol: returns expected value; also CRObject conforms to CRObject", () => {
@@ -266,6 +275,7 @@ test("CRObject +conformsToProtocol: returns expected value; also CRObject confor
 	expect(CRObject.conformsToProtocol_(CRObjectProtocol)).toBeTruthy();
 	const protocol = new Protocol('Bogus');
 	expect(CRObject.conformsToProtocol_(protocol)).toBeFalsy();
+	expect(CRObject.conformsToProtocol_(null)).toBeFalsy();
 });
 
 test("CRObject -conformsToProtocol: returns expected value; also CRObject conforms to CRObject", () => {
@@ -274,6 +284,7 @@ test("CRObject -conformsToProtocol: returns expected value; also CRObject confor
 	expect(object.conformsToProtocol_(CRObjectProtocol)).toBeTruthy();
 	const protocol = new Protocol('Bogus');
 	expect(object.conformsToProtocol_(protocol)).toBeFalsy();
+	expect(object.conformsToProtocol_(null)).toBeFalsy();
 });
 
 test("CRObject +methodForSelector: returns expected value", () => {
@@ -295,6 +306,17 @@ test("CRObject +methodForSelector: returns expected value", () => {
 	const inherited = MyClass.methodForSelector_('conformsToProtocol:');
 	expect(typeof inherited).toBe('function');
 	expect(inherited(MyClass, 'conformsToProtocol:', new Protocol('CRObject'))).toBeTruthy();
+	// null throws does not recognize exception
+	const methodForNull = MyClass.methodForSelector_(null);
+	try {
+		methodForNull(MyClass, 'isMemberOfClass:', CRObject);
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
+		expect(e.reason.jsString).toBe("+[MyClass null]: unrecognized selector sent to class");
+	}
 });
 
 test("CRObject -methodForSelector: returns expected value", () => {
@@ -317,6 +339,17 @@ test("CRObject -methodForSelector: returns expected value", () => {
 	const inherited = object.methodForSelector_('conformsToProtocol:');
 	expect(typeof inherited).toBe('function');
 	expect(inherited(object, 'conformsToProtocol:', new Protocol('CRObject'))).toBeTruthy();
+	// null throws does not recognize exception
+	const methodForNull = object.methodForSelector_(null);
+	try {
+		methodForNull(object, 'initialized');
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
+		expect(e.reason.jsString).toBe(`-[MyClass null]: unrecognized selector sent to instance ${object.$uidString()}`);
+	}
 });
 
 test("CRObject +instanceMethodForSelector: returns expected value", () => {
@@ -339,17 +372,30 @@ test("CRObject +instanceMethodForSelector: returns expected value", () => {
 	const inherited = MyClass.instanceMethodForSelector_('conformsToProtocol:');
 	expect(typeof inherited).toBe('function');
 	expect(inherited(object, 'conformsToProtocol:', new Protocol('CRObject'))).toBeTruthy();
+	// null throws does not recognize exception
+	const methodForNull = MyClass.instanceMethodForSelector_(null);
+	try {
+		methodForNull(object, 'initialized');
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
+		expect(e.reason.jsString).toBe(`-[MyClass null]: unrecognized selector sent to instance ${object.$uidString()}`);
+	}
 });
 
 test("CRObject +instanceMethodSignatureForSelector: returns expected value", () => {
 	const MyClass = class extends CRObject {};
 	expect(MyClass.instanceMethodSignatureForSelector_('initialized')).toBeNull();
+	expect(MyClass.instanceMethodSignatureForSelector_(null)).toBeNull();
 	expect(MyClass.instanceMethodSignatureForSelector_('hash')).toBeInstanceOf(CRMethodSignature);
 });
 
 test("CRObject +methodSignatureForSelector: returns expected value", () => {
 	const MyClass = class extends CRObject {};
 	expect(MyClass.methodSignatureForSelector_('isMemberOfClass:')).toBeNull();
+	expect(MyClass.methodSignatureForSelector_(null)).toBeNull();
 	expect(MyClass.methodSignatureForSelector_('initialized')).toBeInstanceOf(CRMethodSignature);
 });
 
@@ -357,6 +403,7 @@ test("CRObject -methodSignatureForSelector: returns expected value", () => {
 	const MyClass = class extends CRObject {};
 	const object = MyClass.new();
 	expect(object.methodSignatureForSelector_('initialized')).toBeNull();
+	expect(object.methodSignatureForSelector_(null)).toBeNull();
 	expect(object.methodSignatureForSelector_('hash')).toBeInstanceOf(CRMethodSignature);
 });
 
@@ -478,10 +525,12 @@ testPerformSelector({args: 0, nulls: 4}, 'performSelector:');
 
 test("CRObject +forwardingTargetForSelector: returns null", () => {
 	expect(CRObject.forwardingTargetForSelector_('any')).toBeNull();
+	expect(CRObject.forwardingTargetForSelector_(null)).toBeNull();
 });
 
 test("CRObject -forwardingTargetForSelector: returns null", () => {
 	expect(CRObject.new().forwardingTargetForSelector_('any')).toBeNull();
+	expect(CRObject.new().forwardingTargetForSelector_(null)).toBeNull();
 });
 
 test("CRObject +forwardInvocation: always throws does not recognize", () => {
@@ -493,6 +542,15 @@ test("CRObject +forwardInvocation: always throws does not recognize", () => {
 	catch (e) {
 		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
 		expect(e.reason.jsString).toBe("+[CRObject initialized]: unrecognized selector sent to class");
+	}
+	try {
+		CRObject.forwardInvocation_(objj_invocation(CRObject, null));
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
+		expect(e.reason.jsString).toBe("+[CRObject null]: unrecognized selector sent to class");
 	}
 });
 
@@ -507,14 +565,25 @@ test("CRObject -forwardInvocation: always throws does not recognize", () => {
 		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
 		expect(e.reason.jsString).toBe(`-[CRObject description]: unrecognized selector sent to instance ${object.$uidString()}`);
 	}
+	try {
+		object.forwardInvocation_(objj_invocation(CRObject, null));
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
+		expect(e.reason.jsString).toBe(`-[CRObject null]: unrecognized selector sent to instance ${object.$uidString()}`);
+	}
 });
 
 test("CRObject +resolveClassMethod: always returns false", () => {
 	expect(CRObject.resolveClassMethod_('initialized')).toBeFalsy();
+	expect(CRObject.resolveClassMethod_(null).toBeFalsy();
 });
 
 test("CRObject +resolveInstanceMethod: always returns false", () => {
 	expect(CRObject.resolveInstanceMethod_('forwardInvocation:')).toBeFalsy();
+	expect(CRObject.resolveInstanceMethod_(null)).toBeFalsy();
 });
 
 test("CRObject +doesNotRecognizeSelector: always throws does not recognize", () => {
@@ -526,6 +595,15 @@ test("CRObject +doesNotRecognizeSelector: always throws does not recognize", () 
 	catch (e) {
 		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
 		expect(e.reason.jsString).toBe("+[CRObject initialized]: unrecognized selector sent to class");
+	}
+	try {
+		CRObject.doesNotRecognizeSelector_(null);
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
+		expect(e.reason.jsString).toBe("+[CRObject null]: unrecognized selector sent to class");
 	}
 });
 
@@ -539,6 +617,15 @@ test("CRObject -doesNotRecognizeSelector: always throws does not recognize", () 
 	catch (e) {
 		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
 		expect(e.reason.jsString).toBe(`-[CRObject description]: unrecognized selector sent to instance ${object.$uidString()}`);
+	}
+	try {
+		object.doesNotRecognizeSelector_(null);
+		// this actually means the above failed to throw
+		expect(true).toBe(false);
+	}
+	catch (e) {
+		expect(e.name.jsString).toBe(CRInvalidArgumentException.jsString);
+		expect(e.reason.jsString).toBe(`-[CRObject null]: unrecognized selector sent to instance ${object.$uidString()}`);
 	}
 });
 
