@@ -159,12 +159,12 @@ function objj_CRObject(superClass = Object) {
 		//! @{
 		//! @typed BOOL : Class
 		static isEqual_(aClass) {
-			return this.hash === aClass.hash;
+			return aClass !== null && this.hash === aClass.hash;
 		}
 
 		//! @typed BOOL : id
 		isEqual_(object) {
-			return this.hash === object.hash;
+			return object !== null && this.hash === object.hash;
 		}
 
 		//! @property(class, readonly) CRUInteger hash
@@ -226,12 +226,12 @@ function objj_CRObject(superClass = Object) {
 		}
 
 		static conformsToProtocol_(protocol) {
-			return this.$conformsTo.includes(protocol.name);
+			return protocol !== null && this.$conformsTo.includes(protocol.name);
 		}
 
 		//! @typed BOOL : Protocol
 		conformsToProtocol_(protocol) {
-			return this.constructor.$conformsTo.includes(protocol.name);
+			return protocol !== null && this.constructor.$conformsTo.includes(protocol.name);
 		}
 
 		//! @}
