@@ -176,24 +176,8 @@ class CRString extends CRObject {
 	//! @name Identifying and Comparing Strings
 	//! @{
 
-	//! @property(readonly, copy) string jsString
-	//! Returns the native JS string that backs the NSArray
-	get jsString() {return this.$jsString;}
-
 	//! @property(readonly) CRUInteger hash
 	get hash() {return this.$hashCode;}
-
-	$generateHash() {
-		let source = this.$jsString, length = source.length, result = 2166136261;
-		for (let i = 0; i < length; i++) {
-			result = result ^ source.charCodeAt(i);
-			result = result * 16777619;
-		}
-		// check--throw exception  if hash is NaN
-		if (Number.isNaN(result))
-			objj_initialize(CRException).raise_format_(CRInternalInconsistencyException, new CRString("-[%@ $generateHash]: hash result of '%@' is NaN"), this.className, this);
-		this.$hashCode = (new Uint32Array([result]))[0];
-	}
 
 	//! @}
 
@@ -370,6 +354,27 @@ class CRString extends CRObject {
 
 	//! @property(readonly, copy) CRString description
 	get description() {return this;}
+
+	//! @}
+
+	//! @name Methods Not In Cocoa
+	//! @{
+
+	//! @property(readonly, copy) string jsString
+	//! Returns the native JS string that backs the NSArray
+	get jsString() {return this.$jsString;}
+
+	$generateHash() {
+		let source = this.$jsString, length = source.length, result = 2166136261;
+		for (let i = 0; i < length; i++) {
+			result = result ^ source.charCodeAt(i);
+			result = result * 16777619;
+		}
+		// check--throw exception  if hash is NaN
+		if (Number.isNaN(result))
+			objj_initialize(CRException).raise_format_(CRInternalInconsistencyException, new CRString("-[%@ $generateHash]: hash result of '%@' is NaN"), this.className, this);
+		this.$hashCode = (new Uint32Array([result]))[0];
+	}
 
 	//! @}
 }
