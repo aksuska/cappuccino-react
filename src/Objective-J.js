@@ -234,5 +234,4 @@ const CRStringSym = require('./Foundation/CRString'), CRString = CRStringSym.CRS
 const CRMethodSignatureSym = require('./Foundation/CRMethodSignature'), CRMethodSignature = CRMethodSignatureSym.CRMethodSignature;
 const CRInvocationSym = require('./Foundation/CRInvocation'), CRInvocation = CRInvocationSym.CRInvocation;
 const CRExceptionSym = require("./Foundation/CRException"), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
-const CRArraySym = require('./Foundation/CRArray'), CRArray = CRArraySym.CRArray;
 
