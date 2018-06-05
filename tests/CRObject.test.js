@@ -1,5 +1,5 @@
 const OBJJ = require('../src/Objective-J'), objj_initialize = OBJJ.objj_initialize, objj_propGuard = OBJJ.objj_propGuard, objj_function = OBJJ.objj_function, objj_invocation = OBJJ.objj_invocation;
-const CRObjectSym = require('../src/Foundation/CRObject'), CRObject = CRObjectSym.CRObject;
+const CRObjectSym = require('../src/Foundation/CRObject'), CRObject = CRObjectSym.CRObject, objj_CRObject = CRObjectSym.objj_CRObject;
 const CRStringSym = require('../src/Foundation/CRString'), CRString = CRStringSym.CRString;
 const CRExceptionSym = require("../src/Foundation/CRException"), CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
 const CRMethodSignatureSym = require('../src/Foundation/CRMethodSignature'), CRMethodSignature = CRMethodSignatureSym.CRMethodSignature;
@@ -94,6 +94,12 @@ test("CRObject +class returns self", () => {
 	expect(CRObject.class()).toBe(CRObject);
 });
 
+test("CRObject -class returns expected value", () => {
+	expect(CRObject.new().class()).toBe(CRObject);
+	const MyClass = class extends CRObject {};
+	expect(MyClass.new().class()).toBe(MyClass);
+});
+
 test("CRObject +superclass on CRObject returns null", () => {
 	expect(CRObject.superclass).toBeNull();
 });
@@ -103,6 +109,8 @@ test("CRObject +superclass returns super class", () => {
 	expect(MyClass.superclass).toBe(CRObject);
 	const MyClass2 = class extends MyClass {};
 	expect(MyClass2.superclass).toBe(MyClass);
+	const MyClass3 = class extends objj_CRObject(Array) {};
+	expect(MyClass3.superclass).toBe(CRObject);
 });
 
 test("CRObject +superclass is read-only", () => {
@@ -118,6 +126,8 @@ test("CRObject -superclass returns super class", () => {
 	expect(MyClass.new().superclass).toBe(CRObject);
 	const MyClass2 = class extends MyClass {};
 	expect(MyClass2.new().superclass).toBe(MyClass);
+	const MyClass3 = class extends objj_CRObject(Array) {};
+	expect(MyClass3.new().superclass).toBe(CRObject);
 });
 
 test("CRObject -superclass is read-only", () => {
@@ -131,6 +141,8 @@ test("CRObject +isSubclassOfClass: returns expected value", () => {
 	expect(MyClass2.isSubclassOfClass_(CRObject)).toBeTruthy();
 	const MyClass3 = class extends CRObject {};
 	expect(MyClass3.isSubclassOfClass_(MyClass2)).toBeFalsy();
+	const MyClass4 = class extends objj_CRObject(Array) {};
+	expect(MyClass4.isSubclassOfClass_(CRObject)).toBeTruthy();
 });
 
 test("CRObject +className returns expected class name as CRString", () => {
@@ -207,6 +219,8 @@ test("CRObject +isKindOfClass: returns expected value", () => {
 	expect(MyClass.isKindOfClass_(CRObject)).toBeTruthy();
 	expect(MyClass2.isKindOfClass_(CRObject)).toBeTruthy();
 	expect(MyClass.isKindOfClass_(MyClass2)).toBeFalsy();
+	const MyClass4 = class extends objj_CRObject(Array) {};
+	expect(MyClass4.isKindOfClass_(CRObject)).toBeTruthy();
 });
 
 test("CRObject -isKindOfClass: returns expected value", () => {
@@ -216,6 +230,8 @@ test("CRObject -isKindOfClass: returns expected value", () => {
 	expect(MyClass.new().isKindOfClass_(CRObject)).toBeTruthy();
 	expect(MyClass2.new().isKindOfClass_(CRObject)).toBeTruthy();
 	expect(MyClass.new().isKindOfClass_(MyClass2)).toBeFalsy();
+	const MyClass4 = class extends objj_CRObject(Array) {};
+	expect(MyClass4.new().isKindOfClass_(CRObject)).toBeTruthy();
 });
 
 test("CRObject -isMemberOfClass: returns expected value", () => {

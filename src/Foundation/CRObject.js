@@ -115,18 +115,27 @@ function objj_CRObject(superClass = Object) {
 
 		//! @property(class, readonly) Class superclass
 		static get superclass() {
-			return (this.name === 'CRObject') ? null : Object.getPrototypeOf(this);
+			const superClass = (this.name === 'CRObject') ? null : Object.getPrototypeOf(this);
+			// always return concrete singleton for CRObject
+			if (superClass !== null && superClass.name === 'CRObject')
+				return exports.CRObject;
+			else
+				return superClass;
 		}
 
 		//! @property(readonly) Class superclass
 		get superclass() {
-			return (this.constructor.name === 'CRObject') ? null : Object.getPrototypeOf(this.constructor);
+			const superClass = (this.constructor.name === 'CRObject') ? null : Object.getPrototypeOf(this.constructor);
+			if (superClass !== null && superClass.name === 'CRObject')
+				return exports.CRObject;
+			else
+				return superClass;
 		}
 
 		//! @typed BOOL : Class
 		static isSubclassOfClass_(aClass) {
 			for (let targetClass = this; targetClass !== null; targetClass = Object.getPrototypeOf(targetClass)) {
-				if (targetClass === aClass)
+				if (targetClass === aClass || (targetClass.name === 'CRObject' && aClass === exports.CRObject))
 					return true;
 			}
 			return false;
@@ -185,7 +194,7 @@ function objj_CRObject(superClass = Object) {
 		//! @typed BOOL : Class
 		static isKindOfClass_(aClass) {
 			for (let targetClass = this; targetClass !== null; targetClass = Object.getPrototypeOf(targetClass)) {
-				if (targetClass === aClass)
+				if (targetClass === aClass || (targetClass.name === 'CRObject' && aClass === exports.CRObject))
 					return true;
 			}
 			return false;
@@ -193,7 +202,7 @@ function objj_CRObject(superClass = Object) {
 
 		//! @typed BOOL : Class
 		isKindOfClass_(aClass) {
-			return this instanceof aClass;
+			return this.class().isKindOfClass_(aClass);
 		}
 
 		//! Technically, CRObject should respond to +isMemberOfClass: but the answer is always NO and since there is no use case we just don't include it.
