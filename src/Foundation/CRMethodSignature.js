@@ -12,21 +12,9 @@ const CRExceptionSym = require("./CRException"), CRException = CRExceptionSym.CR
 class CRMethodSignature extends CRObject {
 	
 	$typeList = [];
-	
-	//! Property will always be '@' since we currently don't have a means of determining a method's return type
-	//! @property(readonly) string methodReturnType
-	get methodReturnType() {return this.$typeList[0];}
 
-	//! Property will always be 1 since there is no real JS equivalent
-	//! @property(readonly) CRUInteger methodReturnLength
-	get methodReturnLength() {return 1;}
-
-	//! @property(readonly) CRUInteger numberOfArguments
-	get numberOfArguments() {return this.$typeList.length - 1;}
-
-	//! Property will always be 1 since there is no real JS equivalent
-	//! @property(readonly) CRUInteger frameLength
-	get frameLength() {return 1;}
+	//! @name Creating a Method Signature Object
+	//! @{
 
 	//! @typed CRMethodSignature : string
 	static signatureWithObjCTypes_(typeString) {
@@ -36,20 +24,51 @@ class CRMethodSignature extends CRObject {
 		}
 		return sig;
 	}
+	//! @}
+
+	//! @name Getting Information on Argument Types
+	//! @{
 
 	//! @typed string : CRUInteger
 	getArgumentTypeAtIndex_(idx) {
 		if (idx >= this.$typeList.length)
 			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, new CRString("-[%@ getArgumentTypeAtIndex:]: index (%i) out of bounds [0, %i]"), this.className, idx, this.$typeList.length - 1);
-		
+
 		return this.$typeList[idx];
 	}
-	
+
+	//! @property(readonly) CRUInteger numberOfArguments
+	get numberOfArguments() {return this.$typeList.length - 1;}
+
+	//! Property will always be 1 since there is no real JS equivalent
+	//! @property(readonly) CRUInteger frameLength
+	get frameLength() {return 1;}
+
+	//! @}
+
+	//! @name Getting Information on Return Types
+	//! @{
+
+	//! Property will always be '@' since we currently don't have a means of determining a method's return type
+	//! @property(readonly) string methodReturnType
+	get methodReturnType() {return this.$typeList[0];}
+
+	//! Property will always be 1 since there is no real JS equivalent
+	//! @property(readonly) CRUInteger methodReturnLength
+	get methodReturnLength() {return 1;}
+
+	//! @}
+
+	//! @name Determining Synchronous Status
+	//! @{
+
 	//! Currently N/A since we don't have an emulation of Distributed Objects, but always returns YES since that is usually the right answer
 	//! @typed BOOL : void
 	isOneway() {
 		return true;
 	}
+
+	//! @}
 
 	//! @name Methods Not In Cocoa
 	//! @{
@@ -65,6 +84,7 @@ class CRMethodSignature extends CRObject {
 			return null;
 		}
 	}
+
 	//! @}
 }
 exports.CRMethodSignature = CRMethodSignature;
