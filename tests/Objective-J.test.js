@@ -8,13 +8,12 @@ const OBJJ = require('../src/Objective-J'),
 	objj_methodSignature = OBJJ.objj_methodSignature,
 	objj_prop2setter = OBJJ.objj_prop2setter,
 	objj_setter2prop = OBJJ.objj_setter2prop,
-	objj_getMethod = OBJJ.objj_getMethod, objj_array = OBJJ.objj_array;
+	objj_getMethod = OBJJ.objj_getMethod;
 const CRObjectSym = require('../src/Foundation/CRObject'), objj_CRObject = CRObjectSym.objj_CRObject, CRObject = CRObjectSym.CRObject;
 const CRStringSym = require('../src/Foundation/CRString'), CRString = CRStringSym.CRString;
 const CRInvocationSym = require('../src/Foundation/CRInvocation'), CRInvocation = CRInvocationSym.CRInvocation;
 const CRExceptionSym = require("../src/Foundation/CRException"), CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
 const CRMethodSignatureSym = require('../src/Foundation/CRMethodSignature'), CRMethodSignature = CRMethodSignatureSym.CRMethodSignature;
-const CRArraySym = require("../src/Foundation/CRArray"), CRArray = CRArraySym.CRArray;
 
 /*
 	* Let's test utility function first as the main two might depend on them
@@ -111,12 +110,6 @@ test("objj_invocation() returns configured CRInvocation instance", () => {
 	expect(arg).toBe('arg1');
 	invocation.getArgument_atIndex_(argRef, 3);
 	expect(arg).toBe('arg2');
-});
-
-test("objj_array() returns CRArray instance", () => {
-	const array = objj_array([1, 2, 3]);
-	expect(array).toBeInstanceOf(CRArray);
-	expect(array.jsArray).toEqual([1, 2, 3]);
 });
 
 /*

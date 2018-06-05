@@ -228,12 +228,6 @@ function objj_invocation(target, selector, ...args) {
 }
 exports.objj_invocation = objj_invocation;
 
-//! wrapper for CRArray creation
-function objj_array(array) {
-	return new CRArray(array);
-}
-exports.objj_array = objj_array;
-
 // usage imports--import last so we avoid circular dependencies
 const CRObjectSym = require('./Foundation/CRObject'), CRObject = CRObjectSym.CRObject, objj_CRObject = CRObjectSym.objj_CRObject;
 const CRStringSym = require('./Foundation/CRString'), CRString = CRStringSym.CRString;

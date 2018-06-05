@@ -56,7 +56,7 @@ function objj_CRObject(superClass = Object) {
 
 		//! @typed instancetype : void
 		init() {
-			this.$exposedBindings = objj_array([]);
+			this.$exposedBindings = new CRArray([]);
 			this.$observationInfo = {};
 
 			return this;
@@ -544,7 +544,8 @@ const OBJJ = require('../Objective-J'),
 		objj_msgSend = OBJJ.objj_msgSend,
 		objj_propGuard = OBJJ.objj_propGuard,
 		objj_methodSignature = OBJJ.objj_methodSignature,
-		objj_getMethod = OBJJ.objj_getMethod, objj_array = OBJJ.objj_array, objj_initialize = OBJJ.objj_initialize, objj_propertyDescriptor = OBJJ.objj_propertyDescriptor, objj_number = OBJJ.objj_number, objj_value = OBJJ.objj_value;
+		objj_getMethod = OBJJ.objj_getMethod, objj_initialize = OBJJ.objj_initialize, objj_propertyDescriptor = OBJJ.objj_propertyDescriptor, objj_number = OBJJ.objj_number, objj_value = OBJJ.objj_value;
 const CRStringSym = require('./CRString'), CRString = CRStringSym.CRString;
 const CRExceptionSym = require("./CRException"), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
+const CRArraySym = require('./CRArray'), CRArray = CRArraySym.CRArray;
 const sprintf = require('sprintf-js').sprintf;
