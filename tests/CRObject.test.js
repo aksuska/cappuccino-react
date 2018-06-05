@@ -578,7 +578,7 @@ test("CRObject -forwardInvocation: always throws does not recognize", () => {
 
 test("CRObject +resolveClassMethod: always returns false", () => {
 	expect(CRObject.resolveClassMethod_('initialized')).toBeFalsy();
-	expect(CRObject.resolveClassMethod_(null).toBeFalsy();
+	expect(CRObject.resolveClassMethod_(null)).toBeFalsy();
 });
 
 test("CRObject +resolveInstanceMethod: always returns false", () => {
