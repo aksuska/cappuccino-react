@@ -197,18 +197,6 @@ exports.objj_getMethod = objj_getMethod;
  * Convenience functions for creating objects that may depends on caller declaration, to avoid circular dependencies.
 */
 
-//! wrapper for method signature creation
-function objj_methodSignature(object, selector) {
-	let method = objj_getMethod(object, selector);
-	if (method !== undefined) {
-		return objj_initialize(CRMethodSignature).signatureWithObjCTypes_('@@:' + '@'.repeat(method.length));
-	}
-	else {
-		return null;
-	}
-}
-exports.objj_methodSignature = objj_methodSignature;
-
 //! wrapper for CRInvocation creation
 function objj_invocation(target, selector, ...args) {
 	const methodSignature = objj_msgSend(target, 'methodSignatureForSelector:', selector);
@@ -231,7 +219,6 @@ exports.objj_invocation = objj_invocation;
 // usage imports--import last so we avoid circular dependencies
 const CRObjectSym = require('./Foundation/CRObject'), CRObject = CRObjectSym.CRObject, objj_CRObject = CRObjectSym.objj_CRObject;
 const CRStringSym = require('./Foundation/CRString'), CRString = CRStringSym.CRString;
-const CRMethodSignatureSym = require('./Foundation/CRMethodSignature'), CRMethodSignature = CRMethodSignatureSym.CRMethodSignature;
 const CRInvocationSym = require('./Foundation/CRInvocation'), CRInvocation = CRInvocationSym.CRInvocation;
 const CRExceptionSym = require("./Foundation/CRException"), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
 

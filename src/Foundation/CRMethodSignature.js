@@ -4,7 +4,7 @@
  * so as to preserve the type annotations, which would be accessible via the toString() method of Function.
  **/
 
-const OBJJ = require('../Objective-J'), objj_initialize = OBJJ.objj_initialize;
+const OBJJ = require('../Objective-J'), objj_initialize = OBJJ.objj_initialize, objj_getMethod = OBJJ.objj_getMethod;
 const CRObjectSym = require('./CRObject'), CRObject = CRObjectSym.CRObject;
 const CRExceptionSym = require("./CRException"), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
 
@@ -50,6 +50,22 @@ class CRMethodSignature extends CRObject {
 	isOneway() {
 		return true;
 	}
+
+	//! @name Methods Not In Cocoa
+	//! @{
+
+	//! Convenience method for returning configured method signature objects. Used as central point for signature logic.
+	//! @typed CRMethodSignature : id, SEL
+	static methodSignatureForObject_selector_(object, selector) {
+		let method = objj_getMethod(object, selector);
+		if (method !== undefined) {
+			return objj_initialize(CRMethodSignature).signatureWithObjCTypes_('@@:' + '@'.repeat(method.length));
+		}
+		else {
+			return null;
+		}
+	}
+	//! @}
 }
 exports.CRMethodSignature = CRMethodSignature;
 

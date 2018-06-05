@@ -5,7 +5,6 @@ const OBJJ = require('../src/Objective-J'),
 	objj_function = OBJJ.objj_function,
 	objj_propertyDescriptor = OBJJ.objj_propertyDescriptor,
 	objj_invocation = OBJJ.objj_invocation,
-	objj_methodSignature = OBJJ.objj_methodSignature,
 	objj_prop2setter = OBJJ.objj_prop2setter,
 	objj_setter2prop = OBJJ.objj_setter2prop,
 	objj_getMethod = OBJJ.objj_getMethod;
@@ -13,7 +12,6 @@ const CRObjectSym = require('../src/Foundation/CRObject'), objj_CRObject = CRObj
 const CRStringSym = require('../src/Foundation/CRString'), CRString = CRStringSym.CRString;
 const CRInvocationSym = require('../src/Foundation/CRInvocation'), CRInvocation = CRInvocationSym.CRInvocation;
 const CRExceptionSym = require("../src/Foundation/CRException"), CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
-const CRMethodSignatureSym = require('../src/Foundation/CRMethodSignature'), CRMethodSignature = CRMethodSignatureSym.CRMethodSignature;
 
 /*
 	* Let's test utility function first as the main two might depend on them
@@ -86,16 +84,6 @@ test("objj_getMethod() returns function for defined accessors", () => {
 	const object = new MyObject();
 	expect(typeof objj_getMethod(object, 'propValue')).toBe('function');
 	expect(typeof objj_getMethod(object, 'setPropValue:')).toBe('function');
-});
-
-test("objj_methodSignature() returns signature or null", () => {
-	// unrecognized returns null
-	expect(objj_methodSignature(CRObject, 'bogus')).toBeNull();
-	// selector returns method signature object
-	const MyObject = class extends CRObject { testMethod_(arg) {return true;} };
-	let sig = objj_methodSignature(new MyObject(), 'testMethod:');
-	expect(sig).toBeInstanceOf(CRMethodSignature);
-	expect(sig.$typeList.join('')).toBe('@@:@');
 });
 
 test("objj_invocation() returns configured CRInvocation instance", () => {
@@ -190,7 +178,7 @@ test("objj_msgSend() calls forwarding target", () => {
 
 test("objj_msgSend() calls forwardInvocation:", () => {
 	const MyObject = class extends CRObject { forwarded() { return true }	};
-	const MyObject2 = class extends CRObject { constructor() {super(); this.forwardee = new MyObject();} methodSignatureForSelector_(aSelector) {return objj_methodSignature(this.forwardee, aSelector)} forwardInvocation_(invocation) {invocation.invokeWithTarget_(this.forwardee)} };
+	const MyObject2 = class extends CRObject { constructor() {super(); this.forwardee = new MyObject();} methodSignatureForSelector_(aSelector) {return this.forwardee.methodSignatureForSelector_(aSelector)} forwardInvocation_(invocation) {invocation.invokeWithTarget_(this.forwardee)} };
 	expect(objj_msgSend(new MyObject2(), 'forwarded')).toBeTruthy();
 });
 

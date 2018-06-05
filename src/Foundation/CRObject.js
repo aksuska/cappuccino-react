@@ -277,7 +277,7 @@ function objj_CRObject(superClass = Object) {
 		//! @typed CRMethodSignature : SEL
 		static methodSignatureForSelector_(aSelector) {
 			if (this.respondsToSelector_(aSelector)) {
-				return objj_methodSignature(this, aSelector);
+				return objj_initialize(CRMethodSignature).methodSignatureForObject_selector_(this, aSelector);
 			}
 			return null;
 		}
@@ -285,7 +285,7 @@ function objj_CRObject(superClass = Object) {
 		//! @typed CRMethodSignature : SEL
 		methodSignatureForSelector_(aSelector) {
 			if (this.respondsToSelector_(aSelector)) {
-				return objj_methodSignature(this, aSelector);
+				return objj_initialize(CRMethodSignature).methodSignatureForObject_selector_(this, aSelector);
 			}
 			return null;
 		}
@@ -543,9 +543,9 @@ exports.CRObject = objj_CRObject();
 const OBJJ = require('../Objective-J'),
 		objj_msgSend = OBJJ.objj_msgSend,
 		objj_propGuard = OBJJ.objj_propGuard,
-		objj_methodSignature = OBJJ.objj_methodSignature,
-		objj_getMethod = OBJJ.objj_getMethod, objj_initialize = OBJJ.objj_initialize, objj_propertyDescriptor = OBJJ.objj_propertyDescriptor, objj_number = OBJJ.objj_number, objj_value = OBJJ.objj_value;
+		objj_getMethod = OBJJ.objj_getMethod, objj_initialize = OBJJ.objj_initialize, objj_propertyDescriptor = OBJJ.objj_propertyDescriptor;
 const CRStringSym = require('./CRString'), CRString = CRStringSym.CRString;
 const CRExceptionSym = require("./CRException"), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException;
+const CRMethodSignatureSym = require('./CRMethodSignature'), CRMethodSignature = CRMethodSignatureSym.CRMethodSignature;
 const CRArraySym = require('./CRArray'), CRArray = CRArraySym.CRArray;
 const sprintf = require('sprintf-js').sprintf;
