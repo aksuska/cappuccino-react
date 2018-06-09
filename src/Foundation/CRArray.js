@@ -3,6 +3,8 @@
  */
 
 const CRObjectSym = require('./CRObject'), CRObject = CRObjectSym.CRObject;
+const CRRangeSym = require('./CRRange'), CRMakeRange = CRRangeSym.CRMakeRange, CRMaxRange = CRRangeSym.CRMaxRange, CRNotFound = CRRangeSym.CRNotFound, CRStringFromRange = CRRangeSym.CRStringFromRange;
+const OBJJ = require('../Objective-J'), objj_initialize = OBJJ.objj_initialize;
 
 //! NSArray Cocoa Foundation class emulation
 class CRArray extends CRObject {
@@ -21,8 +23,27 @@ class CRArray extends CRObject {
 
 	//! @name Querying an Array
 	//! @{
+
+	//! @typed BOOL : id
+	containsObject_(anObject) {
+		for (let i = 0; i < this.count; i++) {
+			if (this.objectAtIndex(i).isEqual(anObject)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	//! @property(readonly) CRUInteger count
 	get count() { return this.$jsArray.length}
+
+	//! @typed id : CRUInteger
+	objectAtIndex_(index) {
+		if (index >= this.count || index < 0)
+			objj_initialize(CRException).raise_format_(CRRangeException, new CRString("-[%@ objectAtIndex:]: index %d beyond bounds %s"), this.className, index, this.count > 0 ? `[0 .. ${this.count - 1}]` : "for empty CRArray");
+		return this.$jsArray[index];
+	}
+
 	//! @}
 
 	//! @typed id : null
@@ -34,3 +55,6 @@ class CRArray extends CRObject {
 exports.CRArray = CRArray;
 
 CRArray.$conformsTo.push('CRCopying', 'CRMutableCopying');
+
+const CRStringSym = require('./CRString'), CRString = CRStringSym.CRString;
+const CRExceptionSym =  require('./CRException'), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException, CRRangeException = CRExceptionSym.CRRangeException, CRInternalInconsistencyException = CRExceptionSym.CRInternalInconsistencyException;
