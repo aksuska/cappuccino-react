@@ -7,45 +7,6 @@ const CRObjectSym = require('./CRObject'), CRObject = CRObjectSym.CRObject;
 const vsprintf = require("sprintf-js").vsprintf;
 const iconv = require('iconv-lite');
 
-//! @name String Encoding Constants
-//! We use iconv-lite https://github.com/ashtuchkin/iconv-lite for conversion handling, so a number of these encodings are not supported.
-const CRASCIIStringEncoding = 'ascii',
-			CRNEXTSTEPStringEncoding = 'nextstep',
-			CRJapaneseEUCStringEncoding = 'EUC-JP',
-			CRUTF8StringEncoding = 'utf8',
-			CRISOLatin1StringEncoding = 'ISO-8859-1',
-			CRSymbolStringEncoding = 'Adobe Symbol',
-			CRNonLossyASCIIStringEncoding = 'ascii',
-			CRShiftJISStringEncoding = 'Shift_JIS',
-			CRISOLatin2StringEncoding = 'ISO-8859-2',
-			CRUnicodeStringEncoding = 'UTF-16',
-			CRWindowsCP1251StringEncoding = 'CP1251',
-			CRWindowsCP1252StringEncoding = 'CP1252',
-			CRWindowsCP1253StringEncoding = 'CP1253',
-			CRWindowsCP1254StringEncoding = 'CP1254',
-			CRWindowsCP1250StringEncoding = 'CP1250',
-			CRISO2022JPStringEncoding = 'ISO-2022-JP',
-			CRMacOSRomanStringEncoding = 'macroman',
-			CRUTF16StringEncoding = CRUnicodeStringEncoding,
-			CRUTF16BigEndianStringEncoding = 'UTF16BigEndian',
-			CRUTF16LittleEndianStringEncoding = 'UTF16LittleEndian',
-			CRUTF32StringEncoding = 'UTF-32',
-			CRUTF32BigEndianStringEncoding = 'UTF32BigEndian',
-			CRUTF32LittleEndianStringEncoding = 'UTF32LittleEndian';
-Object.assign(exports, {CRASCIIStringEncoding, CRNEXTSTEPStringEncoding, CRJapaneseEUCStringEncoding, CRUTF8StringEncoding, CRISOLatin1StringEncoding, CRSymbolStringEncoding, CRNonLossyASCIIStringEncoding, CRShiftJISStringEncoding, CRISOLatin2StringEncoding, CRUnicodeStringEncoding, CRWindowsCP1251StringEncoding, CRWindowsCP1252StringEncoding, CRWindowsCP1253StringEncoding, CRWindowsCP1254StringEncoding, CRWindowsCP1250StringEncoding, CRISO2022JPStringEncoding, CRMacOSRomanStringEncoding, CRUTF16StringEncoding, CRUTF16BigEndianStringEncoding, CRUTF16LittleEndianStringEncoding, CRUTF32StringEncoding, CRUTF32BigEndianStringEncoding, CRUTF32LittleEndianStringEncoding});
-
-//! @name CRStringCompareOptions
-const CRCaseInsensitiveSearch = 1,
-			CRLiteralSearch = 2,
-			CRBackwardsSearch = 4,
-			CRAnchoredSearch = 8,
-			CRNumericSearch = 64,
-			CRDiacriticInsensitiveSearch = 128,
-			CRWidthInsensitiveSearch = 256,
-			CRForcedOrderingSearch = 512,
-			CRRegularExpressionSearch = 1024;
-Object.assign(exports, {CRCaseInsensitiveSearch, CRLiteralSearch, CRBackwardsSearch, CRAnchoredSearch, CRNumericSearch, CRDiacriticInsensitiveSearch, CRWidthInsensitiveSearch, CRForcedOrderingSearch, CRRegularExpressionSearch});
-
 //! NSString Cocoa Foundation class emulation
 class CRString extends CRObject {
 
@@ -378,6 +339,45 @@ class CRString extends CRObject {
 	//! @}
 }
 exports.CRString = CRString;
+
+//! @name String Encoding Constants
+//! We use iconv-lite https://github.com/ashtuchkin/iconv-lite for conversion handling, so a number of these encodings are not supported.
+const CRASCIIStringEncoding  = new CRString( 'ascii'),
+	CRNEXTSTEPStringEncoding  = new CRString( 'nextstep'),
+	CRJapaneseEUCStringEncoding  = new CRString( 'EUC-JP'),
+	CRUTF8StringEncoding  = new CRString( 'utf8'),
+	CRISOLatin1StringEncoding  = new CRString( 'ISO-8859-1'),
+	CRSymbolStringEncoding  = new CRString( 'Adobe Symbol'),
+	CRNonLossyASCIIStringEncoding  = new CRString( 'ascii'),
+	CRShiftJISStringEncoding  = new CRString( 'Shift_JIS'),
+	CRISOLatin2StringEncoding  = new CRString( 'ISO-8859-2'),
+	CRUnicodeStringEncoding  = new CRString( 'UTF-16'),
+	CRWindowsCP1251StringEncoding  = new CRString( 'CP1251'),
+	CRWindowsCP1252StringEncoding  = new CRString( 'CP1252'),
+	CRWindowsCP1253StringEncoding  = new CRString( 'CP1253'),
+	CRWindowsCP1254StringEncoding  = new CRString( 'CP1254'),
+	CRWindowsCP1250StringEncoding  = new CRString( 'CP1250'),
+	CRISO2022JPStringEncoding  = new CRString( 'ISO-2022-JP'),
+	CRMacOSRomanStringEncoding  = new CRString( 'macroman'),
+	CRUTF16StringEncoding = CRUnicodeStringEncoding,
+	CRUTF16BigEndianStringEncoding  = new CRString( 'UTF16BigEndian'),
+	CRUTF16LittleEndianStringEncoding  = new CRString( 'UTF16LittleEndian'),
+	CRUTF32StringEncoding  = new CRString( 'UTF-32'),
+	CRUTF32BigEndianStringEncoding  = new CRString( 'UTF32BigEndian'),
+	CRUTF32LittleEndianStringEncoding  = new CRString( 'UTF32LittleEndian');
+Object.assign(exports, {CRASCIIStringEncoding, CRNEXTSTEPStringEncoding, CRJapaneseEUCStringEncoding, CRUTF8StringEncoding, CRISOLatin1StringEncoding, CRSymbolStringEncoding, CRNonLossyASCIIStringEncoding, CRShiftJISStringEncoding, CRISOLatin2StringEncoding, CRUnicodeStringEncoding, CRWindowsCP1251StringEncoding, CRWindowsCP1252StringEncoding, CRWindowsCP1253StringEncoding, CRWindowsCP1254StringEncoding, CRWindowsCP1250StringEncoding, CRISO2022JPStringEncoding, CRMacOSRomanStringEncoding, CRUTF16StringEncoding, CRUTF16BigEndianStringEncoding, CRUTF16LittleEndianStringEncoding, CRUTF32StringEncoding, CRUTF32BigEndianStringEncoding, CRUTF32LittleEndianStringEncoding});
+
+//! @name CRStringCompareOptions
+const CRCaseInsensitiveSearch = 1,
+	CRLiteralSearch = 2,
+	CRBackwardsSearch = 4,
+	CRAnchoredSearch = 8,
+	CRNumericSearch = 64,
+	CRDiacriticInsensitiveSearch = 128,
+	CRWidthInsensitiveSearch = 256,
+	CRForcedOrderingSearch = 512,
+	CRRegularExpressionSearch = 1024;
+Object.assign(exports, {CRCaseInsensitiveSearch, CRLiteralSearch, CRBackwardsSearch, CRAnchoredSearch, CRNumericSearch, CRDiacriticInsensitiveSearch, CRWidthInsensitiveSearch, CRForcedOrderingSearch, CRRegularExpressionSearch});
 
 const CRArraySym = require("./CRArray"), CRArray = CRArraySym.CRArray;
 const CRRangeSym = require('./CRRange'), CRMakeRange = CRRangeSym.CRMakeRange, CRMaxRange = CRRangeSym.CRMaxRange, CRNotFound = CRRangeSym.CRNotFound, CRStringFromRange = CRRangeSym.CRStringFromRange;
