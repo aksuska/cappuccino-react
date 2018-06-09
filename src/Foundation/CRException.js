@@ -4,12 +4,6 @@
 
 const OBJJ = require('../Objective-J'), objj_msgSend = OBJJ.objj_msgSend, objj_initialize = OBJJ.objj_initialize;
 const CRObjectSym = require('./CRObject'), objj_CRObject = CRObjectSym.objj_CRObject;
-const CRStringSym = require('./CRString'), CRString = CRStringSym.CRString;
-
-//! @typed CRString
-exports.CRInvalidArgumentException = new CRString("CRInvalidArgumentException");
-exports.CRRangeException = new CRString("CRRangeException");
-exports.CRInternalInconsistencyException = new CRString("CRInternalInconsistencyException");
 
 //! NSException Cocoa Foundation class emulation
 class CRException extends objj_CRObject(Error) {
@@ -90,3 +84,12 @@ function CRSetUncaughtExceptionHandler(handler) {
 	window.addEventListener('error', handler, true);
 }
 exports.CRSetUncaughtExceptionHandler = CRSetUncaughtExceptionHandler;
+
+const CRStringSym = require('./CRString'), CRString = CRStringSym.CRString;
+
+//! @typed CRString
+exports.CRInvalidArgumentException = new CRString("CRInvalidArgumentException");
+//! @typed CRString
+exports.CRRangeException = new CRString("CRRangeException");
+//! @typed CRString
+exports.CRInternalInconsistencyException = new CRString("CRInternalInconsistencyException");
