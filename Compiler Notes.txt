@@ -82,3 +82,6 @@ II. TRANSFORMATIONS
             { get name() { return 'var' }, get var() { return var }, set var(value) { var = value } }
         2. @deref(refVar) compiles to:
             refVar[refVar.name]
+    F. Protocols
+        1. @protocol(name) directives are converted to ProtocolRegistry.protocolForName('name')
+        2. See CRObject.Protocol.js for how protocol declarations should look.
