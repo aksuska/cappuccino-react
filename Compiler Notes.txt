@@ -32,6 +32,7 @@ II. TRANSFORMATIONS
         2. self
             a. unless assigned to, all instances should be changed to "this"
             b. if assigned to, change assignment to "let self = " and leave all instances after assignment (NOT including same line) left alone.
+        3. Support Objective-C keywords with literal conversions, such as @try/@catch/@finally & @throw
     B. Instance variables
         1. DO NOT ALLOW IVARS BEGINNING WITH '$'--RAISE EXCEPTION AT COMPILATION
         3. all framework ivars should be prefixed with '$'
