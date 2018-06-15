@@ -2,10 +2,10 @@
  * Module that specifies the CRObject protocol.
  */
 
-const ProtocolSym = require("./Protocol"), Protocol = ProtocolSym.Protocol;
+const ProtocolSym = require("./Protocol"), Protocol = ProtocolSym.Protocol, ProtocolRegistry = ProtocolSym.ProtocolRegistry;
 
 const CRObjectP = new Protocol('CRObject');
-
+ProtocolRegistry.registerProtocol(CRObjectP);
 CRObjectP.addSelector_isRequired_isClassMethod('class', true, true);
 CRObjectP.addSelector_isRequired_isClassMethod('class', true, false);
 CRObjectP.addProperty_isRequired_onClass('superclass', true, true);
