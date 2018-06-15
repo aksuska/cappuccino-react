@@ -33,3 +33,21 @@ class Protocol {
 	}
 }
 exports.Protocol = Protocol;
+
+// Also, protocols need universal registry
+class ProtocolRegistry {
+
+	static $regMap = {};
+
+	static registerProtocol(protocol) {
+		this.$regMap[protocol.name] = protocol;
+	}
+
+	static protocolForName(protoName) {
+		const protocol = this.$regMap[protoName];
+		if (protocol === undefined)
+			throw `Cannot find protocol declaration for '${protoName}'`;
+		return protocol;
+	}
+}
+exports.ProtocolRegistry = ProtocolRegistry;
