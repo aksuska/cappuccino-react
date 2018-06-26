@@ -37,12 +37,38 @@ class CRDictionary extends CRObject {
 			this.$jsMap.set(ourKey, object);
 	}
 
+	//! @name Creating a Dictionary
+	//! @{
+
 	//! @typed id : null
 	copyWithZone_(zone) {
 		// cocoa just returns the same object, so we'll do the same
 		return this;
 	}
+
+	//! @}
+
+	//! @name Accessing Keys and Values
+	//! @{
+
+	//! @property(readonly, copy) CRArray<id> allKeys
+	get allKeys() {
+		const allKeys = this.$jsMap.keys();
+		return new CRArray([...allKeys]);
+	}
+
+	//! @typed id : id
+	objectForKey_(aKey) {
+		let object = this.$jsMap.get(aKey);
+		if (object === undefined)
+			return null;
+		return object;
+	}
+
+	//! @}
 }
 exports.CRDictionary = CRDictionary;
 
 CRDictionary.$conformsTo.push('CRCopying', 'CRMutableCopying');
+
+const CRArraySym = require('./CRArray'), CRArray = CRArraySym.CRArray;
