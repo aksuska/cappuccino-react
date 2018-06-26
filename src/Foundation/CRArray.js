@@ -15,6 +15,10 @@ class CRArray extends CRObject {
 	constructor(anArray) {
 		super();
 		this.$jsArray = anArray.slice();
+		const array = this.$jsArray.slice();
+		this[Symbol.iterator] = function* () {
+			yield* array;
+		}
 	}
 
 	//! @property(readonly, copy) string jsArray
@@ -26,8 +30,8 @@ class CRArray extends CRObject {
 
 	//! @typed BOOL : id
 	containsObject_(anObject) {
-		for (let i = 0; i < this.count; i++) {
-			if (this.objectAtIndex(i).isEqual(anObject)) {
+		for (let object of this) {
+			if (object.isEqual(anObject)) {
 				return true;
 			}
 		}
