@@ -66,6 +66,20 @@ class CRDictionary extends CRObject {
 	}
 
 	//! @}
+
+	//! @name Creating a Description
+	//! @{
+
+	//! @property(readonly, copy) CRString description
+	get description() {
+		let string = "{\n";
+		for(let pair of this.$jsMap) {
+			string += `    ${pair[0].description.$jsString} = ${pair[1].description.$jsString};\n`;
+		}
+		return new CRString(string+'}');
+	}
+
+	//! @}
 }
 exports.CRDictionary = CRDictionary;
 
