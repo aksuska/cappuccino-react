@@ -31,4 +31,4 @@ class CRNumber extends CRObject {
 	}
 
 }
-
+exports.CRNumber = CRNumber;
