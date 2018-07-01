@@ -33,8 +33,17 @@ class CRDictionary extends CRObject {
 		const ourKey = objj_msgSend(key, 'copyWithZone:', null);
 		if (ourKey === null)
 			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, new CRString("-[%@ setObject:forKey:]: key cannot be null"), this.className);
-		else
+		else {
+			// keys must be unique by -isEqual:, so let's see if we have one
+			for (let pair of this.$jsMap) {
+				if (pair[0].isEqual_(key)) {
+					this.$jsMap.set(pair[0], object);
+					return;
+				}
+			}
+			// otherwise add
 			this.$jsMap.set(ourKey, object);
+		}
 	}
 
 	//! @name Creating a Dictionary
@@ -59,10 +68,11 @@ class CRDictionary extends CRObject {
 
 	//! @typed id : id
 	objectForKey_(aKey) {
-		let object = this.$jsMap.get(aKey);
-		if (object === undefined)
-			return null;
-		return object;
+		for (let pair of this.$jsMap) {
+			if (pair[0].isEqual_(aKey))
+				return pair[1];
+		}
+		return null;
 	}
 
 	//! @}
@@ -73,7 +83,7 @@ class CRDictionary extends CRObject {
 	//! @property(readonly, copy) CRString description
 	get description() {
 		let string = "{\n";
-		for(let pair of this.$jsMap) {
+		for (let pair of this.$jsMap) {
 			string += `    ${pair[0].description.$jsString} = ${pair[1].description.$jsString};\n`;
 		}
 		return new CRString(string+'}');
