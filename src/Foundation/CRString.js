@@ -116,10 +116,10 @@ class CRString extends CRObject {
 
 	//! @typed CRUInteger : CRStringEncoding
 	lengthOfBytesUsingEncoding_(enc) {
-		if (!iconv.encodingExists(enc))
+		if (!iconv.encodingExists(enc.$jsString))
 			return 0;
 
-		const buf = iconv.encode(this.jsString, enc);
+		const buf = iconv.encode(this.$jsString, enc.$jsString);
 		return buf.length;
 	}
 
