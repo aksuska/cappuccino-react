@@ -159,12 +159,12 @@ function objj_CRObject(superClass = Object) {
 		//! @{
 		//! @typed BOOL : Class
 		static isEqual_(aClass) {
-			return this.hash === objj_propGuard(aClass, 'hash');
+			return this.class() === aClass;
 		}
 
 		//! @typed BOOL : id
 		isEqual_(object) {
-			return this.hash === objj_propGuard(object, 'hash');
+			return this === object;
 		}
 
 		//! @property(class, readonly) CRUInteger hash
