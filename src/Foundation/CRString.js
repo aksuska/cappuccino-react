@@ -19,7 +19,6 @@ class CRString extends CRObject {
 		if (jsString !== null && jsString !== undefined)
 		{
 			this.$jsString = jsString;
-			this.$generateHash();
 		}
 	}
 
@@ -35,7 +34,6 @@ class CRString extends CRObject {
 		let self = super.init();
 		if (self) {
 			self.$jsString = '';
-			self.$generateHash();
 		}
 		return self;
 	}
@@ -50,7 +48,6 @@ class CRString extends CRObject {
 		let self = super.init();
 		if (self) {
 			self.$jsString = aString.$jsString;
-			self.$generateHash();
 		}
 		return self;
 	}
@@ -137,7 +134,20 @@ class CRString extends CRObject {
 	//! @{
 
 	//! @property(readonly) CRUInteger hash
-	get hash() {return this.$hashCode;}
+	get hash() {
+		if (this.$hashCode === null) {
+			let source = this.$jsString, length = source.length, result = 2166136261;
+			for (let i = 0; i < length; i++) {
+				result = result ^ source.charCodeAt(i);
+				result = result * 16777619;
+			}
+			// check--throw exception  if hash is NaN
+			if (Number.isNaN(result))
+				objj_initialize(CRException).raise_format_(CRInternalInconsistencyException, new CRString("-[%@ hash]: hash result of '%@' is NaN"), this.className, this);
+			this.$hashCode = (new Uint32Array([result]))[0];
+		}
+		return this.$hashCode;
+	}
 
 	//! @}
 
