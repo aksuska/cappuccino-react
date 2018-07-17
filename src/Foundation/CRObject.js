@@ -78,12 +78,12 @@ function objj_CRObject(superClass = Object) {
 		}
 
 		//! @typed id : void
-		mutableCopy() {
+		static mutableCopy() {
 			return objj_msgSend(this, 'mutableCopyWithZone:', null);
 		}
 
 		//! @typed id : void
-		static mutableCopy() {
+		mutableCopy() {
 			return objj_msgSend(this, 'mutableCopyWithZone:', null);
 		}
 
