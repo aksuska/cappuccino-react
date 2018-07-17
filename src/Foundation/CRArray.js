@@ -17,17 +17,12 @@ class CRArray extends CRObject {
 	}
 
 	//! @typed instancetype : void
-	init(objects) {
+	init() {
 		const self = super.init();
 		if (self) {
-			if (objects === null || objects === undefined)
-				self.$jsArray = [];
-			else
-				self.$jsArray = objects;
-			// we need to define iterator
-			self[Symbol.iterator] = function* () {
-				yield* self.$jsArray;
-			}
+			self.$jsArray = [];
+			// call method to get iterator
+			self[Symbol.iterator] = self.objectEnumerator().$iterator;
 		}
 		return self;
 	}
@@ -35,12 +30,12 @@ class CRArray extends CRObject {
 	//! Our implementation expects a native JavaScript array
 	//! @typed instancetype : Array<id>, CRUInteger
 	initWithObjects_count_(objects, cnt) {
-		return this.init(objects.slice(0, cnt));
+		const self = this.init();
+		if (self) {
+			self.$jsArray.push(...objects.slice(0, cnt));
+		}
+		return self;
 	}
-
-	//! @property(readonly, copy) string jsArray
-	//! Returns a copy of the native JS array that backs the NSArray
-	get jsArray() {return this.$jsArray.slice();}
 
 	//! @name Querying an Array
 	//! @{
@@ -65,6 +60,18 @@ class CRArray extends CRObject {
 		return this.$jsArray[index];
 	}
 
+	//! @typed CREnumerator : void
+	objectEnumerator() {
+		return CREnumerator.alloc().init(this.$jsArray[Symbol.iterator]);
+	}
+
+	//! @typed CREnumerator : void
+	reverseObjectEnumerator() {
+		const reversed = this.$jsArray.slice(0);
+		reversed.reverse();
+		return CREnumerator.alloc().init(reversed[Symbol.iterator]);
+	}
+
 	//! @}
 
 	//! @typed id : null
@@ -72,6 +79,14 @@ class CRArray extends CRObject {
 		// cocoa just returns the same object, so we'll do the same
 		return this;
 	}
+	//! @name Methods Not In Cocoa
+	//! @{
+
+	//! @property(readonly, copy) string jsArray
+	//! Returns a copy of the native JS array that backs the CRArray. Subclasses must override if they use a different backing store.
+	get jsArray() {return this.$jsArray.slice();}
+
+	//! @}
 }
 exports.CRArray = CRArray;
 
@@ -80,3 +95,4 @@ CRArray.$conformsTo.push('CRCopying', 'CRMutableCopying');
 const CRStringSym = require('./CRString'), CRString = CRStringSym.CRString;
 const CRExceptionSym =  require('./CRException'), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException, CRRangeException = CRExceptionSym.CRRangeException, CRInternalInconsistencyException = CRExceptionSym.CRInternalInconsistencyException;
 const CRRangeSym = require('./CRRange'), CRMakeRange = CRRangeSym.CRMakeRange, CRMaxRange = CRRangeSym.CRMaxRange, CRNotFound = CRRangeSym.CRNotFound, CRStringFromRange = CRRangeSym.CRStringFromRange;
+const CREnumerator = require('./CREnumerator').CREnumerator;
