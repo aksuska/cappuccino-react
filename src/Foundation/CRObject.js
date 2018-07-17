@@ -56,7 +56,6 @@ function objj_CRObject(superClass = Object) {
 
 		//! @typed instancetype : void
 		init() {
-			this.$exposedBindings = new CRArray([]);
 			this.$observationInfo = {};
 
 			return this;
@@ -144,13 +143,13 @@ function objj_CRObject(superClass = Object) {
 		//! This property shows under the "Scripting" group in Cocoa docs but since there is no useful equivalent in JS, and this property is otherwise useful, we put it here.
 		//! @property(class, readonly, copy) CRString className
 		static get className() {
-			return new CRString(this.name);
+			return CRString.new(this.name);
 		}
 
 		//! This property shows under the "Scripting" group in Cocoa docs but since there is no useful equivalent in JS, and this property is otherwise useful, we put it here.
 		//! @property(readonly, copy) CRString className
 		get className() {
-			return new CRString(this.constructor.name);
+			return CRString.new(this.constructor.name);
 		}
 
 		//! @}
@@ -296,12 +295,12 @@ function objj_CRObject(superClass = Object) {
 		//! @{
 		//! @property(class, readonly, copy) CRString description
 		static get description() {
-			return new CRString(this.name);
+			return CRString.new(this.name);
 		}
 
 		//! @property(readonly, copy) CRString description
 		get description() {
-			return new CRString(`<${this.constructor.name}: ${this.$uidString()}>`);
+			return CRString.new(`<${this.constructor.name}: ${this.$uidString()}>`);
 		}
 
 		//! @property(class, readonly, copy) CRString debugDescription
@@ -415,12 +414,12 @@ function objj_CRObject(superClass = Object) {
 		//! @{
 		//! @typed void : SEL
 		static doesNotRecognizeSelector_(aSelector) {
-			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, new CRString("+[%s %s]: unrecognized selector sent to class"), this.name, aSelector);
+			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, CRString.new("+[%s %s]: unrecognized selector sent to class"), this.name, aSelector);
 		}
 
 		//! @typed void : SEL
 		doesNotRecognizeSelector_(aSelector) {
-			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, new CRString("-[%@ %s]: unrecognized selector sent to instance %s"), this.className, aSelector, this.$uidString());
+			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, CRString.new("-[%@ %s]: unrecognized selector sent to instance %s"), this.className, aSelector, this.$uidString());
 		}
 
 		//! @}
@@ -430,6 +429,9 @@ function objj_CRObject(superClass = Object) {
 		//! @{
 		//! @property(readonly, copy) CRArray<CRString> exposedBindings
 		get exposedBindings() {
+			// lazy load so we avoid circular dependency in -init
+			if (this.$exposedBindings === null)
+				this.$exposedBindings = CRArray.new();
 			return this.$exposedBindings;
 		}
 
@@ -459,7 +461,7 @@ function objj_CRObject(superClass = Object) {
 		//! @{
 		//! @typed void : CRString
 		setNilValueForKey_(key) {
-			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, new CRString("-[<%@ %s> setNilValueForKey:]: could not set nil as the value for the key %s"), this.className, this.$uidString(), key);
+			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, CRString.new("-[<%@ %s> setNilValueForKey:]: could not set nil as the value for the key %s"), this.className, this.$uidString(), key);
 		}
 
 		//! @typed id : CRString
@@ -508,9 +510,9 @@ function objj_CRObject(superClass = Object) {
 						key = (periodIdx > 0 ? pathString.slice(0, periodIdx) : pathString),
 						path = (periodIdx > 0 ? pathString.slice(periodIdx+1) : '');
 			if (path === '')
-				return this.valueForKey_(new CRString(key));
+				return this.valueForKey_(CRString.new(key));
 			else
-				return objj_propGuard(this[key], 'valueForKeyPath_', [new CRString(path)]);
+				return objj_propGuard(this[key], 'valueForKeyPath_', [CRString.new(path)]);
 		}
 
 		//! Technically, CRObject should respond to +isProxy but the answer is always NO and since there is no use case we just don't include it.

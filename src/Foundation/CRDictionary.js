@@ -12,27 +12,27 @@ class CRDictionary extends CRObject {
 
 	$jsMap;
 	
-	// we use this a convenience constructor for shorthand conversion of literal syntax @{key: value, ...}
-	constructor(...args) {
-		super();
-		this.$jsMap = new Map();
+	// we use this a convenience constructor for object literal syntax @{key: value, ...}
+	static new(...args) {
+		const object = super.new();
 		for (let i=0; i<args.length; i+=2) {
-			this.$setObjectForKey(args[i+1], args[i]);
+			object.$setObjectForKey(args[i+1], args[i]);
 		}
+		return object;
 	}
 
 	// pass through private method so we can raise exceptions when we need to
 	$setObjectForKey(object, key) {
 		// null key is exception
 		if (key === null)
-			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, new CRString("-[%@ setObject:forKey:]: key cannot be null"), this.className);
+			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, CRString.new("-[%@ setObject:forKey:]: key cannot be null"), this.className);
 		else if (object == null)
-			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, new CRString("-[%@ setObject:forKey:]: object cannot be null (key: %@)"), this.className, key);
+			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, CRString.new("-[%@ setObject:forKey:]: object cannot be null (key: %@)"), this.className, key);
 
 		// we need to copy key, but there is a chance we'll get null
 		const ourKey = objj_msgSend(key, 'copyWithZone:', null);
 		if (ourKey === null)
-			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, new CRString("-[%@ setObject:forKey:]: key cannot be null"), this.className);
+			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, CRString.new("-[%@ setObject:forKey:]: key cannot be null"), this.className);
 		else {
 			// keys must be unique by -isEqual:, so let's see if we have one
 			for (let pair of this.$jsMap) {
@@ -57,13 +57,27 @@ class CRDictionary extends CRObject {
 
 	//! @}
 
+	//! @name Initializing an NSDictionary Instance
+	//! @{
+
+	//! @typed instancetype : void
+	init() {
+		const self = super.init();
+		if (self) {
+			this.$jsMap = new Map();
+		}
+		return self;
+	}
+
+	//! @}
+
 	//! @name Accessing Keys and Values
 	//! @{
 
 	//! @property(readonly, copy) CRArray<id> allKeys
 	get allKeys() {
 		const allKeys = this.$jsMap.keys();
-		return new CRArray([...allKeys]);
+		return CRArray.new(allKeys);
 	}
 
 	//! @typed id : id
@@ -86,7 +100,7 @@ class CRDictionary extends CRObject {
 		for (let pair of this.$jsMap) {
 			string += `    ${pair[0].description.$jsString} = ${pair[1].description.$jsString};\n`;
 		}
-		return new CRString(string+'}');
+		return CRString.new(string+'}');
 	}
 
 	//! @}

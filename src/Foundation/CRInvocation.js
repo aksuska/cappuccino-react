@@ -35,7 +35,7 @@ class CRInvocation extends CRObject {
 	static invocationWithMethodSignature_(sig) {
 		// exception if signature null
 		if (sig === null)
-			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, new CRString("+[%s _invocationWithMethodSignature:frame:]: method signature argument cannot be null"), this.name);
+			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, CRString.new("+[%s _invocationWithMethodSignature:frame:]: method signature argument cannot be null"), this.name);
 
 		const invocation = this.new();
 		if (invocation)
@@ -52,7 +52,7 @@ class CRInvocation extends CRObject {
 			return;
 
 		if (idx >= this.$methodSignature.numberOfArguments) {
-			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, new CRString("-[%@ setArgument:atIndex:]: index (%i) out of bounds [-1, %i]"), this.className, idx, this.$methodSignature.numberOfArguments - 1);
+			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, CRString.new("-[%@ setArgument:atIndex:]: index (%i) out of bounds [-1, %i]"), this.className, idx, this.$methodSignature.numberOfArguments - 1);
 		}
 
 		// first two args are actually target & sel
@@ -72,7 +72,7 @@ class CRInvocation extends CRObject {
 			return;
 
 		if (idx >= this.$methodSignature.numberOfArguments) {
-			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, new CRString("-[%@ getArgumentAtIndex:]: index (%i) out of bounds [-1, %i]"), this.className, idx, this.$methodSignature.numberOfArguments - 1);
+			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, CRString.new("-[%@ getArgumentAtIndex:]: index (%i) out of bounds [-1, %i]"), this.className, idx, this.$methodSignature.numberOfArguments - 1);
 		}
 
 		if (idx === 0)

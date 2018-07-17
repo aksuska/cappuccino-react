@@ -67,10 +67,10 @@ II. TRANSFORMATIONS
             a. [object selector:arg1 with:arg2] -> objj_msgSend(object, 'selector:with:', arg1, arg2)
             a. [[CRObject alloc] init] -> objj_msgSend(objj_msgSend(CRObject, 'alloc'), 'init')
     E. Object literals
-        1. @"string" -> new CRString("string")
-        2. @'A', @99[FLU], @YES/NO -> new CRNumber(''##') (constructor will work out how to interpret value)
-        3. @{key: value} -> new CRDictionary(key, value)
-        4. @[value1, value2] -> new CRArray(value1, value2)
+        1. @"string" -> CRString.new("string")
+        2. @'A', @99[FLU], @YES/NO -> CRNumber.new(value[, type]) (constructor will work out how to interpret value)
+        3. @{key: value} -> CRDictionary.new(key, value)
+        4. @[value1, value2] -> CRArray.new([value1, value2])
         5. We can support boxed expressions if we want, we will just need to wrap them in a function and figure out what the result type is
     F. Imports
         1. Class is always default export; also export all other defined symbols.

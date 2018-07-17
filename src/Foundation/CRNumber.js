@@ -13,8 +13,9 @@ class CRNumber extends CRObject {
 	$jsNumber = null;
 	$type = null;
 
-	constructor(value, type = 'I') {
-		super();
+	// we use this a convenience constructor for object literal syntax
+	static new(value, type = 'I') {
+		const object = super.new();
 		if (value !== null && value !== undefined)
 		{
 			if (typeof value === 'string') {
@@ -28,6 +29,7 @@ class CRNumber extends CRObject {
 			this.$jsNumber = value;
 			this.$type = type.toUpperCase();
 		}
+		return object;
 	}
 
 }

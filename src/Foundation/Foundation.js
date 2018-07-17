@@ -68,7 +68,7 @@ export {CRCaseInsensitiveSearch, CRLiteralSearch, CRBackwardsSearch, CRAnchoredS
  */
 
 export const CRSelectorFromString = (selString) => selString.jsString();
-export const CRStringFromSelector = (selector) => new CRString(selector);
+export const CRStringFromSelector = (selector) => CRString.new(selector);
 
 /*
  * CRRange Declaration and Function Exports

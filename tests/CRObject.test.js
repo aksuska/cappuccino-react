@@ -50,7 +50,6 @@ test("CRObject +alloc returns new, uninitialized object", () => {
 test("CRObject -init returns initialized object", () => {
 	const object = CRObject.alloc().init();
 	expect(object).toBeInstanceOf(CRObject);
-	expect(object.$exposedBindings).not.toBeNull();
 	expect(object.$observationInfo).not.toBeNull();
 });
 
@@ -86,7 +85,6 @@ test("CRObject +mutableCopyWithZone: returns self", () => {
 test("CRObject +new returns initialized object", () => {
 	const object = CRObject.new();
 	expect(object).toBeInstanceOf(CRObject);
-	expect(object.$exposedBindings).not.toBeNull();
 	expect(object.$observationInfo).not.toBeNull();
 });
 
@@ -631,13 +629,15 @@ test("CRObject -doesNotRecognizeSelector: always throws does not recognize", () 
 
 test("CRObject -exposedBindings returns empty array", () => {
 	const object = CRObject.new();
+	// initially null on new objects
+	expect(object.$exposedBindings).toBeNull();
 	const exposedBindings = object.exposedBindings;
 	expect(exposedBindings).toBeInstanceOf(CRArray);
 	expect(exposedBindings.count).toBe(0);
 });
 
 test("CRObject -exposedBindings is read-only", () => {
-	testReadOnlyProperty(CRObject.new(), 'exposedBindings', new CRArray([]));
+	testReadOnlyProperty(CRObject.new(), 'exposedBindings', CRArray.new());
 });
 
 test("CRObject -observationInfo returns empty object", () => {

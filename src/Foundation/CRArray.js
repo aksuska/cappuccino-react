@@ -8,16 +8,34 @@ const OBJJ = require('../Objective-J'), objj_initialize = OBJJ.objj_initialize;
 //! NSArray Cocoa Foundation class emulation
 class CRArray extends CRObject {
 
-	$jsArray;
+	$jsArray = null;
 
 	// we use this a convenience constructor for shorthand conversion of literal syntax @[value1, value2, ...]
-	constructor(anArray) {
-		super();
-		this.$jsArray = anArray.slice();
-		const array = this.$jsArray.slice();
-		this[Symbol.iterator] = function* () {
-			yield* array;
+	static new(jsArray = []) {
+		const object = this.alloc();
+		return object.initWithObjects_count_(jsArray, jsArray.length);
+	}
+
+	//! @typed instancetype : void
+	init(objects) {
+		const self = super.init();
+		if (self) {
+			if (objects === null || objects === undefined)
+				self.$jsArray = [];
+			else
+				self.$jsArray = objects;
+			// we need to define iterator
+			self[Symbol.iterator] = function* () {
+				yield* self.$jsArray;
+			}
 		}
+		return self;
+	}
+
+	//! Our implementation expects a native JavaScript array
+	//! @typed instancetype : Array<id>, CRUInteger
+	initWithObjects_count_(objects, cnt) {
+		return this.init(objects.slice(0, cnt));
 	}
 
 	//! @property(readonly, copy) string jsArray
@@ -43,7 +61,7 @@ class CRArray extends CRObject {
 	//! @typed id : CRUInteger
 	objectAtIndex_(index) {
 		if (index >= this.count || index < 0)
-			objj_initialize(CRException).raise_format_(CRRangeException, new CRString("-[%@ objectAtIndex:]: index %d beyond bounds %s"), this.className, index, this.count > 0 ? `[0 .. ${this.count - 1}]` : "for empty CRArray");
+			objj_initialize(CRException).raise_format_(CRRangeException, CRString.new("-[%@ objectAtIndex:]: index %d beyond bounds %s"), this.className, index, this.count > 0 ? `[0 .. ${this.count - 1}]` : "for empty CRArray");
 		return this.$jsArray[index];
 	}
 

@@ -217,7 +217,7 @@ test("objj_propGuard() throws on assignment to property without defined setter",
 });
 
 test("objj_propGuard() returns correct value on property chain", () => {
-	expect(objj_propGuard(new CRString("hello"), 'jsString', 'length')).toBe(5);
+	expect(objj_propGuard(CRString.new("hello"), 'jsString', 'length')).toBe(5);
 });
 
 test("objj_propGuard() executes property chain setter", () => {

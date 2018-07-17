@@ -9,15 +9,13 @@ const CRObjectSym = require('./CRObject'), objj_CRObject = CRObjectSym.objj_CROb
 class CRException extends objj_CRObject(Error) {
 
 	static $uncaughtExceptionHandler = null;
-
 	$userInfo = null;
 
 	constructor(...args) {
 		super(...args);
-
 	}
 
-	// we declare this for consistency with Cocoa, but don't implerment because it already exists in superclass.
+	// we declare this for consistency with Cocoa, but don't implement because it already exists in superclass.
 	//! @property(readonly, copy) CRString name
 
 	//! @property(readonly, copy) CRString reason
@@ -88,8 +86,8 @@ exports.CRSetUncaughtExceptionHandler = CRSetUncaughtExceptionHandler;
 const CRStringSym = require('./CRString'), CRString = CRStringSym.CRString;
 
 //! @typed CRString
-exports.CRInvalidArgumentException = new CRString("CRInvalidArgumentException");
+exports.CRInvalidArgumentException = CRString.new("CRInvalidArgumentException");
 //! @typed CRString
-exports.CRRangeException = new CRString("CRRangeException");
+exports.CRRangeException = CRString.new("CRRangeException");
 //! @typed CRString
-exports.CRInternalInconsistencyException = new CRString("CRInternalInconsistencyException");
+exports.CRInternalInconsistencyException = CRString.new("CRInternalInconsistencyException");

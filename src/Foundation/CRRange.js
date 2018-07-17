@@ -57,7 +57,7 @@ exports.CRRangeFromString = CRRangeFromString;
 
 //! @typed CRString : CRRange
 function CRStringFromRange(range) {
-	return new CRString(`{${(new Uint32Array([range.location]))[0]}, ${(new Uint32Array([range.length]))[0]}}`);
+	return CRString.new(`{${(new Uint32Array([range.location]))[0]}, ${(new Uint32Array([range.length]))[0]}}`);
 }
 exports.CRStringFromRange = CRStringFromRange;
 

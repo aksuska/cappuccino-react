@@ -19,7 +19,7 @@ function testReadOnlyProperty(target, propName, setValue) {
 }
 
 test("CRString shorthand creation using new", () => {
-	const testString = "test", string = new CRString(testString);
+	const testString = "test", string = CRString.new(testString);
 	expect(string).toBeInstanceOf(CRString);
 	expect(string.$jsString).toEqual(testString);
 });
@@ -52,7 +52,7 @@ test("CRString -initWithString: throws on null string", () => {
 });
 
 test("CRString -initWithString: creates string with value", () => {
-	const testString = new CRString("test"), string = CRString.alloc().initWithString_(testString);
+	const testString = CRString.new("test"), string = CRString.alloc().initWithString_(testString);
 	expect(string).toBeInstanceOf(CRString);
 	expect(string.$jsString).toEqual(testString.$jsString);
 });
@@ -70,13 +70,13 @@ test("CRString -initWithFormat:locale:arguments: throws on null format string", 
 });
 
 test("CRString -initWithFormat:locale:arguments: creates string with value", () => {
-	const object = new CRObject(), string = CRString.alloc().initWithFormat_locale_arguments_(new CRString("Object: %@ string: %s number: %d"), null, [object, "js-string", 9]);
+	const object = new CRObject(), string = CRString.alloc().initWithFormat_locale_arguments_(CRString.new("Object: %@ string: %s number: %d"), null, [object, "js-string", 9]);
 	expect(string).toBeInstanceOf(CRString);
 	expect(string.$jsString).toEqual(`Object: ${object.description.$jsString} string: js-string number: 9`);
 });
 
 test("CRString -initWithFormat: calls -initWithFormat:locale:arguments: with expected arguments", () => {
-	const mockFunc = jest.fn(), string = CRString.alloc(), format = new CRString("Object: %@ string: %s number: %d"), args = [1, 2, 3];
+	const mockFunc = jest.fn(), string = CRString.alloc(), format = CRString.new("Object: %@ string: %s number: %d"), args = [1, 2, 3];
 	string.initWithFormat_locale_arguments_ = mockFunc;
 	string.initWithFormat_(format, ...args);
 	expect(mockFunc.mock.calls.length).toBe(1);
@@ -84,7 +84,7 @@ test("CRString -initWithFormat: calls -initWithFormat:locale:arguments: with exp
 });
 
 test("CRString -initWithFormat:arguments: calls -initWithFormat:locale:arguments: with expected arguments", () => {
-	const string = CRString.alloc(), mockFunc = jest.fn(), format = new CRString("Object: %@ string: %s number: %d"), args = [1, 2, 3];
+	const string = CRString.alloc(), mockFunc = jest.fn(), format = CRString.new("Object: %@ string: %s number: %d"), args = [1, 2, 3];
 	string.initWithFormat_locale_arguments_ = mockFunc;
 	string.initWithFormat_arguments_(format, args);
 	expect(mockFunc.mock.calls.length).toBe(1);
@@ -92,7 +92,7 @@ test("CRString -initWithFormat:arguments: calls -initWithFormat:locale:arguments
 });
 
 test("CRString -initWithFormat:locale: calls -initWithFormat:locale:arguments: with expected arguments", () => {
-	const string = CRString.alloc(), mockFunc = jest.fn(), format = new CRString("Object: %@ string: %s number: %d"), args = [1, 2, 3];
+	const string = CRString.alloc(), mockFunc = jest.fn(), format = CRString.new("Object: %@ string: %s number: %d"), args = [1, 2, 3];
 	string.initWithFormat_locale_arguments_ = mockFunc;
 	string.initWithFormat_locale_(format, "CRLocale", ...args);
 	expect(mockFunc.mock.calls.length).toBe(1);
@@ -100,7 +100,7 @@ test("CRString -initWithFormat:locale: calls -initWithFormat:locale:arguments: w
 });
 
 test("CRString +stringWithFormat: calls -initWithFormat:locale:arguments: with expected arguments", () => {
-	const init = CRString.prototype.initWithFormat_locale_arguments_, mockFunc = jest.fn(), format = new CRString("Object: %@ string: %s number: %d"), args = [1, 2, 3];
+	const init = CRString.prototype.initWithFormat_locale_arguments_, mockFunc = jest.fn(), format = CRString.new("Object: %@ string: %s number: %d"), args = [1, 2, 3];
 	CRString.prototype.initWithFormat_locale_arguments_ = mockFunc;
 	CRString.stringWithFormat_(format, ...args);
 	expect(mockFunc.mock.calls.length).toBe(1);
@@ -109,7 +109,7 @@ test("CRString +stringWithFormat: calls -initWithFormat:locale:arguments: with e
 });
 
 test("CRString +localizedStringWithFormat: calls -initWithFormat:locale:arguments: with expected arguments", () => {
-	const init = CRString.prototype.initWithFormat_locale_arguments_, mockFunc = jest.fn(), format = new CRString("Object: %@ string: %s number: %d"), args = [1, 2, 3];
+	const init = CRString.prototype.initWithFormat_locale_arguments_, mockFunc = jest.fn(), format = CRString.new("Object: %@ string: %s number: %d"), args = [1, 2, 3];
 	CRString.prototype.initWithFormat_locale_arguments_ = mockFunc;
 	CRString.localizedStringWithFormat_(format, ...args);
 	expect(mockFunc.mock.calls.length).toBe(1);
@@ -118,7 +118,7 @@ test("CRString +localizedStringWithFormat: calls -initWithFormat:locale:argument
 });
 
 test("CRString +stringWithString: calls -initWithString: with expected arguments", () => {
-	const init = CRString.prototype.initWithString_, mockFunc = jest.fn(), testString = new CRString("test string");
+	const init = CRString.prototype.initWithString_, mockFunc = jest.fn(), testString = CRString.new("test string");
 	CRString.prototype.initWithString_ = mockFunc;
 	CRString.stringWithString_(testString);
 	expect(mockFunc.mock.calls.length).toBe(1);
@@ -132,27 +132,27 @@ test("CRString -copyWithZone: returns self", () => {
 });
 
 test("CRString -length returns expected value", () => {
-	const testString = "test string", string = new CRString(testString);
+	const testString = "test string", string = CRString.new(testString);
 	expect(string.length).toEqual(testString.length);
 });
 
 test("CRString -length is read-only", () => {
-	testReadOnlyProperty(new CRString(''), 'length', 1);
+	testReadOnlyProperty(CRString.new(''), 'length', 1);
 });
 
 test("CRString -lengthOfBytesUsingEncoding: returns 0 for unknown encoding", () => {
-	const testString = "test string", string = new CRString(testString);
+	const testString = "test string", string = CRString.new(testString);
 	expect(string.lengthOfBytesUsingEncoding_(CRSymbolStringEncoding)).toEqual(0);
 });
 
 test("CRString -lengthOfBytesUsingEncoding: returns expected length for passed encoding", () => {
-	const testString = "test string", string = new CRString(testString);
+	const testString = "test string", string = CRString.new(testString);
 	expect(string.lengthOfBytesUsingEncoding_(CRUTF16StringEncoding)).toEqual(testString.length*2+2);
 	expect(string.lengthOfBytesUsingEncoding_(CRUTF8StringEncoding)).toEqual(testString.length);
 });
 
 test("CRString -maximumLengthOfBytesUsingEncoding: calls -lengthOfBytesUsingEncoding:", () => {
-	const testString = "test string", string = new CRString(testString), mockFunc = jest.fn();
+	const testString = "test string", string = CRString.new(testString), mockFunc = jest.fn();
 	string.lengthOfBytesUsingEncoding_ = mockFunc;
 	string.maximumLengthOfBytesUsingEncoding_(CRUTF16StringEncoding);
 	expect(mockFunc.mock.calls.length).toBe(1);
@@ -169,7 +169,7 @@ test("CRString -jsString is read-only", () => {
 });
 
 test("CRString -hash returns expected value", () => {
-	const testString = "an especially long string to calculate some reasonable hash value ", string1 = new CRString(testString), string2 = new CRString(testString), string3 = CRString.new("an especially long string to calculate other some reasonable hash value ");
+	const testString = "an especially long string to calculate some reasonable hash value ", string1 = CRString.new(testString), string2 = CRString.new(testString), string3 = CRString.new("an especially long string to calculate other some reasonable hash value ");
 	expect(string1.hash).toBe(string2.hash);
 	expect(string1.hash).not.toBe(string3.hash);
 });
@@ -191,20 +191,20 @@ test("CRString -componentsSeparatedByString: throws on null string", () => {
 });
 
 test("CRString -componentsSeparatedByString: returns array of self when separator empty", () => {
-	const testString = "test string", array = new CRString(testString).componentsSeparatedByString_(new CRString(''));
+	const testString = "test string", array = CRString.new(testString).componentsSeparatedByString_(CRString.new(''));
 	expect(array.count).toBe(1);
 	expect(array.$jsArray[0].$jsString).toEqual(testString);
 });
 
 test("CRString -componentsSeparatedByString: returns expected value", () => {
-	const testString = "test string", array = new CRString(testString).componentsSeparatedByString_(new CRString(' '));
+	const testString = "test string", array = CRString.new(testString).componentsSeparatedByString_(CRString.new(' '));
 	expect(array.count).toBe(2);
 	const jsStringArray = array.$jsArray.map((string) => string.$jsString);
 	expect(jsStringArray).toEqual(["test", "string"]);
 });
 
 test("CRString -substringFromIndex: throws on index out of range", () => {
-	const testString = new CRString("test string");
+	const testString = CRString.new("test string");
 	try {
 		testString.substringFromIndex_(-1);
 		// this actually means the above failed to throw
@@ -226,12 +226,12 @@ test("CRString -substringFromIndex: throws on index out of range", () => {
 });
 
 test("CRString -substringFromIndex: returns expected value", () => {
-	const testString = new CRString("test string");
+	const testString = CRString.new("test string");
 	expect(testString.substringFromIndex_(3).$jsString).toEqual("t string");
 });
 
 test("CRString -substringWithRange: throws on out of range", () => {
-	const testString = new CRString("test string");
+	const testString = CRString.new("test string");
 	try {
 		testString.substringWithRange_(CRMakeRange(testString.length, 3));
 		// this actually means the above failed to throw
@@ -271,12 +271,12 @@ test("CRString -substringWithRange: throws on out of range", () => {
 });
 
 test("CRString -substringWithRange: returns expected value", () => {
-	const testString = new CRString("test string");
+	const testString = CRString.new("test string");
 	expect(testString.substringWithRange_(CRMakeRange(3, 5)).$jsString).toEqual("t str");
 });
 
 test("CRString -substringToIndex: throws on index out of range", () => {
-	const testString = new CRString("test string");
+	const testString = CRString.new("test string");
 	try {
 		testString.substringToIndex_(-1);
 		// this actually means the above failed to throw
@@ -298,7 +298,7 @@ test("CRString -substringToIndex: throws on index out of range", () => {
 });
 
 test("CRString -substringToIndex: returns expected value", () => {
-	const testString = new CRString("test string");
+	const testString = CRString.new("test string");
 	expect(testString.substringToIndex_(6).$jsString).toEqual("test s");
 });
 
@@ -315,9 +315,9 @@ test("CRString -rangeOfString:options:range:locale: throws on nil string", () =>
 });
 
 test("CRString -rangeOfString:options:range:locale: throws on out of range", () => {
-	const testString = new CRString("test string");
+	const testString = CRString.new("test string");
 	try {
-		testString.rangeOfString_options_range_locale_(new CRString('string'), 0, CRMakeRange(testString.length, 3), null);
+		testString.rangeOfString_options_range_locale_(CRString.new('string'), 0, CRMakeRange(testString.length, 3), null);
 		// this actually means the above failed to throw
 		expect(true).toBe(false);
 	}
@@ -326,7 +326,7 @@ test("CRString -rangeOfString:options:range:locale: throws on out of range", () 
 		expect(e.reason.$jsString).toBe(`-[CRString rangeOfString:options:range:locale:]: Range {${testString.length}, 3} out of bounds; string length ${testString.length}`);
 	}
 	try {
-		testString.rangeOfString_options_range_locale_(new CRString('string'), 0, CRMakeRange(3, 10), null);
+		testString.rangeOfString_options_range_locale_(CRString.new('string'), 0, CRMakeRange(3, 10), null);
 		// this actually means the above failed to throw
 		expect(true).toBe(false);
 	}
@@ -335,7 +335,7 @@ test("CRString -rangeOfString:options:range:locale: throws on out of range", () 
 		expect(e.reason.$jsString).toBe(`-[CRString rangeOfString:options:range:locale:]: Range {3, 10} out of bounds; string length ${testString.length}`);
 	}
 	try {
-		testString.rangeOfString_options_range_locale_(new CRString('string'), 0, CRMakeRange(-1, 5), null);
+		testString.rangeOfString_options_range_locale_(CRString.new('string'), 0, CRMakeRange(-1, 5), null);
 		// this actually means the above failed to throw
 		expect(true).toBe(false);
 	}
@@ -344,7 +344,7 @@ test("CRString -rangeOfString:options:range:locale: throws on out of range", () 
 		expect(e.reason.$jsString).toBe(`-[CRString rangeOfString:options:range:locale:]: Range {4294967295, 5} out of bounds; string length ${testString.length}`);
 	}
 	try {
-		testString.rangeOfString_options_range_locale_(new CRString('string'), 0, CRMakeRange(3, -1), null);
+		testString.rangeOfString_options_range_locale_(CRString.new('string'), 0, CRMakeRange(3, -1), null);
 		// this actually means the above failed to throw
 		expect(true).toBe(false);
 	}
@@ -355,33 +355,33 @@ test("CRString -rangeOfString:options:range:locale: throws on out of range", () 
 });
 
 test("CRString -rangeOfString:options:range:locale: returns expected value (no options, full string range)", () => {
-	const testString = new CRString("test string");
-	expect(testString.rangeOfString_options_range_locale_(new CRString("bogus"), 0, CRMakeRange(0, testString.length), null)).toEqual(CRMakeRange(CRNotFound, 0));
-	expect(testString.rangeOfString_options_range_locale_(new CRString("string"), 0, CRMakeRange(0, testString.length), null)).toEqual(CRMakeRange(5, 6));
+	const testString = CRString.new("test string");
+	expect(testString.rangeOfString_options_range_locale_(CRString.new("bogus"), 0, CRMakeRange(0, testString.length), null)).toEqual(CRMakeRange(CRNotFound, 0));
+	expect(testString.rangeOfString_options_range_locale_(CRString.new("string"), 0, CRMakeRange(0, testString.length), null)).toEqual(CRMakeRange(5, 6));
 });
 
 
 test("CRString -rangeOfString:options:range:locale: returns expected value (case insensitive, partial string range)", () => {
-	const testString = new CRString("test string");
-	expect(testString.rangeOfString_options_range_locale_(new CRString("T"), 0, CRMakeRange(2, 6), null)).toEqual(CRMakeRange(CRNotFound, 0));
-	expect(testString.rangeOfString_options_range_locale_(new CRString("T"), CRCaseInsensitiveSearch, CRMakeRange(2, 6), null)).toEqual(CRMakeRange(3, 1));
+	const testString = CRString.new("test string");
+	expect(testString.rangeOfString_options_range_locale_(CRString.new("T"), 0, CRMakeRange(2, 6), null)).toEqual(CRMakeRange(CRNotFound, 0));
+	expect(testString.rangeOfString_options_range_locale_(CRString.new("T"), CRCaseInsensitiveSearch, CRMakeRange(2, 6), null)).toEqual(CRMakeRange(3, 1));
 });
 
 test("CRString -rangeOfString:options:range:locale: returns expected value (anchored, partial string range)", () => {
-	const testString = new CRString("test string");
-	expect(testString.rangeOfString_options_range_locale_(new CRString("t"), CRAnchoredSearch, CRMakeRange(2, 6), null)).toEqual(CRMakeRange(CRNotFound, 0));
-	expect(testString.rangeOfString_options_range_locale_(new CRString("t"), CRAnchoredSearch, CRMakeRange(3, 6), null)).toEqual(CRMakeRange(3, 1));
-	expect(testString.rangeOfString_options_range_locale_(new CRString("t"), CRAnchoredSearch|CRBackwardsSearch, CRMakeRange(2, 6), null)).toEqual(CRMakeRange(CRNotFound, 0));
-	expect(testString.rangeOfString_options_range_locale_(new CRString("t"), CRAnchoredSearch|CRBackwardsSearch, CRMakeRange(2, 5), null)).toEqual(CRMakeRange(6, 1));
+	const testString = CRString.new("test string");
+	expect(testString.rangeOfString_options_range_locale_(CRString.new("t"), CRAnchoredSearch, CRMakeRange(2, 6), null)).toEqual(CRMakeRange(CRNotFound, 0));
+	expect(testString.rangeOfString_options_range_locale_(CRString.new("t"), CRAnchoredSearch, CRMakeRange(3, 6), null)).toEqual(CRMakeRange(3, 1));
+	expect(testString.rangeOfString_options_range_locale_(CRString.new("t"), CRAnchoredSearch|CRBackwardsSearch, CRMakeRange(2, 6), null)).toEqual(CRMakeRange(CRNotFound, 0));
+	expect(testString.rangeOfString_options_range_locale_(CRString.new("t"), CRAnchoredSearch|CRBackwardsSearch, CRMakeRange(2, 5), null)).toEqual(CRMakeRange(6, 1));
 });
 
 test("CRString -rangeOfString:options:range:locale: returns expected value (backwards search, full string range)", () => {
-	const testString = new CRString("test string");
-	expect(testString.rangeOfString_options_range_locale_(new CRString("t"), CRBackwardsSearch, CRMakeRange(0, testString.length), null)).toEqual(CRMakeRange(6, 1));
+	const testString = CRString.new("test string");
+	expect(testString.rangeOfString_options_range_locale_(CRString.new("t"), CRBackwardsSearch, CRMakeRange(0, testString.length), null)).toEqual(CRMakeRange(6, 1));
 });
 
 test("CRString -description returns self", () => {
-	const testString = "test string", string = new CRString(testString);
+	const testString = "test string", string = CRString.new(testString);
 	expect(string.description.jsString).toEqual(testString);
 });
 

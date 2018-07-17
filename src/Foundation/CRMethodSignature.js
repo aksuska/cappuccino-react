@@ -32,7 +32,7 @@ class CRMethodSignature extends CRObject {
 	//! @typed string : CRUInteger
 	getArgumentTypeAtIndex_(idx) {
 		if (idx >= this.$typeList.length)
-			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, new CRString("-[%@ getArgumentTypeAtIndex:]: index (%i) out of bounds [0, %i]"), this.className, idx, this.$typeList.length - 1);
+			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, CRString.new("-[%@ getArgumentTypeAtIndex:]: index (%i) out of bounds [0, %i]"), this.className, idx, this.$typeList.length - 1);
 
 		return this.$typeList[idx];
 	}

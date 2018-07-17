@@ -14,12 +14,10 @@ class CRString extends CRObject {
 	$hashCode = null;
 
 	// we use this a convenience constructor so we can do shorthand conversions
-	constructor(jsString) {
-		super();
-		if (jsString !== null && jsString !== undefined)
-		{
-			this.$jsString = jsString;
-		}
+	static new(jsString = '') {
+		let object = this.alloc();
+		object.init(jsString);
+		return object;
 	}
 
 	//! @name Creating and Initializing Strings
@@ -30,10 +28,13 @@ class CRString extends CRObject {
 	}
 
 	//! @typed instancetype : void
-	init() {
-		let self = super.init();
+	init(jsString = '') {
+		const self = super.init();
 		if (self) {
-			self.$jsString = '';
+			if (jsString !== null)
+				self.$jsString = jsString;
+			else
+				self.$jsString = '';
 		}
 		return self;
 	}
@@ -41,15 +42,10 @@ class CRString extends CRObject {
 	//! @typed instancetype : CRString
 	initWithString_(aString) {
 		if (aString === null) {
-			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, new CRString("-[%@ initWithString:]: nil argument"), this.className);
+			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, CRString.new("-[%@ initWithString:]: nil argument"), this.className);
 			return null;
 		}
-
-		let self = super.init();
-		if (self) {
-			self.$jsString = aString.$jsString;
-		}
-		return self;
+		return this.init(aString.$jsString);
 	}
 
 	//! @typed instancetype : CRString, ...
@@ -72,14 +68,14 @@ class CRString extends CRObject {
 	//! @typed instancetype : CRString, CRLocale, va_list
 	initWithFormat_locale_arguments_(format, locale, args) {
 		if (format === null) {
-			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, new CRString("-[%@ initWithFormat:locale:arguments:]: nil argument"), this.className);
+			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, CRString.new("-[%@ initWithFormat:locale:arguments:]: nil argument"), this.className);
 			return null;
 		}
 
 		// %@ will always be a string, so convert, but objects must change to description
 		let formatString = format.jsString.replace(/%@/g, '%s');
 		let values = args.map(element => element !== null && element !== undefined && element['$ISA'] === 'CRObject' ? objj_propGuard(element, 'description', 'jsString') : element);
-		return this.initWithString_(new CRString(vsprintf(formatString, values)));
+		return this.initWithString_(CRString.new(vsprintf(formatString, values)));
 	}
 
 	//! @typed instancetype : CRString, ...
@@ -143,7 +139,7 @@ class CRString extends CRObject {
 			}
 			// check--throw exception  if hash is NaN
 			if (Number.isNaN(result))
-				objj_initialize(CRException).raise_format_(CRInternalInconsistencyException, new CRString("-[%@ hash]: hash result of '%@' is NaN"), this.className, this);
+				objj_initialize(CRException).raise_format_(CRInternalInconsistencyException, CRString.new("-[%@ hash]: hash result of '%@' is NaN"), this.className, this);
 			this.$hashCode = (new Uint32Array([result]))[0];
 		}
 		return this.$hashCode;
@@ -157,42 +153,42 @@ class CRString extends CRObject {
 	//! @typed CRArray<CRString> : CRString
 	componentsSeparatedByString_(separator) {
 		if (separator === null)
-			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, new CRString("-[%@ componentsSeparatedByString:]: nil argument"), this.className);
+			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, CRString.new("-[%@ componentsSeparatedByString:]: nil argument"), this.className);
 
 		// to imitate Cocoa behavior, we must return whole string if separator empty
 		if (separator.length === 0)
-			return new CRArray([this]);
+			return CRArray.new([this]);
 
 		// otherwise use split with literal string
 		const parts = this.$jsString.split(separator.$jsString);
 		for (let i=0; i<parts.length; i++) {
-			parts[i] = new CRString(parts[i]);
+			parts[i] = CRString.new(parts[i]);
 		}
-		return new CRArray(parts);
+		return CRArray.new(parts);
 	}
 
 	//! @typed CRString : CRUInteger
 	substringFromIndex_(from) {
 		if (from >= this.length || from < 0)
-			objj_initialize(CRException).raise_format_(CRRangeException, new CRString("-[%@ substringFromIndex:]: Index %d out of bounds; string length %d"), this.className, (new Uint32Array([from]))[0], this.length);
+			objj_initialize(CRException).raise_format_(CRRangeException, CRString.new("-[%@ substringFromIndex:]: Index %d out of bounds; string length %d"), this.className, (new Uint32Array([from]))[0], this.length);
 
-		return new CRString(this.$jsString.substr(from));
+		return CRString.new(this.$jsString.substr(from));
 	}
 
 	//! @typed CRString : CRRange
 	substringWithRange_(range) {
 		if (range.location >= this.length || CRMaxRange(range) > this.length || range.location < 0 || range.length < 0)
-			objj_initialize(CRException).raise_format_(CRRangeException, new CRString("-[%@ substringWithRange:]: Range %@ out of bounds; string length %d"), this.className, CRStringFromRange(range), this.length);
+			objj_initialize(CRException).raise_format_(CRRangeException, CRString.new("-[%@ substringWithRange:]: Range %@ out of bounds; string length %d"), this.className, CRStringFromRange(range), this.length);
 
-		return new CRString(this.$jsString.substr(range.location, range.length));
+		return CRString.new(this.$jsString.substr(range.location, range.length));
 	}
 
 	//! @typed CRString : CRUInteger
 	substringToIndex_(to) {
 		if (to > this.length || to < 0)
-			objj_initialize(CRException).raise_format_(CRRangeException, new CRString("-[%@ substringToIndex:]: Index %d out of bounds; string length %d"), this.className, (new Uint32Array([to]))[0], this.length);
+			objj_initialize(CRException).raise_format_(CRRangeException, CRString.new("-[%@ substringToIndex:]: Index %d out of bounds; string length %d"), this.className, (new Uint32Array([to]))[0], this.length);
 
-		return new CRString(this.$jsString.substr(0, to));
+		return CRString.new(this.$jsString.substr(0, to));
 	}
 
 	//! @}
@@ -204,9 +200,9 @@ class CRString extends CRObject {
 	//! @typed CRRange : CRString, CRStringCompareOptions, CRRange, CRLocale
 	rangeOfString_options_range_locale_(searchString, mask, rangeOfReceiverToSearch, locale) {
 		if (searchString === null)
-			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, new CRString("-[%@ rangeOfString:options:range:locale:]: nil argument"), this.className);
+			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, CRString.new("-[%@ rangeOfString:options:range:locale:]: nil argument"), this.className);
 		if (rangeOfReceiverToSearch.location >= this.length || CRMaxRange(rangeOfReceiverToSearch) > this.length || rangeOfReceiverToSearch.location < 0 || rangeOfReceiverToSearch.length < 0)
-			objj_initialize(CRException).raise_format_(CRRangeException, new CRString("-[%@ rangeOfString:options:range:locale:]: Range %@ out of bounds; string length %d"), this.className, CRStringFromRange(rangeOfReceiverToSearch), this.$jsString.length);
+			objj_initialize(CRException).raise_format_(CRRangeException, CRString.new("-[%@ rangeOfString:options:range:locale:]: Range %@ out of bounds; string length %d"), this.className, CRStringFromRange(rangeOfReceiverToSearch), this.$jsString.length);
 
 		let candidate = this.substringWithRange_(rangeOfReceiverToSearch);
 		if ((mask & CRCaseInsensitiveSearch) === CRCaseInsensitiveSearch) {
@@ -265,48 +261,48 @@ class CRString extends CRObject {
 
 	//! @property(readonly, copy) CRString lowercaseString
 	get lowercaseString() {
-		return new CRString(this.$jsString.toLowerCase());
+		return CRString.new(this.$jsString.toLowerCase());
 	}
 
 	//! @property(readonly, copy) CRString localizedLowercaseString
 	get localizedLowercaseString() {
-		return new CRString(this.$jsString.toLocaleLowerCase());
+		return CRString.new(this.$jsString.toLocaleLowerCase());
 	}
 
 	// TODO: CRLocale support?
 	//! @typed CRString : CRLocale
 	lowercaseStringWithLocale_(locale) {
-		return new CRString(this.$jsString.toLocaleLowerCase());
+		return CRString.new(this.$jsString.toLocaleLowerCase());
 	}
 
 	//! @property(readonly, copy) CRString uppercaseString
 	get uppercaseString() {
-		return new CRString(this.$jsString.toUpperCase());
+		return CRString.new(this.$jsString.toUpperCase());
 	}
 
 	//! @property(readonly, copy) CRString localizedUppercaseString
 	get localizedUppercaseString() {
-		return new CRString(this.$jsString.toLocaleUpperCase());
+		return CRString.new(this.$jsString.toLocaleUpperCase());
 	}
 
 	// TODO: CRLocale support?
 	//! @typed CRString : CRLocale
 	uppercaseStringWithLocale_(locale) {
-		return new CRString(this.$jsString.toLocaleUpperCase());
+		return CRString.new(this.$jsString.toLocaleUpperCase());
 	}
 
 	//! @property(readonly, copy) CRString capitalizedString
 	get capitalizedString() {
 		let string = this.$jsString.toLowerCase();
 		string = string.replace(/(^|\s+)(\S)/, (match) => match.toUpperCase());
-		return new CRString(string);
+		return CRString.new(string);
 	}
 
 	//! @property(readonly, copy) CRString localizedCapitalizedString
 	get localizedCapitalizedString() {
 		let string = this.$jsString.toLocaleLowerCase();
 		string = string.replace(/(^|\s+)(\S)/, (match) => match.toLocaleUpperCase());
-		return new CRString(string);
+		return CRString.new(string);
 	}
 
 	// TODO: CRLocale support?
@@ -314,7 +310,7 @@ class CRString extends CRObject {
 	capitalizedStringWithLocale_(locale) {
 		let string = this.$jsString.toLocaleLowerCase();
 		string = string.replace(/(^|\s+)(\S)/, (match) => match.toLocaleUpperCase());
-		return new CRString(string);
+		return CRString.new(string);
 	}
 
 	//! @}
@@ -356,29 +352,29 @@ const CRExceptionSym =  require('./CRException'), CRException = CRExceptionSym.C
 
 //! @name String Encoding Constants
 //! We use iconv-lite https://github.com/ashtuchkin/iconv-lite for conversion handling, so a number of these encodings are not supported.
-const CRASCIIStringEncoding  = new CRString( 'ascii'),
-	CRNEXTSTEPStringEncoding  = new CRString( 'nextstep'),
-	CRJapaneseEUCStringEncoding  = new CRString( 'EUC-JP'),
-	CRUTF8StringEncoding  = new CRString( 'utf8'),
-	CRISOLatin1StringEncoding  = new CRString( 'ISO-8859-1'),
-	CRSymbolStringEncoding  = new CRString( 'Adobe Symbol'),
-	CRNonLossyASCIIStringEncoding  = new CRString( 'ascii'),
-	CRShiftJISStringEncoding  = new CRString( 'Shift_JIS'),
-	CRISOLatin2StringEncoding  = new CRString( 'ISO-8859-2'),
-	CRUnicodeStringEncoding  = new CRString( 'UTF-16'),
-	CRWindowsCP1251StringEncoding  = new CRString( 'CP1251'),
-	CRWindowsCP1252StringEncoding  = new CRString( 'CP1252'),
-	CRWindowsCP1253StringEncoding  = new CRString( 'CP1253'),
-	CRWindowsCP1254StringEncoding  = new CRString( 'CP1254'),
-	CRWindowsCP1250StringEncoding  = new CRString( 'CP1250'),
-	CRISO2022JPStringEncoding  = new CRString( 'ISO-2022-JP'),
-	CRMacOSRomanStringEncoding  = new CRString( 'macroman'),
+const CRASCIIStringEncoding  = CRString.new( 'ascii'),
+	CRNEXTSTEPStringEncoding  = CRString.new( 'nextstep'),
+	CRJapaneseEUCStringEncoding  = CRString.new( 'EUC-JP'),
+	CRUTF8StringEncoding  = CRString.new( 'utf8'),
+	CRISOLatin1StringEncoding  = CRString.new( 'ISO-8859-1'),
+	CRSymbolStringEncoding  = CRString.new( 'Adobe Symbol'),
+	CRNonLossyASCIIStringEncoding  = CRString.new( 'ascii'),
+	CRShiftJISStringEncoding  = CRString.new( 'Shift_JIS'),
+	CRISOLatin2StringEncoding  = CRString.new( 'ISO-8859-2'),
+	CRUnicodeStringEncoding  = CRString.new( 'UTF-16'),
+	CRWindowsCP1251StringEncoding  = CRString.new( 'CP1251'),
+	CRWindowsCP1252StringEncoding  = CRString.new( 'CP1252'),
+	CRWindowsCP1253StringEncoding  = CRString.new( 'CP1253'),
+	CRWindowsCP1254StringEncoding  = CRString.new( 'CP1254'),
+	CRWindowsCP1250StringEncoding  = CRString.new( 'CP1250'),
+	CRISO2022JPStringEncoding  = CRString.new( 'ISO-2022-JP'),
+	CRMacOSRomanStringEncoding  = CRString.new( 'macroman'),
 	CRUTF16StringEncoding = CRUnicodeStringEncoding,
-	CRUTF16BigEndianStringEncoding  = new CRString( 'UTF16BigEndian'),
-	CRUTF16LittleEndianStringEncoding  = new CRString( 'UTF16LittleEndian'),
-	CRUTF32StringEncoding  = new CRString( 'UTF-32'),
-	CRUTF32BigEndianStringEncoding  = new CRString( 'UTF32BigEndian'),
-	CRUTF32LittleEndianStringEncoding  = new CRString( 'UTF32LittleEndian');
+	CRUTF16BigEndianStringEncoding  = CRString.new( 'UTF16BigEndian'),
+	CRUTF16LittleEndianStringEncoding  = CRString.new( 'UTF16LittleEndian'),
+	CRUTF32StringEncoding  = CRString.new( 'UTF-32'),
+	CRUTF32BigEndianStringEncoding  = CRString.new( 'UTF32BigEndian'),
+	CRUTF32LittleEndianStringEncoding  = CRString.new( 'UTF32LittleEndian');
 Object.assign(exports, {CRASCIIStringEncoding, CRNEXTSTEPStringEncoding, CRJapaneseEUCStringEncoding, CRUTF8StringEncoding, CRISOLatin1StringEncoding, CRSymbolStringEncoding, CRNonLossyASCIIStringEncoding, CRShiftJISStringEncoding, CRISOLatin2StringEncoding, CRUnicodeStringEncoding, CRWindowsCP1251StringEncoding, CRWindowsCP1252StringEncoding, CRWindowsCP1253StringEncoding, CRWindowsCP1254StringEncoding, CRWindowsCP1250StringEncoding, CRISO2022JPStringEncoding, CRMacOSRomanStringEncoding, CRUTF16StringEncoding, CRUTF16BigEndianStringEncoding, CRUTF16LittleEndianStringEncoding, CRUTF32StringEncoding, CRUTF32BigEndianStringEncoding, CRUTF32LittleEndianStringEncoding});
 
 //! @name CRStringCompareOptions
