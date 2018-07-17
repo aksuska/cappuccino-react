@@ -85,3 +85,9 @@ II. TRANSFORMATIONS
     F. Protocols
         1. @protocol(name) directives are converted to ProtocolRegistry.protocolForName('name')
         2. See CRObject.Protocol.js for how protocol declarations should look.
+    G. Collection subscript support
+        1. Support could be tricky, since we need to know the type of a variable to call the correct method. We also need to distinguish between JS collections and our collections.
+        2. Optimally, we could do a compile-time check and convert to the appropriate method call, but that may not be possible since we need to know type.
+        3. Alternatively we could do a runtime check, but that would come with a performance a penalty that would also apply to native JS objects.
+            a. E.g.: object instanceof CRArray ? objj_msgsend(object, 'arraySubScriptMeth:', index) : object instanceof CRDictionary ? objj_msgsend(object, 'dictSubScriptMeth:', index) : leave_unchanged;
+            b. Also need to be aware of mutable collection subscript setters as well
