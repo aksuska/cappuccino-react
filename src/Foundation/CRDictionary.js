@@ -14,11 +14,12 @@ class CRDictionary extends CRObject {
 	
 	// we use this a convenience constructor for object literal syntax @{key: value, ...}
 	static new(...args) {
-		const object = super.new();
+		const objects = [], keys = [];
 		for (let i=0; i<args.length; i+=2) {
-			object.$setObjectForKey(args[i+1], args[i]);
+			keys.push(args[i]);
+			objects.push(args[i+1]);
 		}
-		return object;
+		return super.alloc().initWithObjects_forKeys_count_(objects, keys, keys.length);
 	}
 
 	// pass through private method so we can raise exceptions when we need to
@@ -62,11 +63,31 @@ class CRDictionary extends CRObject {
 
 	//! @typed instancetype : void
 	init() {
+		return this.initWithObjects_forKeys_count_(null, null, 0);
+	}
+
+	//! @typed instancetype : Array<id>, Array<KeyType>, CRUInteger
+	initWithObjects_forKeys_count_(objects, keys, cnt) {
 		const self = super.init();
 		if (self) {
 			this.$jsMap = new Map();
+			// call method to get iterator
+			self[Symbol.iterator] = self.keyEnumerator().$iterator;
+			for (let i=0; i<cnt; i++) {
+				self.$setObjectForKey(objects[i], keys[i]);
+			}
 		}
 		return self;
+	}
+
+	//! @}
+
+	//! @name Counting Entries
+	//! @{
+
+	//! @property(readonly) CRUInteger count
+	get count() {
+		return this.$jsMap.size;
 	}
 
 	//! @}
@@ -76,8 +97,8 @@ class CRDictionary extends CRObject {
 
 	//! @property(readonly, copy) CRArray<id> allKeys
 	get allKeys() {
-		const allKeys = this.$jsMap.keys();
-		return CRArray.new(allKeys);
+		// need to use -keyEnumerator so we are consistent with Cocoa subclassing guidelines
+		return this.keyEnumerator().allObjects;
 	}
 
 	//! @typed id : id
@@ -97,10 +118,20 @@ class CRDictionary extends CRObject {
 	//! @property(readonly, copy) CRString description
 	get description() {
 		let string = "{\n";
-		for (let pair of this.$jsMap) {
-			string += `    ${pair[0].description.$jsString} = ${pair[1].description.$jsString};\n`;
+		for (let key of this) {
+			string += `    ${key.description.$jsString} = ${this.objectForKey_(key).description.$jsString};\n`;
 		}
 		return CRString.new(string+'}');
+	}
+
+	//! @}
+
+	//! @name Instance Methods
+	//! @{
+
+	//! @typed CREnumerator : void
+	keyEnumerator() {
+		return CREnumerator.alloc().init(this.$jsMap.keys()[Symbol.iterator]);
 	}
 
 	//! @}
@@ -110,3 +141,4 @@ exports.CRDictionary = CRDictionary;
 CRDictionary.$conformsTo.push('CRCopying', 'CRMutableCopying');
 
 const CRArraySym = require('./CRArray'), CRArray = CRArraySym.CRArray;
+const CREnumerator = require('./CREnumerator').CREnumerator;
