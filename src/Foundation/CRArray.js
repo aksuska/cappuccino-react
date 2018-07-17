@@ -3,7 +3,6 @@
  */
 
 const CRObjectSym = require('./CRObject'), CRObject = CRObjectSym.CRObject;
-const CRRangeSym = require('./CRRange'), CRMakeRange = CRRangeSym.CRMakeRange, CRMaxRange = CRRangeSym.CRMaxRange, CRNotFound = CRRangeSym.CRNotFound, CRStringFromRange = CRRangeSym.CRStringFromRange;
 const OBJJ = require('../Objective-J'), objj_initialize = OBJJ.objj_initialize;
 
 //! NSArray Cocoa Foundation class emulation
@@ -62,3 +61,4 @@ CRArray.$conformsTo.push('CRCopying', 'CRMutableCopying');
 
 const CRStringSym = require('./CRString'), CRString = CRStringSym.CRString;
 const CRExceptionSym =  require('./CRException'), CRException = CRExceptionSym.CRException, CRInvalidArgumentException = CRExceptionSym.CRInvalidArgumentException, CRRangeException = CRExceptionSym.CRRangeException, CRInternalInconsistencyException = CRExceptionSym.CRInternalInconsistencyException;
+const CRRangeSym = require('./CRRange'), CRMakeRange = CRRangeSym.CRMakeRange, CRMaxRange = CRRangeSym.CRMaxRange, CRNotFound = CRRangeSym.CRNotFound, CRStringFromRange = CRRangeSym.CRStringFromRange;
