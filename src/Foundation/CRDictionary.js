@@ -25,14 +25,14 @@ class CRDictionary extends CRObject {
 	$setObjectForKey(object, key) {
 		// null key is exception
 		if (key === null)
-			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, CRString.new("-[%@ setObject:forKey:]: key cannot be null"), this.className);
+			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, CRString.new("-[%@ setObject:forKey:]: key cannot be nil"), this.className);
 		else if (object == null)
-			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, CRString.new("-[%@ setObject:forKey:]: object cannot be null (key: %@)"), this.className, key);
+			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, CRString.new("-[%@ setObject:forKey:]: object cannot be nil (key: %@)"), this.className, key);
 
 		// we need to copy key, but there is a chance we'll get null
 		const ourKey = objj_msgSend(key, 'copyWithZone:', null);
 		if (ourKey === null)
-			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, CRString.new("-[%@ setObject:forKey:]: key cannot be null"), this.className);
+			objj_initialize(CRException).raise_format_(CRInvalidArgumentException, CRString.new("-[%@ setObject:forKey:]: key cannot be nil"), this.className);
 		else {
 			// keys must be unique by -isEqual:, so let's see if we have one
 			for (let pair of this.$jsMap) {
