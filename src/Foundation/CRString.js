@@ -330,18 +330,6 @@ class CRString extends CRObject {
 	//! Returns the native JS string that backs the NSArray
 	get jsString() {return this.$jsString;}
 
-	$generateHash() {
-		let source = this.$jsString, length = source.length, result = 2166136261;
-		for (let i = 0; i < length; i++) {
-			result = result ^ source.charCodeAt(i);
-			result = result * 16777619;
-		}
-		// check--throw exception  if hash is NaN
-		if (Number.isNaN(result))
-			objj_initialize(CRException).raise_format_(CRInternalInconsistencyException, new CRString("-[%@ $generateHash]: hash result of '%@' is NaN"), this.className, this);
-		this.$hashCode = (new Uint32Array([result]))[0];
-	}
-
 	//! @}
 }
 exports.CRString = CRString;
