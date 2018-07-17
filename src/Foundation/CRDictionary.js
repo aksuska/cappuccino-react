@@ -56,6 +56,15 @@ class CRDictionary extends CRObject {
 		return this;
 	}
 
+	//! @typed id : null
+	mutableCopyWithZone_(zone) {
+		const dict = CRMutableDictionary.alloc().init();
+		for (let key of this) {
+			dict.setObject_forKey_(this.objectForKey_(key), key);
+		}
+		return dict;
+	}
+
 	//! @}
 
 	//! @name Initializing an NSDictionary Instance
@@ -64,6 +73,16 @@ class CRDictionary extends CRObject {
 	//! @typed instancetype : void
 	init() {
 		return this.initWithObjects_forKeys_count_(null, null, 0);
+	}
+
+	//! @typed instancetype : CRDictionary<KeyType, id>
+	initWithDictionary_(otherDictionary) {
+		const objects = [], keys = [];
+		for (let key of otherDictionary) {
+			keys.push(key);
+			objects.push(otherDictionary.objectForKey_(key));
+		}
+		return this.initWithObjects_forKeys_count_(objects, keys, keys.length);
 	}
 
 	//! @typed instancetype : Array<id>, Array<KeyType>, CRUInteger
@@ -141,4 +160,5 @@ exports.CRDictionary = CRDictionary;
 CRDictionary.$conformsTo.push('CRCopying', 'CRMutableCopying');
 
 const CRArraySym = require('./CRArray'), CRArray = CRArraySym.CRArray;
+const CRMutableDictionary = require('./CRMutableDictionary').CRMutableDictionary;
 const CREnumerator = require('./CREnumerator').CREnumerator;
